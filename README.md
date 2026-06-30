@@ -92,6 +92,30 @@ GitHub repo → Settings → Secrets and variables → Actions 에 등록:
 
 선택: `GITGUARDIAN_API_KEY` (시크릿 스캔).
 
+## AI 에이전트 협업 (Claude / Codex)
+
+컨벤션 단일 출처는 [`AGENTS.md`](./AGENTS.md) 다. Claude 는 `CLAUDE.md` 가 이를 `@AGENTS.md` 로 import 하고, Codex 는 `AGENTS.md` 를 직접 읽는다.
+
+프로젝트 슬래시 명령(스킬)은 두 곳에 동일 내용으로 둔다:
+
+| 명령                  | Claude               | Codex             |
+| --------------------- | -------------------- | ----------------- |
+| `/commit`             | `.claude/commands/`  | `.codex/prompts/` |
+| `/pr`                 | `.claude/commands/`  | `.codex/prompts/` |
+| `/scaffold-component` | `.claude/commands/`  | `.codex/prompts/` |
+| `/figma-import`       | `.claude/commands/`  | `.codex/prompts/` |
+
+**Codex 에서 슬래시 명령 활성화** — Codex 는 전역 `~/.codex/prompts/` 만 자동 인식하므로 프로젝트 명령을 복사(또는 심링크)한다:
+
+```bash
+# macOS / Linux (심링크)
+ln -s "$(pwd)/.codex/prompts/"*.md ~/.codex/prompts/
+# Windows (복사)
+copy .codex\prompts\*.md %USERPROFILE%\.codex\prompts\
+```
+
+`/figma-import` 는 Figma Dev Mode MCP 연결이 필요하다 (Codex 는 별도 설정).
+
 ## 라이선스
 
 [MIT](./LICENSE)
