@@ -1,0 +1,9 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "likelionUSWCMS API (placeholder)",
+    "version": "0.0.0",
+    "description": "백엔드 OpenAPI 스펙 확정 시 `npm run api:fetch` 로 교체됩니다."
+  },
+  "paths": {}
+}

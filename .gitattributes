@@ -1,0 +1,11 @@
+# 모든 텍스트 파일은 레포에 LF 로 저장 (OS 간 줄바꿈 churn 방지).
+* text=auto eol=lf
+
+# 바이너리
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.woff binary
+*.woff2 binary

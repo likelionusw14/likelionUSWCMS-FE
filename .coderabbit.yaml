@@ -1,0 +1,42 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+language: ko
+reviews:
+  profile: chill
+  request_changes_workflow: false
+  high_level_summary: true
+  poem: false
+  review_status: true
+  path_filters:
+    - '!package-lock.json'
+    - '!node_modules/**'
+    - '!dist/**'
+    - '!src/api/types.generated.ts'
+  path_instructions:
+    - path: 'src/routes/**'
+      instructions: |
+        라우트(페이지) 컴포넌트입니다. 비즈니스 로직을 직접 넣지 말고
+        organisms/templates/hooks 만 조합해야 합니다.
+    - path: 'src/components/atoms/**'
+      instructions: |
+        Atom 컴포넌트는 프로젝트 의존성 없이 props 만 받아야 합니다.
+        다른 컴포넌트를 import 하면 안 됩니다.
+    - path: 'src/components/molecules/**'
+      instructions: |
+        Molecule 컴포넌트는 2개 이상의 atom 을 조합합니다.
+    - path: 'src/components/organisms/**'
+      instructions: |
+        Organism 컴포넌트는 화면 단위 기능 섹션입니다.
+    - path: 'src/hooks/**'
+      instructions: |
+        모든 데이터 훅은 { data, isLoading } 형태를 반환해야 합니다 (백엔드 seam 패턴 유지).
+    - path: 'src/api/**'
+      instructions: |
+        모든 API 호출은 apiClient(axios) 를 통해야 하고, 타입은 types.generated.ts 를 우선 사용합니다.
+    - path: 'src/types/**'
+      instructions: |
+        모든 인터페이스/타입은 여기에 정의합니다. 엔티티는 id: string 필수.
+  auto_review:
+    enabled: true
+    drafts: false
+chat:
+  auto_reply: true

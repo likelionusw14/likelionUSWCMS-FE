@@ -1,0 +1,6 @@
+dist
+node_modules
+.trash
+src/api/types.generated.ts
+openapi/openapi.json
+*.md
