@@ -1,6 +1,2 @@
 export * from './LoginPage'
-export * from './CommonHomePage'
-export * from './UserHomePage'
-export * from './DashboardPage'
 export * from './NotFoundPage'
-export * from './guards/RequireRole'

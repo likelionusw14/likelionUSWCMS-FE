@@ -1,38 +1,16 @@
-import { Routes, Route } from 'react-router-dom'
-import {
-  LoginPage,
-  CommonHomePage,
-  UserHomePage,
-  DashboardPage,
-  NotFoundPage,
-  RequireRole,
-} from '@routes'
-import { AppShell } from '@templates'
-import { ADMIN_NAV, USER_NAV } from '@constants'
+import { useRoutes } from 'react-router-dom'
+import { LoginPage, NotFoundPage } from '@routes'
+import { commonRoutes } from '@routes/common/routes'
+import { userRoutes } from '@routes/user/routes'
+import { adminRoutes } from '@routes/admin/routes'
 
+// 조립 전용: 영역별 라우트 모듈을 합친다. 페이지 추가는 각 영역 폴더에서 하며 이 파일은 바뀌지 않는다.
 export default function App() {
-  return (
-    <Routes>
-      <Route path="/login" element={<LoginPage />} />
-
-      {/* 공통 (게스트 포함 전체 접근) */}
-      <Route path="/" element={<CommonHomePage />} />
-
-      {/* 사용자 (아기사자 이상) */}
-      <Route element={<RequireRole area="user" />}>
-        <Route element={<AppShell areaLabel="사용자" navItems={USER_NAV} />}>
-          <Route path="/app" element={<UserHomePage />} />
-        </Route>
-      </Route>
-
-      {/* 관리자 (운영진) */}
-      <Route element={<RequireRole area="admin" />}>
-        <Route element={<AppShell areaLabel="관리자" navItems={ADMIN_NAV} />}>
-          <Route path="/admin" element={<DashboardPage />} />
-        </Route>
-      </Route>
-
-      <Route path="*" element={<NotFoundPage />} />
-    </Routes>
-  )
+  return useRoutes([
+    { path: '/login', element: <LoginPage /> },
+    ...commonRoutes,
+    ...userRoutes,
+    ...adminRoutes,
+    { path: '*', element: <NotFoundPage /> },
+  ])
 }
