@@ -58,7 +58,7 @@ npm run api:sync    # 백엔드 OpenAPI → src/api/types.generated.ts (SWAGGER_
   - **색** — `primary`/`secondary`/`gray`(100·300·500·700·900)/`navy`/`white`/`black`/`success`/`error`/`warning`/`info` 만 쓰고 임의 색 신규 생성 금지. 톤 조절이 필요하면 새 색 대신 불투명도 유틸(`bg-primary/10` 등)로 처리.
   - **간격(spacing)** — 키가 곧 픽셀 값이다: `p-16`=16px, `gap-8`=8px, `px-24`=24px (4·8·12·16·24·32·40·48·64·96). 토큰에 없는 고정 치수만 임의값(`w-[240px]`)을 쓴다.
   - **모서리(radius)** — `rounded`(8px)·`rounded-full`(999px) 만 사용.
-  - **글자(typography)** — 한글=Pretendard, 영문/숫자=Inter Medium(고정). Inter 는 500 한 weight 만 로드하고 `body { font-synthesis: none }` 이라 bold 문맥에서도 라틴은 항상 Medium 이다(한글만 실제 가중치). 텍스트 스타일 토큰(size+line-height+weight 번들): `text-h1`(40/700)·`text-h2`(18/700), `text-sm-22|20|18|16`(Semibold 600), `text-m-20|18|16|14`(Medium 500), `text-r-14`(Regular 400). 임의 폰트/크기 신규 생성 금지.
+  - **글자(typography)** — 한글=Pretendard, 영문/숫자=Inter Medium(고정). Inter 는 500 한 weight 만 로드하고 `body { font-synthesis: none }` 이라 bold 문맥에서도 라틴은 항상 Medium 이다(한글만 실제 가중치). 텍스트 스타일 토큰(size+line-height+weight 번들): `text-h1`(40/700, 페이지 제목)·`text-h2`(18/700, 제목 하단 부제), `text-sm-22|20|18|16`(Semibold 600), `text-m-20|18|16|14`(Medium 500), `text-r-14`(Regular 400). 임의 폰트/크기 신규 생성 금지.
 - **Import** — 절대경로 alias 만 사용. 상대경로 `../` 금지. 배럴(`index.ts`) 경로로 import.
 
 ### Path Alias (tsconfig.app.json 와 동기화)

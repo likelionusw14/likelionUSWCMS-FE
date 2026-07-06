@@ -7,8 +7,8 @@ export function DashboardPage() {
   return (
     <div>
       <header className="mb-24">
-        <h1 className="text-xl font-bold text-gray-900">대시보드</h1>
-        <p className="mt-4 text-sm text-gray-700">
+        <h1 className="text-h1 text-gray-900">대시보드</h1>
+        <p className="mt-4 text-h2 text-gray-700">
           동아리 관리 시스템 현황 (백엔드 연동 전 예시 화면)
         </p>
       </header>

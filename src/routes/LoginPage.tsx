@@ -22,8 +22,8 @@ export function LoginPage() {
         onSubmit={handleSubmit}
         className="w-[320px] rounded border border-gray-300 bg-white p-32"
       >
-        <h1 className="text-lg font-bold text-gray-900">멋사 USW CMS</h1>
-        <p className="mb-24 mt-4 text-sm text-gray-700">관리자 로그인</p>
+        <h1 className="text-sm-22 text-gray-900">멋사 USW CMS</h1>
+        <p className="mb-24 mt-4 text-r-14 text-gray-700">관리자 로그인</p>
         <input
           value={id}
           onChange={(event) => setId(event.target.value)}
