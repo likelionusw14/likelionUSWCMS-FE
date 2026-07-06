@@ -14,7 +14,7 @@ Atomic Design 레이어에 새 컴포넌트를 만들고 배럴에 등록한다.
 1. 레이어 디렉터리 결정: atom → `src/components/atoms`, molecule → `src/components/molecules`,
    organism → `src/components/organisms`.
 2. `<디렉터리>/<ComponentName>.tsx` 생성:
-   - props 인터페이스를 파일 상단에 정의 (도메인 타입이 필요하면 `src/types/` 에 추가).
+   - props·도메인 타입은 `src/types/` 에 정의하고 import 한다 (컴포넌트 파일 인라인 정의 금지).
    - 스타일은 Tailwind `className` + `cn`(`@utils`). 인라인 `style` 금지.
    - atom 은 다른 컴포넌트를 import 하지 않는다.
 3. `<디렉터리>/index.ts` 배럴에 `export * from './<ComponentName>'` 추가.

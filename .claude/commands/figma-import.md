@@ -21,7 +21,7 @@ Figma Dev Mode MCP 로 디자인을 읽어와 이 프로젝트의 Atomic Design 
    - 간격 → px 키 spacing(`p-16`=16px, `gap-8`=8px; 4·8·12·16·24·32·40·48·64·96). 반경 → `rounded`(8px)·`rounded-full`(999px).
 4. 레이어를 정한다(인자 우선, 없으면 복잡도로 추론): 단일 표현 요소 → `atom`, atom 조합 → `molecule`, 화면 섹션 → `organism`.
 5. `src/components/<layer>/<Name>.tsx` 생성:
-   - props 인터페이스를 상단에 정의 (도메인 타입은 `src/types/` 에).
+   - props 타입은 `src/types/` 에 정의하고 import 한다 (컴포넌트 파일 인라인 정의 금지).
    - `className` + `cn`(`@utils`) 사용, 인라인 `style` 금지. `atom` 은 다른 컴포넌트를 import 하지 않는다.
    - 고정 문구는 한국어 라벨, 동적 값은 props 로.
 6. `src/components/<layer>/index.ts` 배럴에 `export * from './<Name>'` 추가.

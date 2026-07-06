@@ -28,7 +28,8 @@ reviews:
         Organism 컴포넌트는 화면 단위 기능 섹션입니다.
     - path: 'src/hooks/**'
       instructions: |
-        모든 데이터 훅은 { data, isLoading } 형태를 반환해야 합니다 (백엔드 seam 패턴 유지).
+        데이터 조회(fetch) 훅은 { data, isLoading } 형태를 반환해야 합니다 (백엔드 seam 패턴 유지).
+        상태·액션 훅(useAuth, useLogin 등)은 이 계약에서 제외합니다.
     - path: 'src/api/**'
       instructions: |
         모든 API 호출은 apiClient(axios) 를 통해야 하고, 타입은 types.generated.ts 를 우선 사용합니다.
