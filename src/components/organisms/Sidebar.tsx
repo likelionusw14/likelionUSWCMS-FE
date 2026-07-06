@@ -1,23 +1,21 @@
 import { NavLink } from 'react-router-dom'
 import { cn } from '@utils'
+import type { NavItem } from '@types'
 
-interface NavItem {
-  to: string
-  label: string
+interface SidebarProps {
+  navItems: NavItem[]
+  brandLabel?: string
 }
 
-// 도메인 메뉴(동아리/회원/지원서 등)는 백엔드 스펙 확정 후 추가한다.
-const NAV_ITEMS: NavItem[] = [{ to: '/', label: '대시보드' }]
-
-export function Sidebar() {
+export function Sidebar({ navItems, brandLabel = '멋사 USW' }: SidebarProps) {
   return (
     <aside className="flex h-full w-[240px] flex-col border-r border-gray-300 bg-white">
       <div className="flex h-[56px] items-center gap-8 border-b border-gray-300 px-24">
-        <span className="text-lg font-bold text-primary">멋사 USW</span>
+        <span className="text-lg font-bold text-primary">{brandLabel}</span>
         <span className="text-sm text-gray-500">CMS</span>
       </div>
       <nav className="flex flex-1 flex-col gap-4 p-12">
-        {NAV_ITEMS.map((item) => (
+        {navItems.map((item) => (
           <NavLink
             key={item.to}
             to={item.to}
