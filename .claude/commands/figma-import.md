@@ -16,9 +16,9 @@ Figma Dev Mode MCP 로 디자인을 읽어와 이 프로젝트의 Atomic Design 
 1. Figma MCP 도구를 로드한다 (`get_design_context`, `get_screenshot`, `get_metadata`). 필요하면 `figma-use` 스킬을 함께 로드.
 2. 노드 URL(또는 현재 Figma 선택)로 `get_design_context` 를 호출해 레이아웃·텍스트·스페이싱·색·계층을 가져온다. 시각 확인이 필요하면 `get_screenshot`.
 3. 디자인을 **프로젝트 토큰으로 매핑**한다 (1:1 픽셀 복제보다 토큰/컨벤션 우선):
-   - 색 → `tailwind.config.js` 의 `brand`/`surface`/`content`/`state` 토큰. 가장 가까운 토큰을 쓰고, 새 토큰이 꼭 필요하면 사용자 확인 후 `tailwind.config.js` 에 추가.
-   - 폰트 → `sans`(Pretendard) / `roboto`.
-   - 간격·반경 → Tailwind 스케일 + `rounded-card` 토큰.
+   - 색 → `tailwind.config.js` 의 Figma 토큰 `primary`/`secondary`/`gray`(100·300·500·700·900)/`navy`/`white`/`black`/`success`/`error`/`warning`/`info`. 가장 가까운 토큰을 쓰고 톤 조절은 불투명도 유틸(`bg-primary/10`), 새 토큰이 꼭 필요하면 사용자 확인 후 추가.
+   - 폰트 → `font-sans`(영문=Inter Medium, 한글=Pretendard). 텍스트 스타일 토큰: `text-h1`/`text-h2`, `text-sm-16~22`, `text-m-14~20`, `text-r-14`.
+   - 간격 → px 키 spacing(`p-16`=16px, `gap-8`=8px; 4·8·12·16·24·32·40·48·64·96). 반경 → `rounded`(8px)·`rounded-full`(999px).
 4. 레이어를 정한다(인자 우선, 없으면 복잡도로 추론): 단일 표현 요소 → `atom`, atom 조합 → `molecule`, 화면 섹션 → `organism`.
 5. `src/components/<layer>/<Name>.tsx` 생성:
    - props 인터페이스를 상단에 정의 (도메인 타입은 `src/types/` 에).

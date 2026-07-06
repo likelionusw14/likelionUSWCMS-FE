@@ -17,18 +17,18 @@ export function LoginPage() {
   }
 
   return (
-    <div className="flex h-screen items-center justify-center bg-surface-subtle">
+    <div className="flex h-screen items-center justify-center bg-gray-100">
       <form
         onSubmit={handleSubmit}
-        className="w-80 rounded-card-lg border border-surface-border bg-surface-base p-8"
+        className="w-[320px] rounded border border-gray-300 bg-white p-32"
       >
-        <h1 className="text-lg font-bold text-content">멋사 USW CMS</h1>
-        <p className="mb-6 mt-1 text-sm text-content-muted">관리자 로그인</p>
+        <h1 className="text-lg font-bold text-gray-900">멋사 USW CMS</h1>
+        <p className="mb-24 mt-4 text-sm text-gray-700">관리자 로그인</p>
         <input
           value={id}
           onChange={(event) => setId(event.target.value)}
           placeholder="아이디"
-          className="mb-3 w-full rounded-card border border-surface-border px-3 py-2 text-sm outline-none focus:border-brand"
+          className="mb-12 w-full rounded border border-gray-300 px-12 py-8 text-sm outline-none focus:border-primary"
         />
         <Button type="submit" className="w-full">
           로그인
