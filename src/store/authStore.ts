@@ -1,14 +1,6 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import type { User } from '@types'
-
-interface AuthState {
-  token: string | null
-  user: User | null
-  isAuthenticated: boolean
-  login: (payload: { token: string; user: User }) => void
-  logout: () => void
-}
+import type { AuthState } from '@types'
 
 // 인증 상태. 새로고침 유지를 위해 localStorage 에 영속화한다.
 // (백엔드 연동 시 토큰 refresh/만료 처리를 여기서 확장)
