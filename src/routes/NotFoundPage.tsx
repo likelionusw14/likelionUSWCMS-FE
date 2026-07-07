@@ -2,10 +2,10 @@ import { Link } from 'react-router-dom'
 
 export function NotFoundPage() {
   return (
-    <div className="flex h-screen flex-col items-center justify-center gap-3 bg-surface-subtle">
-      <p className="text-3xl font-bold text-content">404</p>
-      <p className="text-sm text-content-muted">페이지를 찾을 수 없습니다.</p>
-      <Link to="/" className="text-sm font-medium text-brand hover:underline">
+    <div className="flex h-screen flex-col items-center justify-center gap-12 bg-gray-100">
+      <p className="text-h1 text-gray-900">404</p>
+      <p className="text-h2 text-gray-700">페이지를 찾을 수 없습니다.</p>
+      <Link to="/" className="text-sm font-medium text-primary hover:underline">
         대시보드로 돌아가기
       </Link>
     </div>
