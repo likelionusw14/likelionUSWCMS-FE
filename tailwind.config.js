@@ -8,10 +8,20 @@ export default {
       transparent: 'transparent',
       current: 'currentColor',
       inherit: 'inherit',
-      white: '#FFFFFF', // Color / White
-      black: '#000000', // Color / Black
-      primary: { 500: '#FF4823', DEFAULT: '#FF4823' }, // Color / Primary
-      secondary: { 500: '#E3FDFF', DEFAULT: '#E3FDFF' }, // Color / Secondary
+      white: '#FFFFFF', // Color / White / 500
+      black: '#000000', // Color / Black / 500
+      primary: { 500: '#3A60FB', DEFAULT: '#3A60FB' }, // Color / Primary / 500
+      // Secondary·Background 는 Figma 에서 값이 둘(500 1 / 500 2)이라 숫자 접미사로 노출한다.
+      secondary: {
+        1: '#D7E2FF', // Color / Secondary / 500 1
+        2: '#FF4FA3', // Color / Secondary / 500 2
+        DEFAULT: '#D7E2FF',
+      },
+      background: {
+        1: '#EEF3FF', // Color / Background / 500 1
+        2: '#04102D', // Color / Background / 500 2
+        DEFAULT: '#EEF3FF',
+      },
       gray: {
         100: '#F6F6F6',
         300: '#E0E0E0',
@@ -19,11 +29,10 @@ export default {
         700: '#484848',
         900: '#282828',
       },
-      navy: { 500: '#08192E', DEFAULT: '#08192E' }, // Color / Navy
-      success: { 500: '#22C55E', DEFAULT: '#22C55E' }, // Color / Success
-      error: { 500: '#EF4444', DEFAULT: '#EF4444' }, // Color / Error
-      warning: { 500: '#FFD640', DEFAULT: '#FFD640' }, // Color / Warning
-      info: { 500: '#3B82F6', DEFAULT: '#3B82F6' }, // Color / Info
+      success: { 500: '#22C55E', DEFAULT: '#22C55E' }, // Color / Success / 500
+      error: { 500: '#EF4444', DEFAULT: '#EF4444' }, // Color / Error / 500
+      warning: { 500: '#FFD640', DEFAULT: '#FFD640' }, // Color / Warning / 500
+      info: { 500: '#3B82F6', DEFAULT: '#3B82F6' }, // Color / Info / 500
     },
     // ── 간격(Spacing): Figma 토큰. 키 = px 값 (예: p-16 = 16px, gap-8 = 8px). ──
     // Tailwind 기본 배수 스케일을 대체하므로 숫자는 곧 픽셀이다.
@@ -41,10 +50,14 @@ export default {
       64: '64px',
       96: '96px',
     },
-    // ── 모서리(Radius): Figma 토큰만. rounded = 8px, rounded-full = 999px. ──
+    // ── 모서리(Radius): Figma 토큰만. 키 = px 값 (spacing 과 동일 규칙). ──
+    // DEFAULT(=rounded) 는 8px 로 둔다 (기존 사용처 유지).
     borderRadius: {
       none: '0px',
       DEFAULT: '8px', // Radius / 8
+      4: '4px', // Radius / 4
+      8: '8px', // Radius / 8
+      16: '16px', // Radius / 16
       full: '999px', // Radius / 999
     },
     extend: {
