@@ -1,7 +1,15 @@
 // JS 에서 색 값이 필요할 때 사용 (tailwind.config.js 의 Figma 디자인 토큰과 동기화 유지).
 export const colors = {
-  primary: '#FF4823',
-  secondary: '#E3FDFF',
+  primary: '#3A60FB',
+  // Secondary·background 는 Figma 에서 값이 둘(500 1 / 500 2)이라 숫자 키로 유지한다.
+  secondary: {
+    1: '#D7E2FF',
+    2: '#FF4FA3',
+  },
+  background: {
+    1: '#EEF3FF',
+    2: '#04102D',
+  },
   gray: {
     100: '#F6F6F6',
     300: '#E0E0E0',
@@ -9,7 +17,6 @@ export const colors = {
     700: '#484848',
     900: '#282828',
   },
-  navy: '#08192E',
   white: '#FFFFFF',
   black: '#000000',
   success: '#22C55E',
