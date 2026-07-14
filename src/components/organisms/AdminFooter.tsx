@@ -1,4 +1,4 @@
-import { FOOTER_COLUMNS, SOCIAL_LINKS } from '@constants'
+import { BRAND_NAME, BRAND_TAGLINE, FOOTER_COLUMNS, SOCIAL_LINKS } from '@constants'
 
 // 관리자(밝은 배경) 푸터 — 브랜드/소셜 + 링크 칼럼 3개.
 export function AdminFooter() {
@@ -7,8 +7,8 @@ export function AdminFooter() {
       <div className="mx-auto flex h-[360px] w-full max-w-[1280px] items-start justify-center gap-[120px] px-64 py-[60px]">
         <div className="flex flex-1 flex-col gap-48">
           <div className="flex flex-col gap-8">
-            <p className="text-sm-22 text-primary">LIKELION USW</p>
-            <p className="text-m-18 text-primary/60">수원대학교 멋쟁이사자처럼 00기</p>
+            <p className="text-sm-22 text-primary">{BRAND_NAME}</p>
+            <p className="text-m-18 text-primary/60">{BRAND_TAGLINE}</p>
           </div>
           <div className="relative opacity-80">
             <nav className="flex h-48 w-[194px] items-center justify-center gap-8 overflow-hidden rounded-full bg-white px-[15px]">

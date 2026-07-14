@@ -1,4 +1,4 @@
-import { FOOTER_COLUMNS, SOCIAL_LINKS } from '@constants'
+import { BRAND_NAME, BRAND_TAGLINE, FOOTER_COLUMNS, SOCIAL_LINKS } from '@constants'
 
 // 로그인 전(공통) 다크 푸터.
 export function PublicFooter() {
@@ -7,8 +7,8 @@ export function PublicFooter() {
       <div className="mx-auto flex w-full max-w-[1280px] items-start justify-center gap-[120px] px-64 py-[90px]">
         <div className="flex flex-1 flex-col gap-48">
           <div className="flex flex-col gap-8 text-secondary-1">
-            <p className="text-sm-22">LIKELION USW</p>
-            <p className="text-m-18">수원대학교 멋쟁이사자처럼 14기</p>
+            <p className="text-sm-22">{BRAND_NAME}</p>
+            <p className="text-m-18">{BRAND_TAGLINE}</p>
           </div>
           <nav className="flex items-center gap-8">
             {SOCIAL_LINKS.map((social) => (
