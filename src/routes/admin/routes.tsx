@@ -6,6 +6,9 @@ import { DashboardPage } from './DashboardPage'
 import { ProjectListPage } from './ProjectListPage'
 import { ProjectDetailPage } from './ProjectDetailPage'
 import { ProjectFormPage } from './ProjectFormPage'
+import { SessionListPage } from './SessionListPage'
+import { SessionDetailPage } from './SessionDetailPage'
+import { SessionFormPage } from './SessionFormPage'
 
 // 관리자(운영진) 영역 — STAFF. 가드 + 셸 + 페이지를 캡슐화한다.
 // 이 영역 담당자는 이 폴더(routes/admin/)만 편집한다.
@@ -25,6 +28,10 @@ export const adminRoutes: RouteObject[] = [
           { path: '/admin/projects/new', element: <ProjectFormPage /> },
           { path: '/admin/projects/:projectId', element: <ProjectDetailPage /> },
           { path: '/admin/projects/:projectId/edit', element: <ProjectFormPage /> },
+          { path: '/admin/sessions', element: <SessionListPage /> },
+          { path: '/admin/sessions/new', element: <SessionFormPage /> },
+          { path: '/admin/sessions/:sessionId', element: <SessionDetailPage /> },
+          { path: '/admin/sessions/:sessionId/edit', element: <SessionFormPage /> },
         ],
       },
     ],
