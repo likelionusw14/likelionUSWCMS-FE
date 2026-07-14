@@ -1,13 +1,5 @@
-import { Link } from 'react-router-dom'
+import { NotFoundPanel } from '@organisms'
 
 export function NotFoundPage() {
-  return (
-    <div className="flex h-screen flex-col items-center justify-center gap-12 bg-gray-100">
-      <p className="text-h1 text-gray-900">404</p>
-      <p className="text-sm-18 text-gray-700">페이지를 찾을 수 없습니다.</p>
-      <Link to="/" className="text-sm font-medium text-primary hover:underline">
-        대시보드로 돌아가기
-      </Link>
-    </div>
-  )
+  return <NotFoundPanel />
 }
