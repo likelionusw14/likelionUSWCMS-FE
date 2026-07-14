@@ -17,8 +17,10 @@ Figma Dev Mode MCP 로 디자인을 읽어와 이 프로젝트의 Atomic Design 
 2. 노드 URL(또는 현재 Figma 선택)로 `get_design_context` 를 호출해 레이아웃·텍스트·스페이싱·색·계층을 가져온다. 시각 확인이 필요하면 `get_screenshot`.
 3. 디자인을 **프로젝트 토큰으로 매핑**한다 (1:1 픽셀 복제보다 토큰/컨벤션 우선):
    - 색 → `tailwind.config.js` 의 Figma 토큰 `primary`/`secondary`(1·2)/`background`(1·2)/`gray`(100·300·500·700·900)/`white`/`black`/`success`/`error`/`warning`/`info`. 값이 둘인 `secondary`·`background` 는 숫자 접미사(`bg-secondary-2`, `bg-background-1`)로 쓴다. 가장 가까운 토큰을 쓰고 톤 조절은 불투명도 유틸(`bg-primary/10`), 새 토큰이 꼭 필요하면 사용자 확인 후 추가.
-   - 폰트 → `font-sans`(영문=Inter Medium, 한글=Pretendard). 텍스트 스타일 토큰: `text-h1`/`text-h2`, `text-sm-16~22`, `text-m-14~20`, `text-r-14`.
+   - 폰트 → `font-sans`(Pretendard 단일). 텍스트 스타일 토큰: `text-h0`/`text-h1`, `text-sm-16~22`, `text-m-14~20`(본문은 `text-m-18-body`·`text-m-16-home`), `text-r-12|14|20`.
    - 간격 → px 키 spacing(`p-16`=16px, `gap-8`=8px; 4·8·12·16·24·32·40·48·64·96). 반경 → px 키(`rounded-4`·`rounded-8`·`rounded-16`·`rounded-full`(999px); `rounded` = 8px 별칭).
+   - 그라디언트 → `bg-gradient-primary`·`bg-gradient-secondary`·`bg-gradient-white`, 텍스트용 `bg-gradient-typo`(+`bg-clip-text text-transparent`).
+   - 효과 → `shadow-drop`, `shadow-emboss-light`·`shadow-emboss-dark`, `effect-glass`·`effect-glass-shadow`.
 4. 레이어를 정한다(인자 우선, 없으면 복잡도로 추론): 단일 표현 요소 → `atom`, atom 조합 → `molecule`, 화면 섹션 → `organism`.
 5. `src/components/<layer>/<Name>.tsx` 생성:
    - props 타입은 `src/types/` 에 정의하고 import 한다 (컴포넌트 파일 인라인 정의 금지).
