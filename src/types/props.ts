@@ -40,6 +40,7 @@ export interface AdminHeaderProps {
 export interface MenuCardProps {
   title: string
   description: string
+  to: string
   className?: string
 }
 

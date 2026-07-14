@@ -4,20 +4,41 @@ import { MenuCard } from '@molecules'
 const PLACEHOLDER_DESCRIPTION =
   '시장 분석, 사용자 조사, 서비스 기획, 프로젝트 매니지먼트를 배웁니다. 팀의 비전을 설정하고 목표 달성을 이끄는 리더십을 기릅니다.'
 
+// 프로젝트 관리 외 나머지 화면은 순차 구현 예정이라 경로만 먼저 잡아둔다.
 const MENU_CARDS = [
-  { id: 'projects', title: '프로젝트 관리', description: PLACEHOLDER_DESCRIPTION },
-  { id: 'sessions', title: '세션자료 관리', description: PLACEHOLDER_DESCRIPTION },
-  { id: 'schedule', title: '일정 관리', description: PLACEHOLDER_DESCRIPTION },
-  { id: 'notices', title: '공지 관리', description: PLACEHOLDER_DESCRIPTION },
-  { id: 'attendance', title: '출결 관리', description: PLACEHOLDER_DESCRIPTION },
-  { id: 'members', title: '회원 관리', description: PLACEHOLDER_DESCRIPTION },
+  {
+    id: 'projects',
+    title: '프로젝트 관리',
+    description: PLACEHOLDER_DESCRIPTION,
+    to: '/admin/projects',
+  },
+  {
+    id: 'sessions',
+    title: '세션자료 관리',
+    description: PLACEHOLDER_DESCRIPTION,
+    to: '/admin/sessions',
+  },
+  {
+    id: 'schedule',
+    title: '일정 관리',
+    description: PLACEHOLDER_DESCRIPTION,
+    to: '/admin/schedule',
+  },
+  { id: 'notices', title: '공지 관리', description: PLACEHOLDER_DESCRIPTION, to: '/admin/notices' },
+  {
+    id: 'attendance',
+    title: '출결 관리',
+    description: PLACEHOLDER_DESCRIPTION,
+    to: '/admin/attendance',
+  },
+  { id: 'members', title: '회원 관리', description: PLACEHOLDER_DESCRIPTION, to: '/admin/members' },
 ]
 
 export function AdminMenuGrid() {
   return (
     <div className="mx-auto grid w-full max-w-[1280px] grid-cols-1 gap-x-40 gap-y-[36px] px-64 pb-[120px] pt-32 md:grid-cols-2 lg:grid-cols-3">
       {MENU_CARDS.map((card) => (
-        <MenuCard key={card.id} title={card.title} description={card.description} />
+        <MenuCard key={card.id} title={card.title} description={card.description} to={card.to} />
       ))}
     </div>
   )
