@@ -9,7 +9,9 @@ export function ProjectCard({ project, className }: ProjectCardProps) {
 
   return (
     <Link to={`/admin/projects/${project.id}`} className={cn('block', className)}>
-      <WindowPanel bodyClassName="flex h-[574px] flex-col justify-between">
+      {/* 카드가 디자인(555px)보다 넓어지면 이미지도 같이 커지므로 높이는 최소값으로 두고,
+          gap-24 로 설명·태그가 붙지 않을 최소 간격을 준다. */}
+      <WindowPanel bodyClassName="flex min-h-[574px] flex-col justify-between gap-24">
         {coverImage ? (
           <img src={coverImage} alt="" className="aspect-[484/272] w-full rounded-8 object-cover" />
         ) : (
