@@ -2,8 +2,8 @@ import { Navigate } from 'react-router-dom'
 import { useLoginForm } from '@hooks'
 import { LoginForm } from '@organisms'
 
-// 로그인 라우트는 폼 상태 훅과 폼 UI 를 조합만 한다.
-export function LoginPage() {
+// 개발용 역할 선택 로그인 (/login/demo). 카카오 OAuth 연동 전까지 각 영역에 진입하는 통로다.
+export function DemoLoginPage() {
   const { role, setRole, id, setId, error, redirectTo, handleSubmit } = useLoginForm()
 
   // 이미 로그인 상태면 자기 홈으로.

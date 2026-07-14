@@ -31,6 +31,11 @@ export default {
         700: '#484848',
         900: '#282828',
       },
+      // 카카오 브랜드 색 — 디자인 팔레트가 아니라 카카오 로그인 버튼 규정 값이다 (Figma 의 Kakao 변수).
+      kakao: {
+        DEFAULT: '#FEE500', // Kakao / bg
+        text: 'rgba(0, 0, 0, 0.85)', // Kakao / text
+      },
       success: { 500: '#22C55E', DEFAULT: '#22C55E' }, // Color / Success / 500
       error: { 500: '#EF4444', DEFAULT: '#EF4444' }, // Color / Error / 500
       warning: { 500: '#FFD640', DEFAULT: '#FFD640' }, // Color / Warning / 500
