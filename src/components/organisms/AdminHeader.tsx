@@ -9,7 +9,7 @@ export function AdminHeader({ title, navItems, onLogout }: AdminHeaderProps) {
     <header className="w-full bg-background-1">
       <div className="mx-auto flex w-full max-w-[1280px] items-center justify-between px-64 py-16">
         <div className="flex flex-col gap-4">
-          <span className="text-h1 text-primary">LIKELION USW</span>
+          <span className="text-h1 text-secondary-2">LIKELION USW</span>
           <h1 className="text-sm-22 text-black">{title}</h1>
         </div>
         <nav className="flex items-center gap-24">

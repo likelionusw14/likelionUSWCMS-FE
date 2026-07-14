@@ -2,6 +2,7 @@ import { KakaoLoginButton, WindowPanel } from '@atoms'
 import type { SocialLoginPanelProps } from '@types'
 
 // 소셜 로그인 패널 — 카카오 로그인 진입.
+// 카카오 OAuth 연동 전이라 버튼은 가입 플로우(추가정보 입력)로 바로 넘어간다.
 export function SocialLoginPanel({ onKakaoLogin }: SocialLoginPanelProps) {
   return (
     <WindowPanel
