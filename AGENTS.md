@@ -58,7 +58,9 @@ npm run api:sync    # 백엔드 OpenAPI → src/api/types.generated.ts (SWAGGER_
   - **색** — `primary`/`secondary`(1·2)/`background`(1·2)/`gray`(100·300·500·700·900)/`white`/`black`/`success`/`error`/`warning`/`info` 만 쓰고 임의 색 신규 생성 금지. `secondary`·`background` 는 Figma 에 값이 둘(`500 1`/`500 2`)이라 숫자 접미사로 쓴다(`bg-secondary-2`, `bg-background-1`). 접미사 없는 `bg-secondary`·`bg-background` 는 1번 값이다. 톤 조절이 필요하면 새 색 대신 불투명도 유틸(`bg-primary/10` 등)로 처리.
   - **간격(spacing)** — 키가 곧 픽셀 값이다: `p-16`=16px, `gap-8`=8px, `px-24`=24px (4·8·12·16·24·32·40·48·64·96). 토큰에 없는 고정 치수만 임의값(`w-[240px]`)을 쓴다.
   - **모서리(radius)** — spacing 과 같이 키가 곧 픽셀 값이다: `rounded-4`(4px)·`rounded-8`(8px)·`rounded-16`(16px)·`rounded-full`(999px) 만 사용. 접미사 없는 `rounded` 는 8px 별칭.
-  - **글자(typography)** — 한글=Pretendard, 영문/숫자=Inter Medium(고정). Inter 는 500 한 weight 만 로드하고 `body { font-synthesis: none }` 이라 bold 문맥에서도 라틴은 항상 Medium 이다(한글만 실제 가중치). 텍스트 스타일 토큰(size+line-height+weight 번들): `text-h1`(40/700, 페이지 제목)·`text-h2`(18/700, 제목 하단 부제), `text-sm-22|20|18|16`(Semibold 600), `text-m-20|18|16|14`(Medium 500), `text-r-14`(Regular 400). 임의 폰트/크기 신규 생성 금지.
+  - **글자(typography)** — 한글·영문 모두 **Pretendard** 단일 패밀리(`font-sans`). 텍스트 스타일 토큰(size+line-height+letter-spacing+weight 번들): `text-h0`(56/72, 자간 6%, 히어로)·`text-h1`(40, 페이지 제목) = Bold 700, `text-sm-22|20|18|16` = Semibold 600, `text-m-20|18|16|14` = Medium 500, `text-r-20|14|12` = Regular 400. 본문은 줄간격이 붙은 전용 토큰을 쓴다: `text-m-18-body`(18/26, 자간 2%), `text-m-16-home`(16/24, 자간 -2%). 임의 폰트/크기 신규 생성 금지.
+  - **그라디언트** — Figma 색상 스타일 4종을 `bg-gradient-*` 로 등록(솔리드 베이스 + 오버레이 2겹을 그대로 재현): `bg-gradient-primary`·`bg-gradient-secondary`·`bg-gradient-white`. `bg-gradient-typo` 는 텍스트용이라 `bg-clip-text text-transparent` 와 함께 쓴다. 임의 그라디언트 신규 생성 금지.
+  - **효과(effect)** — Figma 효과 스타일: 그림자 `shadow-drop`, 엠보 `shadow-emboss-light`(밝은 배경)·`shadow-emboss-dark`(어두운 배경), 유리 `effect-glass`·`effect-glass-shadow`(유리+그림자). 유리는 Figma 의 GLASS 효과에 CSS 1:1 대응이 없어 `backdrop-blur` + inset 하이라이트로 근사한 값이다.
 - **Import** — 절대경로 alias 만 사용. 상대경로 `../` 금지. 배럴(`index.ts`) 경로로 import.
 
 ### Path Alias (tsconfig.app.json 와 동기화)
