@@ -1,25 +1,6 @@
-import githubIcon from '@/assets/icons/github.svg'
-import instagramIcon from '@/assets/icons/instagram.svg'
-import notionIcon from '@/assets/icons/notion.svg'
+import { FOOTER_COLUMNS, SOCIAL_LINKS } from '@constants'
 
-// 소셜 아이콘 — 링크 URL 은 디자인에 없어 아직 걸지 않는다.
-const SOCIAL_ICONS = [
-  { id: 'github', label: '깃허브', icon: githubIcon },
-  { id: 'notion', label: '노션', icon: notionIcon },
-  { id: 'instagram', label: '인스타그램', icon: instagramIcon },
-]
-
-const FOOTER_COLUMNS = [
-  { id: 'features', title: 'Features', items: ['Core features', 'Pro experience', 'Integrations'] },
-  {
-    id: 'learn-more',
-    title: 'Learn more',
-    items: ['Blog', 'Case studies', 'Customer stories', 'Best practices'],
-  },
-  { id: 'support', title: 'Support', items: ['Contact', 'Support', 'Legal'] },
-]
-
-// 관리자 하단 푸터 — 브랜드/소셜 + 링크 칼럼 3개.
+// 관리자(밝은 배경) 푸터 — 브랜드/소셜 + 링크 칼럼 3개.
 export function AdminFooter() {
   return (
     <footer className="w-full border-t border-secondary-1 bg-secondary-1/80">
@@ -30,13 +11,20 @@ export function AdminFooter() {
             <p className="text-m-18 text-primary/60">수원대학교 멋쟁이사자처럼 00기</p>
           </div>
           <div className="relative opacity-80">
-            <div className="flex h-48 w-[194px] items-center justify-center gap-8 overflow-hidden rounded-full bg-white px-[15px]">
-              {SOCIAL_ICONS.map((social) => (
-                <span key={social.id} className="flex h-48 w-48 items-center justify-center">
-                  <img src={social.icon} alt={social.label} className="h-24 w-24" />
-                </span>
+            <nav className="flex h-48 w-[194px] items-center justify-center gap-8 overflow-hidden rounded-full bg-white px-[15px]">
+              {SOCIAL_LINKS.map((social) => (
+                <a
+                  key={social.id}
+                  href={social.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label={social.label}
+                  className="flex h-48 w-48 items-center justify-center"
+                >
+                  <img src={social.icon} alt="" className="h-24 w-24" />
+                </a>
               ))}
-            </div>
+            </nav>
             {/* 말풍선 꼬리 — 원 두 개로 이어지는 장식. */}
             <span className="absolute left-[17px] top-[42px] h-12 w-12 rounded-full bg-white" />
             <span className="absolute left-[11px] top-[53px] h-[6px] w-[6px] rounded-full bg-white" />

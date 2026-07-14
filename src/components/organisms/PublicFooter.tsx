@@ -1,23 +1,4 @@
-import githubIcon from '@/assets/icons/github-white.svg'
-import instagramIcon from '@/assets/icons/instagram-white.svg'
-import notionIcon from '@/assets/icons/notion-white.svg'
-
-// 소셜 아이콘 — 링크 URL 은 디자인에 없어 아직 걸지 않는다.
-const SOCIAL_ICONS = [
-  { id: 'github', label: '깃허브', icon: githubIcon },
-  { id: 'notion', label: '노션', icon: notionIcon },
-  { id: 'instagram', label: '인스타그램', icon: instagramIcon },
-]
-
-const FOOTER_COLUMNS = [
-  { id: 'features', title: 'Features', items: ['Core features', 'Pro experience', 'Integrations'] },
-  {
-    id: 'learn-more',
-    title: 'Learn more',
-    items: ['Blog', 'Case studies', 'Customer stories', 'Best practices'],
-  },
-  { id: 'support', title: 'Support', items: ['Contact', 'Support', 'Legal'] },
-]
+import { FOOTER_COLUMNS, SOCIAL_LINKS } from '@constants'
 
 // 로그인 전(공통) 다크 푸터.
 export function PublicFooter() {
@@ -27,15 +8,22 @@ export function PublicFooter() {
         <div className="flex flex-1 flex-col gap-48">
           <div className="flex flex-col gap-8 text-secondary-1">
             <p className="text-sm-22">LIKELION USW</p>
-            <p className="text-m-18">수원대학교 멋쟁이사자처럼 00기</p>
+            <p className="text-m-18">수원대학교 멋쟁이사자처럼 14기</p>
           </div>
-          <div className="flex items-center gap-8">
-            {SOCIAL_ICONS.map((social) => (
-              <span key={social.id} className="flex h-48 w-48 items-center justify-center">
-                <img src={social.icon} alt={social.label} className="h-24 w-24" />
-              </span>
+          <nav className="flex items-center gap-8">
+            {SOCIAL_LINKS.map((social) => (
+              <a
+                key={social.id}
+                href={social.href}
+                target="_blank"
+                rel="noreferrer"
+                aria-label={social.label}
+                className="flex h-48 w-48 items-center justify-center"
+              >
+                <img src={social.iconOnDark} alt="" className="h-24 w-24" />
+              </a>
             ))}
-          </div>
+          </nav>
         </div>
         <div className="flex items-start gap-40">
           {FOOTER_COLUMNS.map((column) => (
