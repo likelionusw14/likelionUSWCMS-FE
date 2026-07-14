@@ -1,26 +1,5 @@
-import { StatCard } from '@molecules'
-import { useHealth } from '@hooks'
+import { AdminMenuGrid } from '@organisms'
 
 export function DashboardPage() {
-  const { data: health, isLoading } = useHealth()
-
-  return (
-    <div>
-      <header className="mb-24">
-        <h1 className="text-h1 text-gray-900">대시보드</h1>
-        <p className="mt-4 text-sm-18 text-gray-700">
-          동아리 관리 시스템 현황 (백엔드 연동 전 예시 화면)
-        </p>
-      </header>
-      <div className="grid grid-cols-1 gap-16 sm:grid-cols-2 lg:grid-cols-3">
-        <StatCard label="등록 동아리" value="—" hint="백엔드 연동 후 표시" />
-        <StatCard label="활동 회원" value="—" hint="백엔드 연동 후 표시" />
-        <StatCard
-          label="API 상태"
-          value={isLoading ? '확인 중…' : health.status}
-          hint="useHealth() seam 예시"
-        />
-      </div>
-    </div>
-  )
+  return <AdminMenuGrid />
 }

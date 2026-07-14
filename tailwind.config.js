@@ -16,7 +16,7 @@ export default {
       // Secondary·Background 는 Figma 에서 값이 둘(500 1 / 500 2)이라 숫자 접미사로 노출한다.
       secondary: {
         1: '#D7E2FF', // Color / Secondary / 500 1
-        2: '#FF4FA3', // Color / Secondary / 500 2
+        2: '#FF7B2F', // Color / Secondary / 500 2
         DEFAULT: '#D7E2FF',
       },
       background: {

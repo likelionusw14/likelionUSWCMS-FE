@@ -4,7 +4,7 @@ export const colors = {
   // Secondary·background 는 Figma 에서 값이 둘(500 1 / 500 2)이라 숫자 키로 유지한다.
   secondary: {
     1: '#D7E2FF',
-    2: '#FF4FA3',
+    2: '#FF7B2F',
   },
   background: {
     1: '#EEF3FF',

@@ -17,6 +17,23 @@ export interface RequireRoleProps {
   area: AreaType
 }
 
+export interface AdminShellProps {
+  navItems: NavItem[]
+  // 경로 → 헤더에 띄울 페이지 제목.
+  pageTitles: Record<string, string>
+}
+
+export interface AdminHeaderProps {
+  title: string
+  navItems: NavItem[]
+}
+
+export interface MenuCardProps {
+  title: string
+  description: string
+  className?: string
+}
+
 export interface LoginFormProps {
   role: Role
   onRoleChange: (role: Role) => void
