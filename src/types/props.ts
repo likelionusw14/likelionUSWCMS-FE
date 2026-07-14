@@ -33,6 +33,7 @@ export interface AdminShellProps {
 export interface AdminHeaderProps {
   title: string
   navItems: NavItem[]
+  onLogout: () => void
 }
 
 export interface MenuCardProps {
