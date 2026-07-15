@@ -8,6 +8,7 @@ import type {
 import type { AreaType, Role } from './auth'
 import type { NavItem } from './nav'
 import type { Project, ProjectFormValues } from './project'
+import type { Session, SessionFormValues } from './session'
 import type { SignupProfile } from './signup'
 
 // 컴포넌트 props 타입 (컴포넌트 파일 인라인 정의 금지 규칙에 따라 여기 정의).
@@ -70,6 +71,15 @@ export interface SelectOption {
 export interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
   options: SelectOption[]
   placeholder: string
+}
+
+// 필터 드롭다운 — 선택지 패널을 직접 그려서 네이티브 select 의 이벤트 대신 값만 주고받는다.
+export interface DropdownProps {
+  value: string
+  onChange: (value: string) => void
+  options: SelectOption[]
+  placeholder: string
+  className?: string
 }
 
 export type KakaoLoginButtonProps = ButtonHTMLAttributes<HTMLButtonElement>
@@ -171,6 +181,40 @@ export interface ProjectFormProps {
   // 수정 화면에서만 내려온다 (작성 화면에는 삭제 대상이 없다).
   onDelete?: () => void
   categoryOptions: SelectOption[]
+  fileName: string
+  onFileChange: (fileName: string) => void
+  onFileClear: () => void
+}
+
+// ── 세션자료 관리 ──
+export interface SessionFilterBarProps {
+  week: string
+  part: string
+  onWeekChange: (week: string) => void
+  onPartChange: (part: string) => void
+  weekOptions: SelectOption[]
+  partOptions: SelectOption[]
+  onSearch: () => void
+}
+
+export interface SessionListProps {
+  sessions: Session[]
+  totalCount: number
+  page: number
+  totalPages: number
+  onPageChange: (page: number) => void
+}
+
+export interface SessionDetailProps {
+  session: Session
+}
+
+export interface SessionFormProps {
+  values: SessionFormValues
+  onFieldChange: (field: keyof SessionFormValues, value: string) => void
+  onSubmit: (event: FormEvent<HTMLFormElement>) => void
+  weekOptions: SelectOption[]
+  partOptions: SelectOption[]
   fileName: string
   onFileChange: (fileName: string) => void
   onFileClear: () => void
