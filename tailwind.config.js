@@ -77,6 +77,9 @@ export default {
         // Heading=Bold(700), SM=Semibold(600), M=Medium(500), R=Regular(400).
         // Figma 의 line-height "Auto" 는 normal, letter-spacing 은 % → em 으로 옮긴다.
         h0: ['56px', { lineHeight: '72px', letterSpacing: '0.06em', fontWeight: '700' }], // Heading / H0
+        // 히어로 전용 디스플레이 크기 (홈 메인 비주얼 헤딩): 1·2행 64px / 3행 80px, 자간 0.
+        'hero-64': ['64px', { lineHeight: 'normal', fontWeight: '700' }],
+        'hero-80': ['80px', { lineHeight: 'normal', fontWeight: '700' }],
         h1: ['40px', { lineHeight: 'normal', fontWeight: '700' }], // Heading / H1
         'sm-22': ['22px', { lineHeight: 'normal', fontWeight: '600' }],
         'sm-20': ['20px', { lineHeight: 'normal', fontWeight: '600' }],
@@ -111,6 +114,9 @@ export default {
         // 텍스트에 쓸 때는 `bg-gradient-typo bg-clip-text text-transparent` 조합.
         'gradient-typo':
           'linear-gradient(to bottom, rgb(58 96 251 / 0) 33.8%, rgb(58 96 251 / 0.604) 100%), linear-gradient(#FFFFFF, #FFFFFF)',
+        // 서브컬러 타이포 그라디언트(히어로 "멋쟁이사자처럼"): amber → secondary-2 세로.
+        'gradient-typo-secondary':
+          'linear-gradient(to bottom, #FFBD2F 0%, #FF9D2F 26.13%, #FF7B2F 100%)',
       },
       // ── 효과(그림자): Figma 효과 스타일. ──
       boxShadow: {
