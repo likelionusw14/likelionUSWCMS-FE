@@ -219,3 +219,41 @@ export interface SessionFormProps {
   onFileChange: (fileName: string) => void
   onFileClear: () => void
 }
+
+// 공용 모달 셸 — 오버레이 + 중앙 카드. 포털·ESC·바깥클릭 닫기. children 은 카드 내용.
+export interface ModalProps {
+  open: boolean
+  onClose: () => void
+  children: ReactNode
+  // 닫기 수단(ESC·바깥클릭) 잠금. 결과 팝업처럼 버튼으로만 닫을 때 true.
+  dismissable?: boolean
+  // 접근성 라벨(제목 텍스트).
+  ariaLabel?: string
+}
+
+// 확인 팝업(삭제 등) — 경고 아이콘 + 제목/설명 + 취소/확인 2버튼.
+export interface ConfirmDialogProps {
+  open: boolean
+  onClose: () => void
+  onConfirm: () => void
+  // 제목(SM/20). 예: '삭제'.
+  title: string
+  // 설명(M/14). 예: '해당 문서를 삭제하시겠습니까?'.
+  description?: string
+  // 확인 버튼 라벨. 기본 '확인'.
+  confirmLabel?: string
+  // 취소 버튼 라벨. 기본 '취소'.
+  cancelLabel?: string
+}
+
+// 결과 팝업(삭제완료 등) — 제목/설명 + 단일 확인 버튼(버튼으로만 닫힘).
+export interface ResultDialogProps {
+  open: boolean
+  onConfirm: () => void
+  // 제목(SM/20). 예: '삭제 완료'.
+  title: string
+  // 설명(M/14). 예: '삭제처리가 완료되었습니다.'.
+  description?: string
+  // 버튼 라벨. 예: '일정 관리로 이동'.
+  confirmLabel: string
+}
