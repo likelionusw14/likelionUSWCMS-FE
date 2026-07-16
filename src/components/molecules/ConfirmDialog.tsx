@@ -1,7 +1,7 @@
 import { Modal } from './Modal'
 import type { ConfirmDialogProps } from '@types'
 
-// 확인 팝업(삭제 등) — 96px 원형 경고 아이콘 + 제목/설명 + 취소/확인 버튼.
+// 확인 팝업(삭제 등) — 96px 원형 쓰레기통 아이콘 + 제목/설명 + 취소/확인 버튼.
 // Figma "삭제 팝업": 카드 padding 24/32·gap 32, 버튼 h-48·px-32·SM/18(취소=회색 border, 확인=파랑 채움).
 export function ConfirmDialog({
   open,
@@ -15,20 +15,27 @@ export function ConfirmDialog({
   return (
     <Modal open={open} onClose={onClose} ariaLabel={title}>
       <div className="flex flex-col items-center gap-32 px-32 py-24">
-        <span
+        <svg
           aria-hidden
-          className="flex h-96 w-96 items-center justify-center rounded-full border-2 border-error"
+          width="96"
+          height="96"
+          viewBox="0 0 96 96"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
         >
-          <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path
-              d="M20 12V22M20 28H20.02"
-              stroke="#EF4444"
-              strokeWidth="3"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </span>
+          <rect x="1" y="1" width="94" height="94" rx="47" stroke="#EF4444" strokeWidth="2" />
+          <path d="M51 47V56" stroke="#EF4444" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M45 47V56" stroke="#EF4444" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          <path
+            d="M39 41V60C39 61.1046 39.8954 62 41 62H55C56.1046 62 57 61.1046 57 60V41"
+            stroke="#EF4444"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path d="M36 41H60" stroke="#EF4444" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M41 41L44 35H53L56 41" stroke="#EF4444" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
         <div className="flex flex-col items-center gap-8">
           <p className="text-center text-sm-20 text-black">{title}</p>
           {description && <p className="text-center text-m-14 text-black">{description}</p>}
@@ -37,14 +44,14 @@ export function ConfirmDialog({
           <button
             type="button"
             onClick={onClose}
-            className="flex h-48 items-center justify-center rounded-8 border border-gray-500 px-32 text-sm-18 text-gray-500"
+            className="flex h-48 min-w-[128px] items-center justify-center rounded-8 border border-gray-500 px-32 text-sm-18 text-gray-500"
           >
             {cancelLabel}
           </button>
           <button
             type="button"
             onClick={onConfirm}
-            className="flex h-48 items-center justify-center rounded-8 bg-primary px-32 text-sm-18 text-white"
+            className="flex h-48 min-w-[128px] items-center justify-center rounded-8 bg-primary px-32 text-sm-18 text-white"
           >
             {confirmLabel}
           </button>
