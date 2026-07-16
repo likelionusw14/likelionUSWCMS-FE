@@ -124,7 +124,7 @@ export default {
         drop: '0 4px 8px 0 rgb(7 13 40 / 0.2)',
         // 화이트배경 엠보 — 위 흰색 하이라이트 + 아래 primary 음영
         'emboss-light':
-          'inset 0 4px 4px 0 rgb(255 255 255 / 0.45), inset 0 -4px 4px 0 rgb(58 96 251 / 0.3)',
+          'inset 0 4px 4px 0 rgb(255 255 255 / 0.3), inset 0 -4px 4px 0 rgb(58 96 251 / 0.3)',
         // 다크배경 엠보 — 같은 구성, 더 강한 대비
         'emboss-dark':
           'inset 0 4px 4px 0 rgb(255 255 255 / 1), inset 0 -4px 4px 0 rgb(58 96 251 / 0.5)',
@@ -151,6 +151,29 @@ export default {
           '-webkit-backdrop-filter': 'blur(5px)',
           'box-shadow':
             '0 4px 8px 0 rgb(7 13 40 / 0.2), inset 1px 1px 1px 0 rgb(255 255 255 / 0.6), inset -1px -1px 1px 0 rgb(255 255 255 / 0.25)',
+        },
+        // 스크롤바 숨김 — 스크롤은 되되 스크롤바 미표시(캘린더 셀 내부 등).
+        '.no-scrollbar': {
+          'scrollbar-width': 'none',
+          '-ms-overflow-style': 'none',
+        },
+        '.no-scrollbar::-webkit-scrollbar': {
+          display: 'none',
+        },
+        // 세로 스크롤 영역 상·하단을 투명으로 페이드(자연스럽게 사라지는 느낌).
+        '.scroll-fade-y': {
+          'mask-image':
+            'linear-gradient(to bottom, transparent 0, #000 12px, #000 calc(100% - 12px), transparent 100%)',
+          '-webkit-mask-image':
+            'linear-gradient(to bottom, transparent 0, #000 12px, #000 calc(100% - 12px), transparent 100%)',
+        },
+        '.scroll-fade-top': {
+          'mask-image': 'linear-gradient(to bottom, transparent 0, #000 12px, #000 100%)',
+          '-webkit-mask-image': 'linear-gradient(to bottom, transparent 0, #000 12px, #000 100%)',
+        },
+        '.scroll-fade-bottom': {
+          'mask-image': 'linear-gradient(to bottom, #000 0, #000 calc(100% - 12px), transparent 100%)',
+          '-webkit-mask-image': 'linear-gradient(to bottom, #000 0, #000 calc(100% - 12px), transparent 100%)',
         },
       })
     }),
