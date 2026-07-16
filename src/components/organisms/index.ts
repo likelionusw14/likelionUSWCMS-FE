@@ -28,3 +28,6 @@ export * from './HomeApply'
 export * from './SocialLoginPanel'
 export * from './SignupProfileForm'
 export * from './SignupPendingPanel'
+
+export * from './UserHeader'
+export * from './UserFooter'

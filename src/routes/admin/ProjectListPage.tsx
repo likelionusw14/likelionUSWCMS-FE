@@ -20,11 +20,12 @@ export function ProjectListPage() {
       <div className="flex flex-col gap-24 px-24 pb-[120px] pt-32">
         <ProjectFilterBar
           cohort={cohort}
-          part={part}
+          filterValue={part}
           onCohortChange={setCohort}
-          onPartChange={setPart}
+          onFilterChange={setPart}
           cohortOptions={COHORT_OPTIONS}
-          partOptions={PART_OPTIONS}
+          filterOptions={PART_OPTIONS}
+          filterPlaceholder="파트"
           onSearch={() => setPage(1)}
         />
         <ProjectList
@@ -33,6 +34,7 @@ export function ProjectListPage() {
           page={page}
           totalPages={totalPages}
           onPageChange={setPage}
+          createPath="/admin/projects/new"
         />
       </div>
     </>
