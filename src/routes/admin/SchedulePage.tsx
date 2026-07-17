@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { ConfirmDialog, ScheduleFormModal } from '@molecules'
+import { ConfirmDialog, ResultDialog, ScheduleFormModal } from '@molecules'
 import { ScheduleCalendar } from '@organisms'
 import { useSchedules } from '@hooks'
 
@@ -12,6 +12,7 @@ export function SchedulePage() {
   const [month, setMonth] = useState(now.getMonth())
   const [formOpen, setFormOpen] = useState(false)
   const [deleteOpen, setDeleteOpen] = useState(false)
+  const [deleteDoneOpen, setDeleteDoneOpen] = useState(false)
 
   return (
     <>
@@ -39,9 +40,19 @@ export function SchedulePage() {
       <ConfirmDialog
         open={deleteOpen}
         onClose={() => setDeleteOpen(false)}
-        onConfirm={() => setDeleteOpen(false)}
+        onConfirm={() => {
+          setDeleteOpen(false)
+          setDeleteDoneOpen(true)
+        }}
         title="일정 삭제"
         description="해당 일정을 삭제하시겠습니까?"
+      />
+      <ResultDialog
+        open={deleteDoneOpen}
+        onConfirm={() => setDeleteDoneOpen(false)}
+        title="삭제 완료"
+        description="삭제처리가 완료되었습니다."
+        confirmLabel="확인"
       />
     </>
   )

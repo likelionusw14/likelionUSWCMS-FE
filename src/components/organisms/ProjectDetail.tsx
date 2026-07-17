@@ -68,7 +68,7 @@ export function ProjectDetail({ project }: ProjectDetailProps) {
 
       <section className="flex flex-col gap-16 overflow-hidden rounded-8 bg-white px-32 py-24">
         <h3 className="text-sm-18 text-black">프로젝트 설명</h3>
-        <p className="min-h-[210px] w-full rounded-8 bg-background-1 p-24 text-m-14 text-black">
+        <p className="min-h-[210px] w-full whitespace-pre-line rounded-8 bg-background-1 p-24 text-m-14 text-black">
           {project.description}
         </p>
       </section>

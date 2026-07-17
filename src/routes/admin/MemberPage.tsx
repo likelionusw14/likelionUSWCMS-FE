@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { COHORT_OPTIONS, PART_OPTIONS } from '@constants'
 import { useMembers, usePendingMembers, usePagination } from '@hooks'
-import { MemberEditModal, RoleEditModal } from '@molecules'
+import { MemberEditModal, ResultDialog, RoleEditModal } from '@molecules'
 import { MemberList, PendingMemberList } from '@organisms'
 import type { Member } from '@types'
 
@@ -12,6 +12,7 @@ export function MemberPage() {
   const { data: pending } = usePendingMembers()
   const [editMember, setEditMember] = useState<Member | null>(null)
   const [roleMember, setRoleMember] = useState<Member | null>(null)
+  const [deleteDoneOpen, setDeleteDoneOpen] = useState(false)
 
   const { page, setPage, totalPages, slice } = usePagination({
     totalItems: members.length,
@@ -44,7 +45,10 @@ export function MemberPage() {
         open={!!editMember}
         onClose={() => setEditMember(null)}
         onSubmit={() => setEditMember(null)}
-        onDelete={() => setEditMember(null)}
+        onDelete={() => {
+          setEditMember(null)
+          setDeleteDoneOpen(true)
+        }}
         initialValues={
           editMember
             ? { name: editMember.name, cohort: editMember.cohort, part: editMember.part }
@@ -58,6 +62,13 @@ export function MemberPage() {
         onClose={() => setRoleMember(null)}
         onSubmit={() => setRoleMember(null)}
         value={roleMember?.role}
+      />
+      <ResultDialog
+        open={deleteDoneOpen}
+        onConfirm={() => setDeleteDoneOpen(false)}
+        title="삭제 완료"
+        description="삭제처리가 완료되었습니다."
+        confirmLabel="확인"
       />
     </>
   )

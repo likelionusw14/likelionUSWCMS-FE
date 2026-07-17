@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { FormEvent } from 'react'
 import calendarIcon from '@/assets/icons/calendar.svg'
 import { Dropdown, FormInput } from '@atoms'
@@ -21,6 +21,15 @@ export function ProjectForm({
 }: ProjectFormProps) {
   const [error, setError] = useState(false)
   const [dateOpen, setDateOpen] = useState<'start' | 'end' | null>(null)
+  const descriptionRef = useRef<HTMLTextAreaElement>(null)
+
+  // 프로젝트 설명 auto-grow — 엔터/입력마다 scrollHeight 만큼 높이를 늘린다. 값(초기값 포함) 변화 시 재계산.
+  useEffect(() => {
+    const el = descriptionRef.current
+    if (!el) return
+    el.style.height = 'auto'
+    el.style.height = `${el.scrollHeight}px`
+  }, [values.description])
 
   function change(field: keyof ProjectFormValues, value: string) {
     onFieldChange(field, value)
@@ -148,11 +157,12 @@ export function ProjectForm({
           <div className="flex w-full items-stretch">
             <FormRow label="프로젝트 설명" labelClassName="rounded-bl-8">
               <textarea
-                value={values.description}
-                onChange={(event) => onFieldChange('description', event.target.value)}
-                placeholder="프로젝트를 설명해주세요"
+                ref={descriptionRef}
                 rows={6}
-                className="no-scrollbar w-full resize-none rounded-8 border border-secondary-1 bg-background-1 px-16 py-[8.5px] text-m-14 text-black placeholder:text-primary/50 focus:outline-none"
+                value={values.description}
+                onChange={(event) => change('description', event.target.value)}
+                placeholder="프로젝트를 설명해주세요"
+                className="no-scrollbar min-h-[148px] w-full resize-none rounded-8 border border-secondary-1 bg-background-1 px-16 py-[8.5px] text-m-14 text-black placeholder:text-primary/50 focus:outline-none"
               />
             </FormRow>
           </div>
