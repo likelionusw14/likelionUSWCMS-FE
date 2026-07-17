@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { COHORT_OPTIONS, PART_OPTIONS } from '@constants'
+import { COHORT_OPTIONS } from '@constants'
 import { Dropdown } from '@atoms'
 import { useProjects, usePagination } from '@hooks'
 import { ProjectList, SearchBar } from '@organisms'
@@ -8,13 +8,16 @@ import { ProjectList, SearchBar } from '@organisms'
 export function ProjectListPage() {
   const { data: projects } = useProjects()
   const [cohort, setCohort] = useState('')
-  const [part, setPart] = useState('')
+  // Project 모델엔 파트 개념이 없어 기수(cohortId)만 필터한다. COHORT_OPTIONS value 는 '14기' 형식.
+  const filtered = cohort
+    ? projects.filter((project) => `${project.cohortId}기` === cohort)
+    : projects
   const { page, setPage, totalPages, slice } = usePagination({
-    totalItems: projects.length,
+    totalItems: filtered.length,
     pageSize: 4,
   })
 
-  const visibleProjects = slice(projects)
+  const visibleProjects = slice(filtered)
 
   return (
     <>
@@ -22,15 +25,17 @@ export function ProjectListPage() {
         <SearchBar onSearch={() => setPage(1)}>
           <Dropdown
             value={cohort}
-            onChange={setCohort}
+            onChange={(value) => {
+              setCohort(value)
+              setPage(1)
+            }}
             options={COHORT_OPTIONS}
             placeholder="기수"
           />
-          <Dropdown value={part} onChange={setPart} options={PART_OPTIONS} placeholder="파트" />
         </SearchBar>
         <ProjectList
           projects={visibleProjects}
-          totalCount={projects.length}
+          totalCount={filtered.length}
           page={page}
           totalPages={totalPages}
           onPageChange={setPage}

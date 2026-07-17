@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { WindowPanel } from '@atoms'
+import { Button, WindowPanel } from '@atoms'
 import type { RemarkModalProps } from '@types'
 import { Modal } from '@molecules'
 
@@ -35,20 +35,12 @@ export function RemarkModal({ open, onClose, onSubmit, value = '' }: RemarkModal
             </div>
           </div>
           <div className="flex justify-center gap-[10px]">
-            <button
-              type="button"
-              onClick={handleSubmit}
-              className="flex h-32 w-[56px] items-center justify-center whitespace-nowrap rounded-8 bg-primary text-m-14 text-white"
-            >
+            <Button size="sm" variant="primary" onClick={handleSubmit} className="whitespace-nowrap">
               저장
-            </button>
-            <button
-              type="button"
-              onClick={onClose}
-              className="flex h-32 w-[56px] items-center justify-center whitespace-nowrap rounded-8 border border-primary text-m-14 text-primary"
-            >
+            </Button>
+            <Button size="sm" variant="outline" onClick={onClose} className="whitespace-nowrap">
               취소
-            </button>
+            </Button>
           </div>
         </div>
       </WindowPanel>

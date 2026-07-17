@@ -1,6 +1,4 @@
-import { useState } from 'react'
-import type { FormEvent } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useEntityForm } from '@hooks'
 import type { Project, ProjectFormValues } from '@types'
 
 const EMPTY_VALUES: ProjectFormValues = {
@@ -15,7 +13,8 @@ const EMPTY_VALUES: ProjectFormValues = {
   description: '',
 }
 
-function toFormValues(project: Project | undefined): ProjectFormValues {
+// 엔티티 → 폼 값 매핑. useEntityForm 의 useEffect 재실행을 막기 위해 모듈 상수 함수로 둔다.
+function toProjectValues(project: Project | undefined): ProjectFormValues {
   if (!project) return EMPTY_VALUES
   return {
     name: project.title,
@@ -32,25 +31,11 @@ function toFormValues(project: Project | undefined): ProjectFormValues {
   }
 }
 
-// 프로젝트 작성·수정 폼 상태. 백엔드 연동 전이라 저장·삭제는 목록으로 돌아가기만 한다.
+// 프로젝트 작성·수정 폼 상태. 대표이미지 파일명은 엔티티에 없어 하이드레이트하지 않는다.
 export function useProjectForm(project?: Project) {
-  const navigate = useNavigate()
-  const [values, setValues] = useState<ProjectFormValues>(() => toFormValues(project))
-  const [fileName, setFileName] = useState('')
-
-  function setField(field: keyof ProjectFormValues, value: string) {
-    setValues((previous) => ({ ...previous, [field]: value }))
-  }
-
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-    navigate('/admin/projects')
-  }
-  return {
-    values,
-    setField,
-    handleSubmit,
-    fileName,
-    setFileName,
-  }
+  return useEntityForm<Project, ProjectFormValues>({
+    entity: project,
+    toValues: toProjectValues,
+    redirectTo: '/admin/projects',
+  })
 }

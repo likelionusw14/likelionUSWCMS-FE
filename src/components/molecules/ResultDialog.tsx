@@ -1,3 +1,4 @@
+import { Button } from '@atoms'
 import { Modal } from '@molecules'
 import type { ResultDialogProps } from '@types'
 
@@ -11,13 +12,9 @@ export function ResultDialog({ open, onConfirm, title, description, confirmLabel
           <p className="text-center text-sm-20 text-black">{title}</p>
           {description && <p className="text-center text-m-14 text-black">{description}</p>}
         </div>
-        <button
-          type="button"
-          onClick={onConfirm}
-          className="flex h-48 min-w-[128px] items-center justify-center rounded-8 bg-primary px-32 text-sm-18 text-white"
-        >
+        <Button variant="primary" onClick={onConfirm}>
           {confirmLabel}
-        </button>
+        </Button>
       </div>
     </Modal>
   )

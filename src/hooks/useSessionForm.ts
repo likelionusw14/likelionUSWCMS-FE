@@ -1,6 +1,4 @@
-import { useState } from 'react'
-import type { FormEvent } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useEntityForm } from '@hooks'
 import type { Session, SessionFormValues } from '@types'
 
 const EMPTY_VALUES: SessionFormValues = {
@@ -8,30 +6,23 @@ const EMPTY_VALUES: SessionFormValues = {
   part: '',
 }
 
-function toFormValues(session: Session | undefined): SessionFormValues {
+// 엔티티 → 폼 값 매핑. useEntityForm 의 useEffect 재실행을 막기 위해 모듈 상수 함수로 둔다.
+function toSessionValues(session: Session | undefined): SessionFormValues {
   if (!session) return EMPTY_VALUES
   return { week: session.week, part: session.part }
 }
 
-// 세션자료 작성·수정 폼 상태. 백엔드 연동 전이라 저장은 목록으로 돌아가기만 한다.
+// 엔티티 → 첨부 파일명. edit 진입 시 기존 파일명을 하이드레이트한다.
+function toSessionFileName(session: Session | undefined): string {
+  return session?.fileName ?? ''
+}
+
+// 세션자료 작성·수정 폼 상태.
 export function useSessionForm(session?: Session) {
-  const navigate = useNavigate()
-  const [values, setValues] = useState<SessionFormValues>(() => toFormValues(session))
-  const [fileName, setFileName] = useState('')
-
-  function setField(field: keyof SessionFormValues, value: string) {
-    setValues((previous) => ({ ...previous, [field]: value }))
-  }
-
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-    navigate('/admin/sessions')
-  }
-  return {
-    values,
-    setField,
-    handleSubmit,
-    fileName,
-    setFileName,
-  }
+  return useEntityForm<Session, SessionFormValues>({
+    entity: session,
+    toValues: toSessionValues,
+    toFileName: toSessionFileName,
+    redirectTo: '/admin/sessions',
+  })
 }

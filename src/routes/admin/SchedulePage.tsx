@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { ConfirmDialog, ResultDialog, ScheduleFormModal } from '@molecules'
 import { ScheduleCalendar } from '@organisms'
 import { useSchedules } from '@hooks'
+import type { CalendarEvent } from '@types'
 
 // 일정 관리 — 월 캘린더(ScheduleCalendar). 칩 클릭 시 상세 팝업(수정/삭제), + 버튼으로 일정 작성.
 // Figma 491:3357.
@@ -13,6 +14,7 @@ export function SchedulePage() {
   const [year, setYear] = useState(now.getFullYear())
   const [month, setMonth] = useState(now.getMonth())
   const [formOpen, setFormOpen] = useState(false)
+  const [editingEvent, setEditingEvent] = useState<CalendarEvent | null>(null)
   const [deleteOpen, setDeleteOpen] = useState(false)
   const [deleteDoneOpen, setDeleteDoneOpen] = useState(false)
 
@@ -27,8 +29,14 @@ export function SchedulePage() {
             setYear(y)
             setMonth(m)
           }}
-          onRegister={() => setFormOpen(true)}
-          onEventEdit={() => setFormOpen(true)}
+          onRegister={() => {
+            setEditingEvent(null)
+            setFormOpen(true)
+          }}
+          onEventEdit={(event) => {
+            setEditingEvent(event)
+            setFormOpen(true)
+          }}
           onEventDelete={() => setDeleteOpen(true)}
           className="w-full"
         />
@@ -36,8 +44,15 @@ export function SchedulePage() {
 
       <ScheduleFormModal
         open={formOpen}
-        onClose={() => setFormOpen(false)}
-        onSubmit={() => setFormOpen(false)}
+        initialEvent={editingEvent}
+        onClose={() => {
+          setFormOpen(false)
+          setEditingEvent(null)
+        }}
+        onSubmit={() => {
+          setFormOpen(false)
+          setEditingEvent(null)
+        }}
       />
       <ConfirmDialog
         open={deleteOpen}

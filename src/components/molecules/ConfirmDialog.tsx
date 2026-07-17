@@ -1,3 +1,4 @@
+import { Button } from '@atoms'
 import { Modal } from '@molecules'
 import type { ConfirmDialogProps } from '@types'
 
@@ -22,39 +23,32 @@ export function ConfirmDialog({
           viewBox="0 0 96 96"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
+          className="text-error"
         >
-          <rect x="1" y="1" width="94" height="94" rx="47" stroke="#EF4444" strokeWidth="2" />
-          <path d="M51 47V56" stroke="#EF4444" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-          <path d="M45 47V56" stroke="#EF4444" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          <rect x="1" y="1" width="94" height="94" rx="47" stroke="currentColor" strokeWidth="2" />
+          <path d="M51 47V56" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M45 47V56" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
           <path
             d="M39 41V60C39 61.1046 39.8954 62 41 62H55C56.1046 62 57 61.1046 57 60V41"
-            stroke="#EF4444"
+            stroke="currentColor"
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
           />
-          <path d="M36 41H60" stroke="#EF4444" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-          <path d="M41 41L44 35H53L56 41" stroke="#EF4444" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M36 41H60" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M41 41L44 35H53L56 41" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
         <div className="flex flex-col items-center gap-8">
           <p className="text-center text-sm-20 text-black">{title}</p>
           {description && <p className="text-center text-m-14 text-black">{description}</p>}
         </div>
         <div className="flex gap-24">
-          <button
-            type="button"
-            onClick={onClose}
-            className="flex h-48 min-w-[128px] items-center justify-center rounded-8 border border-gray-500 px-32 text-sm-18 text-gray-500"
-          >
+          <Button variant="outline" onClick={onClose}>
             {cancelLabel}
-          </button>
-          <button
-            type="button"
-            onClick={onConfirm}
-            className="flex h-48 min-w-[128px] items-center justify-center rounded-8 bg-primary px-32 text-sm-18 text-white"
-          >
+          </Button>
+          <Button variant="primary" onClick={onConfirm}>
             {confirmLabel}
-          </button>
+          </Button>
         </div>
       </div>
     </Modal>

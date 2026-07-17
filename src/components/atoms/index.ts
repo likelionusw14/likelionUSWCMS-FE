@@ -1,6 +1,5 @@
 export * from './Button'
 export * from './Input'
-export * from './FormInput'
 export * from './Select'
 export * from './Dropdown'
 export * from './Chip'

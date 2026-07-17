@@ -11,9 +11,8 @@ export function NoticeFormPage() {
   const navigate = useNavigate()
   const { data: notice } = useNotice(noticeId)
   const isEdit = Boolean(noticeId)
-  const { values, setField, handleSubmit, pinned, setPinned, fileName, setFileName } = useNoticeForm(
-    notice ? { title: notice.title, tag: notice.tag, content: notice.content } : undefined,
-  )
+  const { values, setField, handleSubmit, pinned, setPinned, fileName, setFileName } =
+    useNoticeForm(notice)
   const [confirmOpen, setConfirmOpen] = useState(false)
   const [deleteDoneOpen, setDeleteDoneOpen] = useState(false)
 

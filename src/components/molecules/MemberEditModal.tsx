@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Dropdown, WindowPanel } from '@atoms'
+import { Button, Dropdown, WindowPanel } from '@atoms'
 import type { MemberEditModalProps } from '@types'
 import { Modal } from '@molecules'
 import { ConfirmDialog } from '@molecules'
@@ -70,7 +70,7 @@ export function MemberEditModal({
                   placeholder="이름"
                 />
                 {nameError && (
-                  <p className="text-[10px] font-normal leading-normal text-error">
+                  <p className="text-r-12 text-error">
                     이름을 다시 확인해주세요
                   </p>
                 )}
@@ -90,20 +90,12 @@ export function MemberEditModal({
         </div>
 
         <div className="flex gap-16">
-          <button
-            type="button"
-            onClick={handleSave}
-            className="flex h-48 min-w-[128px] items-center justify-center rounded-8 bg-primary px-32 text-sm-18 text-white"
-          >
+          <Button variant="primary" onClick={handleSave}>
             저장
-          </button>
-          <button
-            type="button"
-            onClick={onClose}
-            className="flex h-48 min-w-[128px] items-center justify-center rounded-8 border border-primary px-32 text-sm-18 text-primary"
-          >
+          </Button>
+          <Button variant="outline" onClick={onClose}>
             취소
-          </button>
+          </Button>
         </div>
       </WindowPanel>
       </Modal>
@@ -115,7 +107,7 @@ export function MemberEditModal({
           onDelete()
         }}
         title="삭제"
-        description="해당 문서를 삭제하시겠습니까?"
+        description="해당 회원을 삭제하시겠습니까?"
       />
     </>
   )

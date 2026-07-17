@@ -25,11 +25,11 @@ export function Checkbox({ checked, onChange, variant = 'square', disabled, aria
           viewBox="0 0 15 10"
           fill="none"
           aria-hidden
-          className={variant === 'round' ? 'h-[12px] w-[18px]' : 'h-[10px] w-[15px]'}
+          className={cn('text-white', variant === 'round' ? 'h-[12px] w-[18px]' : 'h-[10px] w-[15px]')}
         >
           <path
             d="M1 5l4.5 4L14 1"
-            stroke="#FFFFFF"
+            stroke="currentColor"
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"

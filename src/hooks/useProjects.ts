@@ -8,6 +8,7 @@ import type {
   ProjectPage,
   ProjectQuery,
   ProjectSummary,
+  QueryResult,
 } from '@types'
 
 // 백엔드 연동 전 API 명세와 같은 모양으로 유지하는 목 응답.
@@ -95,7 +96,7 @@ function toProject(response: ProjectDetailResponse): Project {
 }
 
 // 관리자 화면 호환용 전체 프로젝트 조회. 실제 연동 시 관리자 전용 API 훅으로 분리한다.
-export function useProjects(): { data: Project[]; isLoading: boolean } {
+export function useProjects(): QueryResult<Project[]> {
   return { data: MOCK_PROJECT_RESPONSES.map(toProject), isLoading: false }
 }
 
@@ -128,10 +129,7 @@ export function useProjectCatalog(query: ProjectQuery = {}): {
 }
 
 // 프로젝트 단건 조회.
-export function useProject(id: string | undefined): {
-  data: Project | undefined
-  isLoading: boolean
-} {
+export function useProject(id: string | undefined): QueryResult<Project | undefined> {
   const response = MOCK_PROJECT_RESPONSES.find((project) => String(project.projectId) === id)
   return { data: response ? toProject(response) : undefined, isLoading: false }
 }

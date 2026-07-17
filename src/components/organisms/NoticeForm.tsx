@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import type { FormEvent } from 'react'
-import { Dropdown, FormInput, PinToggle } from '@atoms'
+import { Button, Dropdown, Input, PinToggle } from '@atoms'
 import { FileUploadField, FormRow } from '@molecules'
 import type { NoticeFormProps, NoticeFormValues } from '@types'
 
@@ -51,7 +51,8 @@ export function NoticeForm({
           {/* 제목 / 태그 */}
           <div className="relative z-40 flex h-[56px] w-full items-stretch border-b border-secondary-1">
             <FormRow label="제목" labelClassName="rounded-tl-8">
-              <FormInput
+              <Input
+                variant="form"
                 value={values.title}
                 onChange={(event) => change('title', event.target.value)}
                 placeholder="제목을 입력해주세요"
@@ -101,20 +102,13 @@ export function NoticeForm({
       </div>
 
       <div className="flex w-full flex-col gap-16">
-        <button
-          type="submit"
-          className="flex h-48 w-full items-center justify-center rounded-8 bg-primary px-32 text-sm-18 text-white"
-        >
+        <Button type="submit" size="block">
           저장
-        </button>
+        </Button>
         {onDelete ? (
-          <button
-            type="button"
-            onClick={onDelete}
-            className="flex h-48 w-full items-center justify-center rounded-8 border border-error px-32 text-sm-18 text-error"
-          >
+          <Button size="block" variant="danger" onClick={onDelete}>
             삭제
-          </button>
+          </Button>
         ) : null}
       </div>
     </form>

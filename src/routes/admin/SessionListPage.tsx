@@ -9,23 +9,42 @@ export function SessionListPage() {
   const { data: sessions } = useSessions()
   const [week, setWeek] = useState('')
   const [part, setPart] = useState('')
+  const filtered = sessions.filter(
+    (session) => (!week || session.week === week) && (!part || session.part === part),
+  )
   const { page, setPage, totalPages, slice } = usePagination({
-    totalItems: sessions.length,
+    totalItems: filtered.length,
     pageSize: 20,
   })
 
-  const visibleSessions = slice(sessions)
+  const visibleSessions = slice(filtered)
 
   return (
     <>
       <div className="flex flex-col gap-24 px-24 pb-[120px] pt-32">
         <SearchBar onSearch={() => setPage(1)}>
-          <Dropdown value={week} onChange={setWeek} options={WEEK_OPTIONS} placeholder="주차" />
-          <Dropdown value={part} onChange={setPart} options={PART_OPTIONS} placeholder="파트" />
+          <Dropdown
+            value={week}
+            onChange={(value) => {
+              setWeek(value)
+              setPage(1)
+            }}
+            options={WEEK_OPTIONS}
+            placeholder="주차"
+          />
+          <Dropdown
+            value={part}
+            onChange={(value) => {
+              setPart(value)
+              setPage(1)
+            }}
+            options={PART_OPTIONS}
+            placeholder="파트"
+          />
         </SearchBar>
         <SessionList
           sessions={visibleSessions}
-          totalCount={sessions.length}
+          totalCount={filtered.length}
           page={page}
           totalPages={totalPages}
           onPageChange={setPage}

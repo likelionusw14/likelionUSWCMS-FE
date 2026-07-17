@@ -1,6 +1,6 @@
 import { useMemo, useRef } from 'react'
-import { WheelPicker, WindowPanel } from '@atoms'
-import { Modal } from '@molecules'
+import { Button, WheelPicker, WindowPanel } from '@atoms'
+import { Modal, WheelDeck } from '@molecules'
 import type { TimePickerModalProps } from '@types'
 
 const HOURS = Array.from({ length: 12 }, (_, i) => String(i + 1)) // 1~12
@@ -53,61 +53,45 @@ export function TimePickerModal({ open, onClose, onConfirm, value }: TimePickerM
           <span className="text-sm-22 text-black">시간 선택</span>
         </div>
 
-        {/* 3열 휠 */}
-        <div className="relative h-[220px] w-[302px] touch-pan-y overflow-hidden rounded-8 bg-white">
-          {/* 중앙 선택 밴드 230×40 */}
-          <div className="pointer-events-none absolute left-1/2 top-1/2 h-40 w-[230px] -translate-x-1/2 -translate-y-1/2 rounded-8 bg-black/5" />
-          {/* 3열 (시 24 · 분 28 · AM/PM 34, gap 32, 좌우 76) */}
-          <div className="flex h-full touch-pan-y items-center justify-center gap-32 px-[76px]">
-            <WheelPicker
-              items={HOURS}
-              defaultIndex={initial.hourIdx}
-              onChange={(i) => {
-                hourRef.current = i
-              }}
-              widthClass="w-[24px]"
-              ariaLabel="시"
-            />
-            <WheelPicker
-              items={MINUTES}
-              defaultIndex={initial.minuteIdx}
-              onChange={(i) => {
-                minuteRef.current = i
-              }}
-              widthClass="w-[28px]"
-              ariaLabel="분"
-            />
-            <WheelPicker
-              items={MERIDIEM}
-              defaultIndex={initial.apIdx}
-              onChange={(i) => {
-                apRef.current = i
-              }}
-              widthClass="w-[34px]"
-              ariaLabel="오전/오후"
-            />
-          </div>
-          {/* 위·아래 흐림 (흰 그라디언트) */}
-          <div className="pointer-events-none absolute inset-x-0 top-0 h-[90px] bg-gradient-to-b from-white to-transparent" />
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[90px] bg-gradient-to-t from-white to-transparent" />
-        </div>
+        {/* 3열 휠 (시 · 분 · AM/PM). 밴드 폭 230, 컨테이너 302 */}
+        <WheelDeck className="h-[220px] w-[302px] overflow-hidden rounded-8 bg-white" bandClassName="w-[230px]">
+          <WheelPicker
+            items={HOURS}
+            defaultIndex={initial.hourIdx}
+            onChange={(i) => {
+              hourRef.current = i
+            }}
+            widthClass="w-[24px]"
+            ariaLabel="시"
+          />
+          <WheelPicker
+            items={MINUTES}
+            defaultIndex={initial.minuteIdx}
+            onChange={(i) => {
+              minuteRef.current = i
+            }}
+            widthClass="w-[28px]"
+            ariaLabel="분"
+          />
+          <WheelPicker
+            items={MERIDIEM}
+            defaultIndex={initial.apIdx}
+            onChange={(i) => {
+              apRef.current = i
+            }}
+            widthClass="w-[34px]"
+            ariaLabel="오전/오후"
+          />
+        </WheelDeck>
 
         {/* 저장 / 취소 */}
         <div className="flex items-center gap-16">
-          <button
-            type="button"
-            onClick={handleConfirm}
-            className="flex h-48 min-w-[128px] items-center justify-center rounded-8 bg-primary px-32 text-sm-18 text-white"
-          >
+          <Button variant="primary" onClick={handleConfirm}>
             저장
-          </button>
-          <button
-            type="button"
-            onClick={onClose}
-            className="flex h-48 min-w-[128px] items-center justify-center rounded-8 border border-primary px-32 text-sm-18 text-primary"
-          >
+          </Button>
+          <Button variant="outline" onClick={onClose}>
             취소
-          </button>
+          </Button>
         </div>
       </WindowPanel>
     </Modal>

@@ -1,4 +1,5 @@
 import { useLayoutEffect, useRef, useState } from 'react'
+import { Button } from '@atoms'
 import { cn } from '@utils'
 import type { SchedulePopupProps } from '@types'
 
@@ -71,10 +72,10 @@ export function SchedulePopup({ event, tail = 'left', onEdit, onDelete, classNam
         width={w}
         height={height}
         viewBox={`0 0 ${w} ${height}`}
-        className="absolute inset-0 overflow-visible"
+        className="absolute inset-0 overflow-visible text-primary"
         style={isRight ? { transform: 'scaleX(-1)' } : undefined}
       >
-        <path d={bubblePath(w, height)} fill="white" stroke="#3A60FB" strokeWidth="1" />
+        <path d={bubblePath(w, height)} fill="white" stroke="currentColor" strokeWidth="1" />
       </svg>
 
       <div
@@ -114,22 +115,14 @@ export function SchedulePopup({ event, tail = 'left', onEdit, onDelete, classNam
         {showActions && (
           <div className="flex h-48 shrink-0 items-center justify-center gap-[10px]">
             {onEdit && (
-              <button
-                type="button"
-                onClick={onEdit}
-                className="flex h-32 w-[56px] items-center justify-center overflow-hidden whitespace-nowrap rounded-8 bg-primary px-16 text-m-14 text-white"
-              >
+              <Button size="sm" variant="primary" onClick={onEdit} className="overflow-hidden whitespace-nowrap px-16">
                 수정
-              </button>
+              </Button>
             )}
             {onDelete && (
-              <button
-                type="button"
-                onClick={onDelete}
-                className="flex h-32 w-[56px] items-center justify-center overflow-hidden whitespace-nowrap rounded-8 border border-error px-16 text-m-14 text-error"
-              >
+              <Button size="sm" variant="danger" onClick={onDelete} className="overflow-hidden whitespace-nowrap px-16">
                 삭제
-              </button>
+              </Button>
             )}
           </div>
         )}

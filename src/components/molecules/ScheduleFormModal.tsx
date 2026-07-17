@@ -1,21 +1,34 @@
 import { useEffect, useState } from 'react'
 import calendarIcon from '@/assets/icons/calendar.svg'
 import clockIcon from '@/assets/icons/clock.svg'
-import { WindowPanel } from '@atoms'
+import { Button, WindowPanel } from '@atoms'
 import { cn } from '@utils'
-import type { ScheduleFormModalProps, ScheduleFormValues } from '@types'
+import type { CalendarEvent, ScheduleFormModalProps, ScheduleFormValues } from '@types'
 import { Modal } from '@molecules'
 import { DatePickerModal } from '@molecules'
 import { TimePickerModal } from '@molecules'
 
 const EMPTY: ScheduleFormValues = { title: '', place: '', date: '', time: '', description: '' }
 
+// CalendarEvent(수정 대상) → 폼 값. date 'YYYY-MM-DD'→'YYYY.MM.DD', time 은 dateTime 의 'HH:MM' 패턴에서 추출.
+function toFormValues(event: CalendarEvent | null | undefined): ScheduleFormValues {
+  if (!event) return EMPTY
+  return {
+    title: event.title,
+    place: event.place ?? '',
+    date: event.date ? event.date.replace(/-/g, '.') : '',
+    time: event.dateTime?.match(/(\d{1,2}:\d{2})/)?.[1] ?? '',
+    description: event.description ?? '',
+  }
+}
+
 // 필드 공통 — bg-background-1 + secondary-1 테두리 + 8px 모서리 (Figma 일정 작성 인풋).
 const FIELD = 'h-32 w-full rounded-8 border border-secondary-1 bg-background-1 px-16 text-m-14 text-black placeholder:text-primary/50'
 
-// 일정 작성 팝업 — 일정명·장소·날짜·시간·설명. 날짜/시간 필드는 내부에서 선택 팝업을 띄운다.
-export function ScheduleFormModal({ open, onClose, onSubmit, initialValues }: ScheduleFormModalProps) {
-  const [values, setValues] = useState<ScheduleFormValues>({ ...EMPTY, ...initialValues })
+// 일정 작성·수정 팝업 — 일정명·장소·날짜·시간·설명. 날짜/시간 필드는 내부에서 선택 팝업을 띄운다.
+// initialEvent 가 있으면 수정 모드(기존 값 하이드레이트), 없으면 신규 등록(빈 폼).
+export function ScheduleFormModal({ open, onClose, onSubmit, initialEvent }: ScheduleFormModalProps) {
+  const [values, setValues] = useState<ScheduleFormValues>(() => toFormValues(initialEvent))
   const [dateOpen, setDateOpen] = useState(false)
   const [timeOpen, setTimeOpen] = useState(false)
   const [descError, setDescError] = useState(false)
@@ -24,12 +37,12 @@ export function ScheduleFormModal({ open, onClose, onSubmit, initialValues }: Sc
 
   useEffect(() => {
     if (open) {
-      setValues({ ...EMPTY, ...initialValues })
+      setValues(toFormValues(initialEvent))
       setDescError(false)
       setTitleError(false)
       setPlaceError(false)
     }
-  }, [open, initialValues])
+  }, [open, initialEvent])
 
   function set<K extends keyof ScheduleFormValues>(key: K, value: ScheduleFormValues[K]) {
     setValues((previous) => ({ ...previous, [key]: value }))
@@ -65,7 +78,7 @@ export function ScheduleFormModal({ open, onClose, onSubmit, initialValues }: Sc
                 placeholder="일정명을 적어주세요"
               />
               {titleError && (
-                <p className="text-[10px] font-normal leading-normal text-error">
+                <p className="text-r-12 font-normal leading-normal text-error">
                   일정명을 다시 확인해주세요
                 </p>
               )}
@@ -85,7 +98,7 @@ export function ScheduleFormModal({ open, onClose, onSubmit, initialValues }: Sc
                 placeholder="장소"
               />
               {placeError && (
-                <p className="text-[10px] font-normal leading-normal text-error">
+                <p className="text-r-12 font-normal leading-normal text-error">
                   장소를 다시 확인해주세요
                 </p>
               )}
@@ -134,14 +147,14 @@ export function ScheduleFormModal({ open, onClose, onSubmit, initialValues }: Sc
               placeholder="일정에 대한 설명을 적어주세요 (최대 150자)"
             />
             {descError ? (
-              <p className="text-[10px] font-normal leading-normal text-error">
+              <p className="text-r-12 font-normal leading-normal text-error">
                 일정 설명을 다시 확인해주세요
               </p>
             ) : (
               values.description.length > 0 && (
                 <p
                   className={cn(
-                    'text-right text-[10px] font-normal leading-normal',
+                    'text-right text-r-12 font-normal leading-normal',
                     values.description.length >= 150 ? 'text-error' : 'text-primary',
                   )}
                 >
@@ -153,20 +166,12 @@ export function ScheduleFormModal({ open, onClose, onSubmit, initialValues }: Sc
         </div>
 
         <div className="flex gap-16">
-          <button
-            type="button"
-            onClick={handleSave}
-            className="flex h-48 min-w-[128px] items-center justify-center rounded-8 bg-primary px-32 text-sm-18 text-white"
-          >
+          <Button variant="primary" onClick={handleSave}>
             저장
-          </button>
-          <button
-            type="button"
-            onClick={onClose}
-            className="flex h-48 min-w-[128px] items-center justify-center rounded-8 border border-primary px-32 text-sm-18 text-primary"
-          >
+          </Button>
+          <Button variant="outline" onClick={onClose}>
             취소
-          </button>
+          </Button>
         </div>
       </WindowPanel>
 

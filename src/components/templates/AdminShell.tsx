@@ -1,31 +1,17 @@
-import { useState } from 'react'
-import { useLocation, useOutlet, useNavigate } from 'react-router-dom'
-import { AnimatePresence, motion } from 'framer-motion'
-import { useAuth } from '@hooks'
+import { useLocation } from 'react-router-dom'
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
+import { useLogout } from '@hooks'
 import { AdminFooter, AdminHeader } from '@organisms'
 import type { AdminShellProps } from '@types'
+import { AnimatedOutlet } from './AnimatedOutlet'
+import { pageFadeTransition, pageFadeVariants } from './transitions'
 
-function AnimatedOutlet() {
-  const o = useOutlet()
-  const [outlet] = useState(o)
-  return <>{outlet}</>
-}
-
+// 대시보드 홈 셸: 상단 헤더(영역 네비) + 본문 + 푸터. 관리 페이지는 AdminSidebarShell 을 쓴다.
 export function AdminShell({ navItems, pageTitles }: AdminShellProps) {
   const { pathname } = useLocation()
-  const navigate = useNavigate()
-  const { logout } = useAuth()
+  const reduce = useReducedMotion()
+  const handleLogout = useLogout()
 
-  function handleLogout() {
-    logout()
-    navigate('/login')
-  }
-
-  const variants = {
-    initial: { opacity: 0 },
-    animate: { opacity: 1 },
-    exit: { opacity: 0 },
-  }
   return (
     <div className="flex min-h-screen flex-col bg-background-1">
       <AdminHeader title={pageTitles[pathname] ?? ''} navItems={navItems} onLogout={handleLogout} />
@@ -36,8 +22,8 @@ export function AdminShell({ navItems, pageTitles }: AdminShellProps) {
             initial="initial"
             animate="animate"
             exit="exit"
-            variants={variants}
-            transition={{ duration: 0.1, ease: 'easeInOut' }}
+            variants={pageFadeVariants}
+            transition={pageFadeTransition(!!reduce)}
           >
             <AnimatedOutlet />
           </motion.div>
