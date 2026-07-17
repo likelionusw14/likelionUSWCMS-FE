@@ -233,6 +233,8 @@ export interface ListSectionProps {
   page?: number
   totalPages?: number
   onPageChange?: (page: number) => void
+  // 페이지네이션은 두되 건수의 (page/total) 표기만 숨긴다 (프로젝트 목록: '총 X건'만 표시).
+  hidePageInfo?: boolean
   // 있으면 건수 줄 우측에 + 버튼.
   onAdd?: () => void
   children: ReactNode

@@ -10,12 +10,13 @@ export function ListSection({
   page,
   totalPages,
   onPageChange,
+  hidePageInfo,
   onAdd,
   children,
   className,
 }: ListSectionProps) {
   const countText =
-    page !== undefined && totalPages !== undefined
+    page !== undefined && totalPages !== undefined && !hidePageInfo
       ? `총 ${totalCount}건 (${page}/${totalPages} page)`
       : `총 ${totalCount}건`
 

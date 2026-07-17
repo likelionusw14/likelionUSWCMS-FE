@@ -1,9 +1,9 @@
-import { Link } from 'react-router-dom'
-import plusIcon from '@/assets/icons/plus.svg'
-import { Pagination, ProjectCard } from '@molecules'
+import { useNavigate } from 'react-router-dom'
+import { ProjectCard } from '@molecules'
+import { ListSection } from './ListSection'
 import type { ProjectListProps } from '@types'
 
-// 프로젝트 목록 — 건수 + 등록 버튼 + 카드 그리드 + 페이지네이션.
+// 프로젝트 목록 — 건수(총 X건) + 등록 버튼 + 카드 그리드(2열) + 페이지네이션.
 export function ProjectList({
   projects,
   totalCount,
@@ -11,24 +11,22 @@ export function ProjectList({
   totalPages,
   onPageChange,
 }: ProjectListProps) {
+  const navigate = useNavigate()
+
   return (
-    <div className="flex w-full flex-col justify-center gap-24 rounded-16 bg-white p-24">
-      <div className="flex w-full items-center justify-between">
-        <p className="text-m-14 text-black">총 {totalCount}건</p>
-        <Link
-          to="/admin/projects/new"
-          aria-label="프로젝트 등록"
-          className="flex h-40 w-40 items-center justify-center"
-        >
-          <img src={plusIcon} alt="" className="h-16 w-16" />
-        </Link>
-      </div>
+    <ListSection
+      totalCount={totalCount}
+      page={page}
+      totalPages={totalPages}
+      onPageChange={onPageChange}
+      hidePageInfo
+      onAdd={() => navigate('/admin/projects/new')}
+    >
       <div className="grid w-full grid-cols-1 gap-x-[29px] gap-y-[59px] lg:grid-cols-2">
         {projects.map((project) => (
           <ProjectCard key={project.id} project={project} />
         ))}
       </div>
-      <Pagination page={page} totalPages={totalPages} onPageChange={onPageChange} />
-    </div>
+    </ListSection>
   )
 }
