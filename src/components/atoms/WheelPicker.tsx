@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { cn } from '@utils'
 
 // 휠 치수 (Figma 302×220) — 행 40, 위/아래 스페이서 90 = (220-40)/2.
@@ -7,6 +7,8 @@ const CONTAINER_H = 220
 const SPACER = (CONTAINER_H - ITEM_H) / 2
 const ANGLE = 20 // 항목당 회전각(deg) — 실린더 곡률
 const MAX = 4 // 중앙 기준 표시 범위(그 밖은 숨김; 4×20=80° < 90°)
+const STEP = 40 // 휠 delta 누적 임계 — 노치당 1칸
+const DUR = 120 // 센터링 트윈 시간(ms)
 
 export interface WheelPickerProps {
   items: string[]
@@ -16,9 +18,11 @@ export interface WheelPickerProps {
   ariaLabel?: string
 }
 
-// iOS 스타일 3D 휠 한 열 — 네이티브 scroll-snap(관성·스냅)에 항목별 perspective+rotateX 로 실린더 곡률.
-// 스크롤 프레임은 rAF 로 DOM 을 직접 갱신(React state 미사용)해 리렌더 없이 매끄럽게 돈다.
-// 정지(디바운스) 시 가장 가까운 항목을 onChange 로 알린다. 초기 위치는 defaultIndex(마운트 시 1회).
+// iOS 스타일 3D 휠 한 열 — 항목별 perspective+rotateX 로 실린더 곡률.
+// 데스크톱 휠: 노치당 1칸(관성 없는 짧은 트윈). 모바일 터치: 자유 스크롤 → 멈추면 가까운 항목으로 센터링.
+// CSS scroll-snap 미사용 — mandatory 스냅의 정착 애니메이션이 모바일에서 다음 터치를 씹는 문제를 피하고,
+// 대신 '취소 가능한 JS 트윈'으로 센터링한다(터치 시작 시 즉시 취소 → 씹힘 없음).
+// 스크롤/센터링 중 React 리렌더가 없도록 DOM 을 직접 갱신(노드 캐시)해 메인스레드 부담을 줄인다.
 export function WheelPicker({
   items,
   defaultIndex,
@@ -27,35 +31,38 @@ export function WheelPicker({
   ariaLabel,
 }: WheelPickerProps) {
   const ref = useRef<HTMLDivElement>(null)
+  const nodes = useRef<HTMLElement[]>([])
   const raf = useRef<number | undefined>(undefined)
+  const anim = useRef<number | undefined>(undefined)
   const settleTimer = useRef<number | undefined>(undefined)
   const last = useRef(defaultIndex)
   const target = useRef(defaultIndex)
   const acc = useRef(0)
-  const [active, setActive] = useState(defaultIndex)
 
-  // 현재 스크롤 위치에 맞춰 각 항목의 3D 변형/투명도/굵기를 직접 그린다.
+  const clampIdx = (i: number) => Math.max(0, Math.min(items.length - 1, i))
+
+  // 현재 스크롤 위치에 맞춰 각 항목의 3D 변형/투명도/굵기/선택표시를 직접 그린다(리렌더 없음).
   function paint() {
     const el = ref.current
     if (!el) return
     const center = el.scrollTop / ITEM_H
-    el.querySelectorAll<HTMLElement>('[data-wheel-item]').forEach((node, i) => {
+    const sel = Math.round(center)
+    nodes.current.forEach((node, i) => {
       const dist = i - center
       const abs = Math.abs(dist)
       if (abs > MAX) {
         node.style.opacity = '0'
         node.style.fontWeight = '500'
-        return
+      } else {
+        node.style.opacity = String(Math.max(0.2, 1 - abs * 0.18))
+        node.style.transform = `perspective(1000px) rotateX(${dist * -ANGLE}deg)`
+        node.style.fontWeight = abs < 0.5 ? '600' : '500'
       }
-      node.style.opacity = String(Math.max(0.2, 1 - abs * 0.18))
-      node.style.transform = `perspective(1000px) rotateX(${dist * -ANGLE}deg)`
-      node.style.fontWeight = abs < 0.5 ? '600' : '500'
+      node.setAttribute('aria-selected', String(i === sel))
     })
   }
 
-  // 짧고 고정된 트윈(120ms) — 네이티브 smooth 의 부유하는 관성 대신 즉각적인 detent 느낌.
-  // 트윈 동안 mandatory 스냅을 꺼 중간 위치가 스냅에 끌려가지 않게 한다(끝나면 복원).
-  const anim = useRef<number | undefined>(undefined)
+  // 짧고 고정된 트윈(관성 없는 detent). 새 트윈/터치가 오면 취소된다.
   function animateTo(top: number) {
     const el = ref.current
     if (!el) return
@@ -66,17 +73,23 @@ export function WheelPicker({
       el.scrollTop = top
       return
     }
-    el.style.scrollSnapType = 'none'
     const start = performance.now()
     function frame(now: number) {
       const node = ref.current
       if (!node) return
-      const p = Math.min(1, (now - start) / 120)
+      const p = Math.min(1, (now - start) / DUR)
       node.scrollTop = from + dist * (1 - Math.pow(1 - p, 3))
       if (p < 1) anim.current = requestAnimationFrame(frame)
-      else node.style.scrollSnapType = 'y mandatory'
     }
     anim.current = requestAnimationFrame(frame)
+  }
+
+  function notify(idx: number) {
+    target.current = idx
+    if (idx !== last.current) {
+      last.current = idx
+      onChange(idx)
+    }
   }
 
   function handleScroll() {
@@ -86,45 +99,45 @@ export function WheelPicker({
     settleTimer.current = window.setTimeout(() => {
       const el = ref.current
       if (!el) return
-      const idx = Math.max(0, Math.min(items.length - 1, Math.round(el.scrollTop / ITEM_H)))
-      setActive(idx)
-      target.current = idx
-      if (idx !== last.current) {
-        last.current = idx
-        onChange(idx)
-      }
-    }, 110)
+      const idx = clampIdx(Math.round(el.scrollTop / ITEM_H))
+      notify(idx)
+      // 터치 후 가까운 항목으로 센터링(휠/클릭은 이미 정렬돼 no-op).
+      animateTo(idx * ITEM_H)
+    }, 90)
   }
 
-  // 마운트(팝업 열림) 시 초기 위치로 이동 + 최초 페인트 + 초기값 통지.
   useEffect(() => {
     const el = ref.current
     if (!el) return
+    nodes.current = Array.from(el.querySelectorAll<HTMLElement>('[data-wheel-item]'))
     el.scrollTop = defaultIndex * ITEM_H
     last.current = defaultIndex
     target.current = defaultIndex
-    setActive(defaultIndex)
     onChange(defaultIndex)
     paint()
 
-    // 데스크톱 휠: 노치당 1칸(트랙패드는 누적)만 이동. 네이티브 스냅 애니메이션이 멈춘 뒤
-    // 입력을 씹는 문제를 피하려 wheel 을 직접 처리(preventDefault)하고 목표 항목으로 부드럽게 이동한다.
-    const STEP = 40
+    // 데스크톱 휠: 노치당 1칸(트랙패드는 누적)만 목표 항목으로 트윈.
     function onWheel(event: WheelEvent) {
-      const node = ref.current
-      if (!node) return
+      if (!ref.current) return
       event.preventDefault()
       acc.current += event.deltaY
       if (Math.abs(acc.current) < STEP) return
-      const dir = acc.current > 0 ? 1 : -1
       acc.current = 0
-      target.current = Math.max(0, Math.min(items.length - 1, target.current + dir))
+      target.current = clampIdx(target.current + (event.deltaY > 0 ? 1 : -1))
       animateTo(target.current * ITEM_H)
     }
+    // 새 터치가 시작되면 진행 중 센터링 트윈을 즉시 멈춘다(터치 씹힘 방지).
+    function cancelAnim() {
+      if (anim.current) cancelAnimationFrame(anim.current)
+    }
     el.addEventListener('wheel', onWheel, { passive: false })
+    el.addEventListener('touchstart', cancelAnim, { passive: true })
+    el.addEventListener('pointerdown', cancelAnim, { passive: true })
 
     return () => {
       el.removeEventListener('wheel', onWheel)
+      el.removeEventListener('touchstart', cancelAnim)
+      el.removeEventListener('pointerdown', cancelAnim)
       if (raf.current) cancelAnimationFrame(raf.current)
       if (anim.current) cancelAnimationFrame(anim.current)
       if (settleTimer.current) window.clearTimeout(settleTimer.current)
@@ -139,7 +152,7 @@ export function WheelPicker({
       aria-label={ariaLabel}
       onScroll={handleScroll}
       className={cn('no-scrollbar select-none overflow-y-scroll text-center', widthClass)}
-      style={{ height: CONTAINER_H, scrollbarWidth: 'none', scrollSnapType: 'y mandatory' }}
+      style={{ height: CONTAINER_H, scrollbarWidth: 'none' }}
     >
       <div style={{ height: SPACER }} aria-hidden />
       {items.map((it, i) => (
@@ -148,13 +161,12 @@ export function WheelPicker({
           type="button"
           data-wheel-item
           role="option"
-          aria-selected={i === active}
           onClick={() => {
             target.current = i
             animateTo(i * ITEM_H)
           }}
           className="flex w-full items-center justify-center whitespace-nowrap text-[22px] leading-none text-black [backface-visibility:hidden]"
-          style={{ height: ITEM_H, scrollSnapAlign: 'center' }}
+          style={{ height: ITEM_H }}
         >
           {it}
         </button>
