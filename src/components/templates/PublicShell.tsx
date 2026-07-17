@@ -29,7 +29,7 @@ export function PublicShell({ navItems, applyItem }: PublicShellProps) {
             animate="animate"
             exit="exit"
             variants={variants}
-            transition={{ duration: 0.15, ease: 'easeInOut' }}
+            transition={{ duration: 0.1, ease: 'easeInOut' }}
             className="flex w-full justify-center"
           >
             <AnimatedOutlet />

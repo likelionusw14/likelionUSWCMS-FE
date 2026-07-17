@@ -37,7 +37,7 @@ export function AdminShell({ navItems, pageTitles }: AdminShellProps) {
             animate="animate"
             exit="exit"
             variants={variants}
-            transition={{ duration: 0.15, ease: 'easeInOut' }}
+            transition={{ duration: 0.1, ease: 'easeInOut' }}
           >
             <AnimatedOutlet />
           </motion.div>
