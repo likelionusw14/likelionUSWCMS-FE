@@ -1,9 +1,8 @@
 import { useMemo, useState } from 'react'
 import calendarIcon from '@/assets/icons/calendar.svg'
-import searchIcon from '@/assets/icons/search.svg'
 import { Dropdown } from '@atoms'
 import { DatePickerModal, RemarkModal } from '@molecules'
-import { AdminTopBar, AttendanceCodeCreate, AttendanceList } from '@organisms'
+import { AdminTopBar, AttendanceCodeCreate, AttendanceList, SearchBar } from '@organisms'
 import { useAttendance, useAttendanceCode } from '@hooks'
 import { PART_OPTIONS } from '@constants'
 import type { AttendanceRecord } from '@types'
@@ -48,30 +47,25 @@ export function AttendancePage() {
         />
 
         <h2 className="text-center text-sm-22 text-black">출석 내역</h2>
-        <div className="flex w-full items-center justify-between rounded-16 bg-white px-32 py-12">
-          <div className="flex items-center gap-16">
-            <button
-              type="button"
-              onClick={() => setDateOpen(true)}
-              className="flex h-32 w-[160px] items-center justify-between rounded-8 border border-secondary-1 bg-background-1 px-16 py-8 text-m-14 text-background-2"
-            >
-              <span>{dateFilter}</span>
-              <img src={calendarIcon} alt="" className="h-24 w-24 shrink-0" />
-            </button>
-            <Dropdown
-              value={partFilter}
-              onChange={(value) => {
-                setPartFilter(value)
-                setPage(1)
-              }}
-              options={PART_OPTIONS}
-              placeholder="파트"
-            />
-          </div>
-          <button type="button" aria-label="검색">
-            <img src={searchIcon} alt="" className="h-40 w-24" />
+        <SearchBar>
+          <button
+            type="button"
+            onClick={() => setDateOpen(true)}
+            className="flex h-32 w-[160px] items-center justify-between rounded-8 border border-secondary-1 bg-background-1 px-16 py-8 text-m-14 text-background-2"
+          >
+            <span>{dateFilter}</span>
+            <img src={calendarIcon} alt="" className="h-24 w-24 shrink-0" />
           </button>
-        </div>
+          <Dropdown
+            value={partFilter}
+            onChange={(value) => {
+              setPartFilter(value)
+              setPage(1)
+            }}
+            options={PART_OPTIONS}
+            placeholder="파트"
+          />
+        </SearchBar>
         <AttendanceList
           records={visible}
           totalCount={filtered.length}

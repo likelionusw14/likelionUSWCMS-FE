@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { COHORT_OPTIONS, PART_OPTIONS } from '@constants'
+import { Dropdown } from '@atoms'
 import { useProjects } from '@hooks'
-import { AdminTopBar, ProjectFilterBar, ProjectList } from '@organisms'
+import { AdminTopBar, ProjectList, SearchBar } from '@organisms'
 
 const PAGE_SIZE = 4
 
@@ -18,15 +19,15 @@ export function ProjectListPage() {
     <>
       <AdminTopBar breadcrumb="홈 / 프로젝트 관리" title="프로젝트 관리" />
       <div className="flex flex-col gap-24 px-24 pb-[120px] pt-32">
-        <ProjectFilterBar
-          cohort={cohort}
-          part={part}
-          onCohortChange={setCohort}
-          onPartChange={setPart}
-          cohortOptions={COHORT_OPTIONS}
-          partOptions={PART_OPTIONS}
-          onSearch={() => setPage(1)}
-        />
+        <SearchBar onSearch={() => setPage(1)} filtersClassName="gap-24">
+          <Dropdown
+            value={cohort}
+            onChange={setCohort}
+            options={COHORT_OPTIONS}
+            placeholder="기수"
+          />
+          <Dropdown value={part} onChange={setPart} options={PART_OPTIONS} placeholder="파트" />
+        </SearchBar>
         <ProjectList
           projects={visibleProjects}
           totalCount={projects.length}

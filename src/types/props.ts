@@ -150,14 +150,15 @@ export interface ProjectCardProps {
   className?: string
 }
 
-export interface ProjectFilterBarProps {
-  cohort: string
-  part: string
-  onCohortChange: (cohort: string) => void
-  onPartChange: (part: string) => void
-  cohortOptions: SelectOption[]
-  partOptions: SelectOption[]
-  onSearch: () => void
+// 목록 상단 공용 검색바 — 껍데기(흰 카드)+검색 아이콘은 SearchBar 소유, 필터는 children 슬롯.
+// 관리자 목록(프로젝트·세션·공지·출결)이 공유. 검색 동작은 백엔드 연동 시 채운다(디자인에 입력창 없음).
+export interface SearchBarProps {
+  // 좌측 필터 슬롯 (Dropdown·날짜버튼 등).
+  children: ReactNode
+  // 검색 아이콘 클릭. 없으면 아이콘 비활성(디자인상 항상 표시).
+  onSearch?: () => void
+  // 필터 컨테이너 gap 조정 등 (기본 gap-16).
+  filtersClassName?: string
 }
 
 export interface ProjectListProps {
@@ -192,16 +193,6 @@ export interface ProjectFormProps {
 }
 
 // ── 세션자료 관리 ──
-export interface SessionFilterBarProps {
-  week: string
-  part: string
-  onWeekChange: (week: string) => void
-  onPartChange: (part: string) => void
-  weekOptions: SelectOption[]
-  partOptions: SelectOption[]
-  onSearch: () => void
-}
-
 export interface SessionListProps {
   sessions: Session[]
   totalCount: number
