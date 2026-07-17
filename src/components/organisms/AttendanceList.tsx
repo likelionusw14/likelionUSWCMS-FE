@@ -2,10 +2,12 @@ import { Checkbox } from '@atoms'
 import { Pagination } from '@molecules'
 import type { AttendanceListProps } from '@types'
 
+// 표 셀 — 6열 모두 74px 고정, 행 사이 secondary-1 구분선.
 const ROW = 'flex w-full items-center justify-between border-b border-secondary-1 px-32 py-8'
 const CELL = 'w-[74px] shrink-0 text-center'
 
-// 출석 내역 — 날짜·이름·학번·파트·출석상태(체크박스 토글)·비고(RemarkModal) + 페이지네이션. Figma 563:8945.
+// 출석 내역 카드 — 건수 + 표(날짜·이름·학번·파트·출석상태 체크·비고) + 페이지네이션.
+// 흰 카드 rounded-16 + 파란 엠보. 출석상태는 체크박스 토글, 비고는 RemarkModal(검정 밑줄). Figma 563:8947.
 export function AttendanceList({
   records,
   totalCount,
@@ -16,8 +18,7 @@ export function AttendanceList({
   onEditRemark,
 }: AttendanceListProps) {
   return (
-    <section className="flex w-full flex-col gap-24 rounded-8 bg-white px-32 py-24">
-      <h2 className="text-sm-22 text-black">출석 내역</h2>
+    <section className="flex w-full flex-col gap-24 overflow-hidden rounded-16 bg-white px-32 py-24 shadow-emboss-light">
       <p className="text-m-14 text-black">
         총 {totalCount}건 ({page}/{totalPages} page)
       </p>
@@ -36,7 +37,7 @@ export function AttendanceList({
             <span className={CELL}>{record.name}</span>
             <span className={CELL}>{record.studentId}</span>
             <span className={CELL}>{record.part}</span>
-            <span className="flex w-[74px] shrink-0 justify-center">
+            <span className="flex w-[74px] shrink-0 items-center justify-center">
               <Checkbox
                 checked={record.present}
                 onChange={() => onTogglePresent(record.id)}
@@ -47,9 +48,10 @@ export function AttendanceList({
             <button
               type="button"
               onClick={() => onEditRemark(record)}
-              className={`${CELL} truncate text-primary underline`}
+              aria-label="비고"
+              className={`${CELL} truncate text-black ${record.remark ? 'underline' : ''}`}
             >
-              {record.remark || '비고'}
+              {record.remark}
             </button>
           </div>
         ))}
