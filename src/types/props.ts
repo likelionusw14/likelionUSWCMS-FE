@@ -166,12 +166,27 @@ export interface SearchBarProps {
   onSearch?: () => void
 }
 
+// 사용자 프로젝트 목록 상단 검색바(기수+분류 필터). 관리자는 SearchBar 로 통일했으나
+// 사용자 화면(UserProjectListPage)이 이 컴포넌트를 그대로 사용 중이라 유지한다.
+export interface ProjectFilterBarProps {
+  cohort: string
+  filterValue: string
+  onCohortChange: (cohort: string) => void
+  onFilterChange: (value: string) => void
+  cohortOptions: SelectOption[]
+  filterOptions: SelectOption[]
+  filterPlaceholder: string
+  onSearch: () => void
+}
+
 export interface ProjectListProps {
   projects: Project[]
   totalCount: number
   page: number
   totalPages: number
   onPageChange: (page: number) => void
+
+  createPath?: string
 }
 
 export interface ProjectDetailProps {
@@ -221,6 +236,19 @@ export interface SessionFormProps {
   onFileClear: () => void
 }
 
+export interface UserProjectDetailProps {
+  project: Project
+}
+
+export interface UserHeaderProps {
+  navItems: NavItem[]
+  onLogout: () => void
+}
+
+export interface UserShellProps {
+  navItems: NavItem[]
+}
+
 // 출석 코드 생성 — 코드 표시 + 유효시간 카운트다운 + 생성 버튼.
 export interface AttendanceCodeCreateProps {
   // 발급된 7자리 코드. 없으면 placeholder('0000000') 표시.
@@ -240,8 +268,6 @@ export interface ListSectionProps {
   page?: number
   totalPages?: number
   onPageChange?: (page: number) => void
-  // 페이지네이션은 두되 건수의 (page/total) 표기만 숨긴다 (프로젝트 목록: '총 X건'만 표시).
-  hidePageInfo?: boolean
   // 있으면 건수 줄 우측에 + 버튼.
   onAdd?: () => void
   children: ReactNode

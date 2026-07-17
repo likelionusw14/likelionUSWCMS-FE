@@ -33,6 +33,7 @@ export function ProjectListPage() {
           page={page}
           totalPages={totalPages}
           onPageChange={setPage}
+          createPath="/admin/projects/new"
         />
       </div>
     </>
