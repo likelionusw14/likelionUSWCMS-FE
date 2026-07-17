@@ -1,25 +1,16 @@
 import { Outlet, useLocation } from 'react-router-dom'
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 import { PublicFooter, PublicHeader } from '@organisms'
 import type { PublicShellProps } from '@types'
 
 // 로그인 전(공통) 영역 셸: 다크 배경 + 헤더 + 콘텐츠 + 푸터.
 export function PublicShell({ navItems, applyItem }: PublicShellProps) {
   const location = useLocation()
-  const shouldReduceMotion = useReducedMotion()
-
-  const variants = shouldReduceMotion
-    ? {
-        initial: { opacity: 0 },
-        animate: { opacity: 1 },
-        exit: { opacity: 0 },
-      }
-    : {
-        initial: { opacity: 0, y: 15 },
-        animate: { opacity: 1, y: 0 },
-        exit: { opacity: 0, y: -15 },
-      }
-
+  const variants = {
+    initial: { opacity: 0 },
+    animate: { opacity: 1 },
+    exit: { opacity: 0 },
+  }
   return (
     <div className="flex min-h-screen flex-col bg-background-2">
       <PublicHeader navItems={navItems} applyItem={applyItem} />
