@@ -19,11 +19,15 @@ export function ScheduleFormModal({ open, onClose, onSubmit, initialValues }: Sc
   const [dateOpen, setDateOpen] = useState(false)
   const [timeOpen, setTimeOpen] = useState(false)
   const [descError, setDescError] = useState(false)
+  const [titleError, setTitleError] = useState(false)
+  const [placeError, setPlaceError] = useState(false)
 
   useEffect(() => {
     if (open) {
       setValues({ ...EMPTY, ...initialValues })
       setDescError(false)
+      setTitleError(false)
+      setPlaceError(false)
     }
   }, [open, initialValues])
 
@@ -32,10 +36,13 @@ export function ScheduleFormModal({ open, onClose, onSubmit, initialValues }: Sc
   }
 
   function handleSave() {
-    if (!values.description.trim()) {
-      setDescError(true)
-      return
-    }
+    const nextTitle = !values.title.trim()
+    const nextPlace = !values.place.trim()
+    const nextDesc = !values.description.trim()
+    setTitleError(nextTitle)
+    setPlaceError(nextPlace)
+    setDescError(nextDesc)
+    if (nextTitle || nextPlace || nextDesc) return
     onSubmit(values)
   }
 
@@ -47,25 +54,41 @@ export function ScheduleFormModal({ open, onClose, onSubmit, initialValues }: Sc
         <div className="flex w-full flex-col gap-8">
           <div className="flex w-full flex-col gap-8">
             <span className="px-8 text-m-16 text-black">일정명</span>
-            <div className="flex h-48 flex-col">
+            <div className="flex h-48 flex-col gap-4">
               <input
                 className={FIELD}
                 value={values.title}
-                onChange={(event) => set('title', event.target.value)}
+                onChange={(event) => {
+                  set('title', event.target.value)
+                  if (titleError) setTitleError(false)
+                }}
                 placeholder="일정명을 적어주세요"
               />
+              {titleError && (
+                <p className="text-[10px] font-normal leading-normal text-error">
+                  일정명을 다시 확인해주세요
+                </p>
+              )}
             </div>
           </div>
 
           <div className="flex w-full flex-col gap-8">
             <span className="px-8 text-m-16 text-black">장소</span>
-            <div className="flex h-48 flex-col">
+            <div className="flex h-48 flex-col gap-4">
               <input
                 className={FIELD}
                 value={values.place}
-                onChange={(event) => set('place', event.target.value)}
+                onChange={(event) => {
+                  set('place', event.target.value)
+                  if (placeError) setPlaceError(false)
+                }}
                 placeholder="장소"
               />
+              {placeError && (
+                <p className="text-[10px] font-normal leading-normal text-error">
+                  장소를 다시 확인해주세요
+                </p>
+              )}
             </div>
           </div>
 

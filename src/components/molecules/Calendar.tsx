@@ -1,6 +1,7 @@
 import calendarNext from '@/assets/icons/calendar-next.svg'
 import calendarPrev from '@/assets/icons/calendar-prev.svg'
 import plusIcon from '@/assets/icons/plus.svg'
+import { motion, useReducedMotion } from 'framer-motion'
 import { CalendarDay, WindowPanel } from '@atoms'
 import { buildMonthGrid, toDateKey } from '@utils'
 import { cn } from '@utils'
@@ -19,8 +20,9 @@ const WEEKDAYS = [
 
 // 월(month) 캘린더 — 창(WindowPanel: primary 헤더바 h-40 + 엠보 흰 본문) + 월 네비 + 요일 + 날짜 그리드.
 // presentational: 데이터는 events prop 으로만 받는다. 창 크롬은 WindowPanel 아톰을 재사용한다.
-export function Calendar({ year, month, events, onMonthChange, onRegister, className }: CalendarProps) {
+export function Calendar({ year, month, events, onMonthChange, onRegister, onEventClick, className }: CalendarProps) {
   const grid = buildMonthGrid(year, month)
+  const reduce = useReducedMotion()
 
   // 날짜별 일정 묶기.
   const byDate = new Map<string, CalendarEvent[]>()
@@ -90,7 +92,13 @@ export function Calendar({ year, month, events, onMonthChange, onRegister, class
           ))}
         </div>
 
-        <div className="grid grid-cols-7 gap-px overflow-hidden rounded-16 border border-secondary-1 bg-secondary-1">
+        <motion.div
+          key={`${year}-${month}`}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: reduce ? 0 : 0.12 }}
+          className="grid grid-cols-7 gap-px overflow-hidden rounded-16 border border-secondary-1 bg-secondary-1"
+        >
           {grid.map(({ date, inMonth }) => {
             const key = toDateKey(date)
             return (
@@ -99,10 +107,11 @@ export function Calendar({ year, month, events, onMonthChange, onRegister, class
                 day={date.getDate()}
                 inMonth={inMonth}
                 events={byDate.get(key) ?? []}
+                onEventClick={onEventClick}
               />
             )
           })}
-        </div>
+        </motion.div>
       </div>
     </WindowPanel>
   )

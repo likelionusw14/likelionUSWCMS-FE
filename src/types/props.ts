@@ -222,6 +222,15 @@ export interface SessionFormProps {
   onFileClear: () => void
 }
 
+// 출석 코드 생성 — 코드 표시 + 유효시간 카운트다운 + 생성 버튼.
+export interface AttendanceCodeCreateProps {
+  // 발급된 7자리 코드. 없으면 placeholder('0000000') 표시.
+  code: string | null
+  // 남은 유효시간(초). 표시는 mm:ss.
+  remainingSeconds: number
+  onGenerate: () => void
+}
+
 // 목록 섹션 셸 — 제목 + 총건수(+선택 페이지정보) + 선택 추가버튼 + 툴바 슬롯 + 콘텐츠(DataTable) + 선택 페이지네이션.
 // 관리자 목록 5종(회원·승인대기·출결·공지·세션)이 공유. 가변부는 선택 prop 유무로 켠다.
 export interface ListSectionProps {
@@ -356,4 +365,62 @@ export interface RoleEditModalProps {
   onSubmit: (role: string) => void
   // 현재 선택된 권한 키. 기본 첫 옵션.
   value?: string
+}
+
+// 일정 팝업 항목 — 캘린더 날짜 클릭 시 말풍선에 표시할 일정.
+export interface SchedulePopupEvent {
+  id: string
+  title: string
+  // 표시용 문자열. 예: '2026년 7월 3일 10:00'.
+  dateTime: string
+  place: string
+  description: string
+}
+
+// 일정 팝업 — 캘린더 날짜 위 말풍선. 제목·날짜시간·장소·설명 + (선택)수정/삭제.
+export interface SchedulePopupProps {
+  event: SchedulePopupEvent
+  // 꼬리 방향. left = 팝업이 셀 오른쪽(꼬리 왼쪽), right = 팝업이 셀 왼쪽(꼬리 오른쪽). 기본 left.
+  tail?: 'left' | 'right'
+  // 있으면 하단 수정/삭제 버튼 표시.
+  onEdit?: () => void
+  onDelete?: () => void
+  className?: string
+}
+
+// 고정여부 토글 — 공지 고정 등. off=background-1 / on=primary 트랙, 20px 흰 노브.
+export interface PinToggleProps {
+  pinned: boolean
+  onChange: (pinned: boolean) => void
+  disabled?: boolean
+  ariaLabel?: string
+  className?: string
+}
+
+// ── 공지 작성 ──
+export interface NoticeFormValues {
+  title: string
+  tag: string
+  content: string
+}
+
+// 공지 작성 폼 — 제목·태그·고정여부·첨부링크·공지내용 + 저장. 제목/내용 미입력 시 오류 문구.
+export interface NoticeFormProps {
+  values: NoticeFormValues
+  onFieldChange: (field: keyof NoticeFormValues, value: string) => void
+  onSubmit: (event: FormEvent<HTMLFormElement>) => void
+  pinned: boolean
+  onPinnedChange: (pinned: boolean) => void
+  tagOptions: SelectOption[]
+  fileName: string
+  onFileChange: (fileName: string) => void
+  onFileClear: () => void
+}
+
+// 승인/취소 액션 버튼 쌍 — 승인대기 목록 행 등. Figma 1000:1550.
+export interface ApprovalActionsProps {
+  onApprove: () => void
+  onCancel: () => void
+  disabled?: boolean
+  className?: string
 }
