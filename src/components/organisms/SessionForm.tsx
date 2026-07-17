@@ -36,10 +36,10 @@ export function SessionForm({
   return (
     <form onSubmit={handleSubmit} className="flex flex-col items-center gap-24 px-24 pb-[120px] pt-32">
       <div className="flex w-full flex-col gap-4">
-        <div className="w-full overflow-hidden rounded-8 bg-white">
+        <div className="w-full rounded-8 bg-white">
           {/* 주차 / 파트 */}
-          <div className="flex h-[56px] w-full items-stretch border-b border-secondary-1">
-            <FormRow label="주차">
+          <div className="relative z-20 flex h-[56px] w-full items-stretch border-b border-secondary-1">
+            <FormRow label="주차" labelClassName="rounded-tl-8">
               <Dropdown
                 value={values.week}
                 onChange={(value) => change('week', value)}
@@ -58,10 +58,9 @@ export function SessionForm({
               />
             </FormRow>
           </div>
-
           {/* 대표이미지 업로드 */}
-          <div className="flex h-[115px] w-full items-stretch">
-            <FormRow label="대표이미지 업로드">
+          <div className="relative z-10 flex h-[115px] w-full items-stretch">
+            <FormRow label="대표이미지 업로드" labelClassName="rounded-bl-8">
               <FileUploadField
                 fileName={fileName}
                 onFileChange={onFileChange}

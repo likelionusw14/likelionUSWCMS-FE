@@ -46,10 +46,10 @@ export function NoticeForm({
   return (
     <form onSubmit={handleSubmit} className="flex flex-col items-center gap-24 px-24 pb-[120px] pt-32">
       <div className="flex w-full flex-col gap-4">
-        <div className="w-full overflow-hidden rounded-8 bg-white">
+        <div className="w-full rounded-8 bg-white">
           {/* 제목 / 태그 */}
-          <div className="flex h-[56px] w-full items-stretch border-b border-secondary-1">
-            <FormRow label="제목">
+          <div className="relative z-40 flex h-[56px] w-full items-stretch border-b border-secondary-1">
+            <FormRow label="제목" labelClassName="rounded-tl-8">
               <FormInput
                 value={values.title}
                 onChange={(event) => change('title', event.target.value)}
@@ -68,22 +68,22 @@ export function NoticeForm({
           </div>
 
           {/* 고정여부 */}
-          <div className="flex h-[52px] w-full items-stretch">
+          <div className="relative z-30 flex h-[52px] w-full items-stretch">
             <FormRow label="고정여부">
               <PinToggle pinned={pinned} onChange={onPinnedChange} ariaLabel="고정여부" />
             </FormRow>
           </div>
 
           {/* 첨부링크 */}
-          <div className="flex h-[115px] w-full items-stretch border-y border-secondary-1">
+          <div className="relative z-20 flex h-[115px] w-full items-stretch border-y border-secondary-1">
             <FormRow label="첨부링크">
               <FileUploadField fileName={fileName} onFileChange={onFileChange} onFileClear={onFileClear} />
             </FormRow>
           </div>
 
           {/* 공지내용 */}
-          <div className="flex w-full items-stretch">
-            <FormRow label="공지내용">
+          <div className="relative z-10 flex w-full items-stretch">
+            <FormRow label="공지내용" labelClassName="rounded-bl-8">
               <textarea
                 ref={contentRef}
                 rows={1}

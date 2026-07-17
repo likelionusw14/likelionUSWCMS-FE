@@ -356,15 +356,18 @@ export interface ScheduleFormModalProps {
   initialValues?: Partial<ScheduleFormValues>
 }
 
-// 날짜 선택 팝업 — 년/월/일 3열 휠. 일정 등록·수정, 일정(날짜) 변경 공용.
+// 날짜 선택 팝업 — 년/월/일 3열 휠(granularity='month' 면 년/월 2열). 일정 등록·수정,
+// 일정(날짜) 변경, 프로젝트 제작기간(월 단위) 공용.
 export interface DatePickerModalProps {
   open: boolean
   onClose: () => void
-  onConfirm: (value: string) => void // 'YYYY.MM.DD'
-  // 초기 선택값 'YYYY.MM.DD'. 없으면 오늘.
+  onConfirm: (value: string) => void // granularity 에 따라 'YYYY.MM.DD' 또는 'YYYY.MM'
+  // 초기 선택값. 없으면 오늘.
   value?: string
   // 제목. 기본 '날짜 선택'.
   title?: string
+  // 'day'(기본, 년/월/일) | 'month'(년/월만, 출력도 'YYYY.MM').
+  granularity?: 'day' | 'month'
 }
 
 // 시간 선택 팝업 — 시/분/오전·오후 3열 휠.

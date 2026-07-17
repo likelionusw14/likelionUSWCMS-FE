@@ -2,7 +2,7 @@ import { useState } from 'react'
 import type { FormEvent } from 'react'
 import calendarIcon from '@/assets/icons/calendar.svg'
 import { Dropdown, FormInput } from '@atoms'
-import { FileUploadField, FormRow } from '@molecules'
+import { DatePickerModal, FileUploadField, FormRow } from '@molecules'
 import type { ProjectFormProps, ProjectFormValues } from '@types'
 
 // 프로젝트 작성·수정 폼 — 표 형태(라벨 secondary-1 + 입력): 프로젝트명·기수·태그·제작기간·
@@ -20,6 +20,7 @@ export function ProjectForm({
   onFileClear,
 }: ProjectFormProps) {
   const [error, setError] = useState(false)
+  const [dateOpen, setDateOpen] = useState<'start' | 'end' | null>(null)
 
   function change(field: keyof ProjectFormValues, value: string) {
     onFieldChange(field, value)
@@ -39,10 +40,10 @@ export function ProjectForm({
   return (
     <form onSubmit={handleSubmit} className="flex flex-col items-center gap-24 px-24 pb-[120px] pt-32">
       <div className="flex w-full flex-col gap-4">
-        <div className="w-full overflow-hidden rounded-8 bg-white">
+        <div className="w-full rounded-8 bg-white">
           {/* 프로젝트명 */}
-          <div className="flex h-[56px] w-full items-stretch">
-            <FormRow label="프로젝트명">
+          <div className="relative z-50 flex h-[56px] w-full items-stretch">
+            <FormRow label="프로젝트명" labelClassName="rounded-tl-8">
               <FormInput
                 value={values.name}
                 onChange={(event) => change('name', event.target.value)}
@@ -52,7 +53,7 @@ export function ProjectForm({
           </div>
 
           {/* 기수 / 태그 */}
-          <div className="flex h-[56px] w-full items-stretch border-y border-secondary-1">
+          <div className="relative z-40 flex h-[56px] w-full items-stretch border-y border-secondary-1">
             <FormRow label="기수">
               <Dropdown
                 value={values.cohort}
@@ -74,42 +75,36 @@ export function ProjectForm({
           </div>
 
           {/* 제작기간 */}
-          <div className="flex h-[56px] w-full items-stretch">
+          <div className="relative z-30 flex h-[56px] w-full items-stretch">
             <FormRow label="제작기간">
               <div className="flex items-center gap-24">
-                <div className="relative w-[160px]">
-                  <FormInput
-                    value={values.startDate}
-                    onChange={(event) => onFieldChange('startDate', event.target.value)}
-                    placeholder="YYYY.MM"
-                    className="pr-40"
-                  />
-                  <img
-                    src={calendarIcon}
-                    alt=""
-                    className="pointer-events-none absolute right-16 top-4 h-24 w-24"
-                  />
-                </div>
+                <button
+                  type="button"
+                  onClick={() => setDateOpen('start')}
+                  className="flex h-32 w-[160px] items-center justify-between rounded-8 border border-secondary-1 bg-background-1 px-16 text-m-14"
+                >
+                  <span className={values.startDate ? 'text-black' : 'text-primary/50'}>
+                    {values.startDate || 'YYYY.MM'}
+                  </span>
+                  <img src={calendarIcon} alt="" className="h-24 w-24 shrink-0" />
+                </button>
                 <span className="text-r-12 text-primary/50">~</span>
-                <div className="relative w-[160px]">
-                  <FormInput
-                    value={values.endDate}
-                    onChange={(event) => onFieldChange('endDate', event.target.value)}
-                    placeholder="YYYY.MM"
-                    className="pr-40"
-                  />
-                  <img
-                    src={calendarIcon}
-                    alt=""
-                    className="pointer-events-none absolute right-16 top-4 h-24 w-24"
-                  />
-                </div>
+                <button
+                  type="button"
+                  onClick={() => setDateOpen('end')}
+                  className="flex h-32 w-[160px] items-center justify-between rounded-8 border border-secondary-1 bg-background-1 px-16 text-m-14"
+                >
+                  <span className={values.endDate ? 'text-black' : 'text-primary/50'}>
+                    {values.endDate || 'YYYY.MM'}
+                  </span>
+                  <img src={calendarIcon} alt="" className="h-24 w-24 shrink-0" />
+                </button>
               </div>
             </FormRow>
           </div>
 
           {/* 깃허브 URL / 프로젝트 URL */}
-          <div className="flex h-[56px] w-full items-stretch border-y border-secondary-1">
+          <div className="relative z-20 flex h-[56px] w-full items-stretch border-y border-secondary-1">
             <FormRow label="깃허브 URL">
               <FormInput
                 value={values.githubUrl}
@@ -127,7 +122,7 @@ export function ProjectForm({
           </div>
 
           {/* 프로젝트 참여자 */}
-          <div className="flex w-full items-stretch">
+          <div className="relative z-10 flex w-full items-stretch">
             <FormRow label="프로젝트 참여자">
               <FormInput
                 value={values.participants}
@@ -151,7 +146,7 @@ export function ProjectForm({
 
           {/* 프로젝트 설명 */}
           <div className="flex w-full items-stretch">
-            <FormRow label="프로젝트 설명">
+            <FormRow label="프로젝트 설명" labelClassName="rounded-bl-8">
               <textarea
                 value={values.description}
                 onChange={(event) => onFieldChange('description', event.target.value)}
@@ -183,6 +178,17 @@ export function ProjectForm({
           </button>
         ) : null}
       </div>
+
+      <DatePickerModal
+        open={dateOpen !== null}
+        onClose={() => setDateOpen(null)}
+        onConfirm={(value) => {
+          if (dateOpen) change(dateOpen === 'start' ? 'startDate' : 'endDate', value)
+        }}
+        value={dateOpen === 'start' ? values.startDate : values.endDate}
+        title={dateOpen === 'start' ? '제작 시작일' : '제작 종료일'}
+        granularity="month"
+      />
     </form>
   )
 }

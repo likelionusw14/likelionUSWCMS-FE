@@ -20,6 +20,7 @@ export function DatePickerModal({
   onConfirm,
   value,
   title = '날짜 선택',
+  granularity = 'day',
 }: DatePickerModalProps) {
   // value 변화 시 초기 인덱스 계산. 휠은 열릴 때 remount 되어 이 값으로 위치를 잡는다(열 때마다 초기화).
   const initial = useMemo(() => {
@@ -42,6 +43,11 @@ export function DatePickerModal({
   function handleConfirm() {
     const year = years[yearRef.current]
     const month = months[monthRef.current]
+    if (granularity === 'month') {
+      onConfirm(`${year}.${pad2(month)}`)
+      onClose()
+      return
+    }
     const day = days[dayRef.current]
     onConfirm(`${year}.${pad2(month)}.${pad2(day)}`)
     onClose()
@@ -77,15 +83,17 @@ export function DatePickerModal({
               widthClass="w-[43px]"
               ariaLabel="월"
             />
-            <WheelPicker
-              items={days.map((d) => `${d}일`)}
-              defaultIndex={initial.day}
-              onChange={(i) => {
-                dayRef.current = i
-              }}
-              widthClass="w-[46px]"
-              ariaLabel="일"
-            />
+            {granularity === 'day' && (
+              <WheelPicker
+                items={days.map((d) => `${d}일`)}
+                defaultIndex={initial.day}
+                onChange={(i) => {
+                  dayRef.current = i
+                }}
+                widthClass="w-[46px]"
+                ariaLabel="일"
+              />
+            )}
           </div>
           {/* 위/아래 페이드 마스크 — 중앙 외 행을 흐리게 (스크롤 방해 없음) */}
           <div className="pointer-events-none absolute inset-x-0 top-0 z-20 h-[90px] bg-gradient-to-b from-white to-transparent" />
