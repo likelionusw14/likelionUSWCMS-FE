@@ -9,18 +9,20 @@ const VALUE_CELL = 'flex h-40 min-w-px flex-1 items-center px-24 text-m-14 text-
 // 프로젝트 상세 — 정보 테이블 + 이미지 + 설명.
 export function ProjectDetail({ project }: ProjectDetailProps) {
   const rows = [
-    { label: '태그', value: project.category },
-    { label: '제작기간', value: `${project.startDate} ~ ${project.endDate}` },
+    { label: '태그', value: project.tags.join(', ') },
+    {
+      label: '제작기간',
+      value: `${project.developedYear}.${String(project.developedMonth).padStart(2, '0')}`,
+    },
     { label: '깃허브 URL', value: project.githubUrl },
-    { label: '프로젝트 URL', value: project.projectUrl },
+    { label: '프로젝트 URL', value: project.deployUrl },
   ]
-  const [coverImage] = project.imageUrls
 
   return (
     <div className="flex flex-col gap-16 px-24 pb-[120px] pt-32">
       <section className="flex flex-col gap-24 overflow-hidden rounded-8 bg-white px-32 py-24">
         <div className="flex w-full items-center justify-between">
-          <h2 className="text-sm-20 text-black">{project.name}</h2>
+          <h2 className="text-sm-20 text-black">{project.title}</h2>
           <div className="flex items-center gap-8">
             <Link
               to="/admin/projects"
@@ -50,7 +52,12 @@ export function ProjectDetail({ project }: ProjectDetailProps) {
               프로젝트 참여자
             </span>
             <p className="min-w-px flex-1 px-24 py-12 text-m-14 text-black">
-              {project.participants.join(', ')}
+              {project.participants
+                .map(
+                  (participant) =>
+                    `${participant.name}(${participant.cohortId}기,${participant.part},${participant.role})`,
+                )
+                .join(', ')}
             </p>
           </div>
         </div>
@@ -58,8 +65,12 @@ export function ProjectDetail({ project }: ProjectDetailProps) {
 
       <section className="flex flex-col gap-16 overflow-hidden rounded-8 bg-white px-32 py-24">
         <h3 className="text-sm-18 text-black">프로젝트 이미지</h3>
-        {coverImage ? (
-          <img src={coverImage} alt="" className="h-[210px] w-full rounded-8 object-cover" />
+        {project.thumbnailUrl ? (
+          <img
+            src={project.thumbnailUrl}
+            alt={`${project.title} 대표 이미지`}
+            className="h-[210px] w-full rounded-8 object-cover"
+          />
         ) : (
           <div className="h-[210px] w-full rounded-8 bg-gray-100" />
         )}

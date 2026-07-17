@@ -1,24 +1,81 @@
 import type { Entity } from './common'
 
-// 프로젝트 (Entity: id 필수).
-export interface Project extends Entity {
+export type ProjectTag = '해커톤' | '아이디어톤'
+
+export interface ProjectParticipant {
+  userId: number
   name: string
-  // 태그 — 프로젝트 / 해커톤 등 분류.
-  category: string
-  // 제작기간 (YYYY.MM).
-  startDate: string
-  endDate: string
-  githubUrl: string
-  projectUrl: string
-  // 참여자 표기 문자열 (예: 김ㅇㅇ(14기,기획)).
-  participants: string[]
-  description: string
-  // 카드에 붙는 해시태그.
-  tags: string[]
-  imageUrls: string[]
+  cohortId: number
+  part: string
+  role: string
 }
 
-// 프로젝트 작성·수정 폼 값 (참여자는 쉼표로 구분한 한 줄 입력).
+// 프로젝트 목록 API 응답 항목.
+export interface ProjectSummaryResponse {
+  projectId: number
+  title: string
+  thumbnailUrl: string
+  tags: string[]
+  cohortId: number
+  developedYear: number
+  developedMonth: number
+  createdAt: string
+}
+
+// 프로젝트 상세 API 응답.
+export interface ProjectDetailResponse extends ProjectSummaryResponse {
+  description: string
+  deployUrl: string
+  githubUrl: string
+  participants: ProjectParticipant[]
+  updatedAt: string
+}
+
+export interface ProjectPageResponse {
+  content: ProjectSummaryResponse[]
+  page: number
+  size: number
+  totalElements: number
+  totalPages: number
+  hasNext: boolean
+}
+
+export interface ProjectQuery {
+  page?: number
+  size?: number
+  cohortId?: number
+  tag?: ProjectTag
+}
+
+// 컴포넌트가 의존하는 화면용 프로젝트 모델. API 숫자 ID는 경계에서 문자열로 변환한다.
+export interface ProjectSummary extends Entity {
+  title: string
+  thumbnailUrl: string
+  tags: string[]
+  cohortId: number
+  developedYear: number
+  developedMonth: number
+  createdAt: string
+}
+
+export interface ProjectPage {
+  content: ProjectSummary[]
+  page: number
+  size: number
+  totalElements: number
+  totalPages: number
+  hasNext: boolean
+}
+
+export interface Project extends ProjectSummary {
+  description: string
+  deployUrl: string
+  githubUrl: string
+  participants: ProjectParticipant[]
+  updatedAt: string
+}
+
+// 프로젝트 작성·수정 폼 값. 관리자 폼은 백엔드 쓰기 명세 확정 전 기존 입력 구조를 유지한다.
 export interface ProjectFormValues {
   name: string
   category: string

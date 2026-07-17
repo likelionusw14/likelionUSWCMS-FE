@@ -7,7 +7,7 @@ import type {
 } from 'react'
 import type { AreaType, Role } from './auth'
 import type { NavItem } from './nav'
-import type { Project, ProjectFormValues } from './project'
+import type { Project, ProjectFormValues, ProjectSummary } from './project'
 import type { Session, SessionFormValues } from './session'
 import type { SignupProfile } from './signup'
 
@@ -143,7 +143,8 @@ export interface PaginationProps {
 }
 
 export interface ProjectCardProps {
-  project: Project
+  project: ProjectSummary
+  detailPath: string
   className?: string
 }
 
@@ -159,12 +160,12 @@ export interface ProjectFilterBarProps {
 }
 
 export interface ProjectListProps {
-  projects: Project[]
+  projects: ProjectSummary[]
   totalCount: number
   page: number
   totalPages: number
   onPageChange: (page: number) => void
-
+  detailBasePath: string
   createPath?: string
 }
 

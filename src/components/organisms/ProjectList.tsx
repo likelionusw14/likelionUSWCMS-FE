@@ -10,6 +10,7 @@ export function ProjectList({
   page,
   totalPages,
   onPageChange,
+  detailBasePath,
   createPath,
 }: ProjectListProps) {
   return (
@@ -26,12 +27,30 @@ export function ProjectList({
           </Link>
         )}
       </div>
-      <div className="grid w-full grid-cols-1 gap-x-[29px] gap-y-[59px] lg:grid-cols-2">
-        {projects.map((project) => (
-          <ProjectCard key={project.id} project={project} />
-        ))}
-      </div>
-      <Pagination page={page} totalPages={totalPages} onPageChange={onPageChange} />
+      {projects.length > 0 ? (
+        <>
+          <div className="grid w-full grid-cols-1 gap-x-[29px] gap-y-[59px] lg:grid-cols-2">
+            {projects.map((project) => (
+              <ProjectCard
+                key={project.id}
+                project={project}
+                detailPath={`${detailBasePath}/${project.id}`}
+              />
+            ))}
+          </div>
+          <Pagination
+            page={page}
+            totalPages={Math.max(1, totalPages)}
+            onPageChange={onPageChange}
+          />
+        </>
+      ) : (
+        <div className="flex min-h-[240px] items-center justify-center rounded-8 bg-background-1 px-24 text-center text-m-18 text-gray-700">
+          조건에 맞는 프로젝트가 없습니다.
+          <br />
+          다른 기수나 태그를 선택해 주세요.
+        </div>
+      )}
     </div>
   )
 }
