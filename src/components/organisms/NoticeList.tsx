@@ -43,7 +43,7 @@ export function NoticeList({ notices, totalCount, page, totalPages, onPageChange
           >
             <span className={`${CHECK_CELL} pointer-events-none`}>
               {notice.mustRead && (
-                <Checkbox checked onChange={() => {}} variant="square" ariaLabel="필독" />
+                <Checkbox checked onChange={() => {}} variant="round" ariaLabel="필독" />
               )}
             </span>
             <span className={TITLE_CELL}>{notice.title}</span>
