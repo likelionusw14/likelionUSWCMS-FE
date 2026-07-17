@@ -14,9 +14,9 @@ function AnimatedOutlet() {
 export function PublicShell({ navItems, applyItem }: PublicShellProps) {
   const location = useLocation()
   const variants = {
-    initial: { opacity: 0, filter: 'blur(4px)' },
-    animate: { opacity: 1, filter: 'blur(0px)' },
-    exit: { opacity: 0, filter: 'blur(4px)' },
+    initial: { opacity: 0 },
+    animate: { opacity: 1 },
+    exit: { opacity: 0 },
   }
   return (
     <div className="flex min-h-screen flex-col bg-background-2">
@@ -29,7 +29,7 @@ export function PublicShell({ navItems, applyItem }: PublicShellProps) {
             animate="animate"
             exit="exit"
             variants={variants}
-            transition={{ duration: 0.2, ease: 'easeInOut' }}
+            transition={{ duration: 0.15, ease: 'easeInOut' }}
             className="flex w-full justify-center"
           >
             <AnimatedOutlet />

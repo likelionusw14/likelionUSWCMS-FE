@@ -14,9 +14,9 @@ function AnimatedOutlet() {
 export function AdminSidebarShell({ homeItem, navItems }: AdminSidebarShellProps) {
   const location = useLocation()
   const variants = {
-    initial: { opacity: 0, filter: 'blur(4px)' },
-    animate: { opacity: 1, filter: 'blur(0px)' },
-    exit: { opacity: 0, filter: 'blur(4px)' },
+    initial: { opacity: 0 },
+    animate: { opacity: 1 },
+    exit: { opacity: 0 },
   }
   return (
     <div className="flex h-screen overflow-hidden bg-background-1">
@@ -34,7 +34,7 @@ export function AdminSidebarShell({ homeItem, navItems }: AdminSidebarShellProps
               animate="animate"
               exit="exit"
               variants={variants}
-              transition={{ duration: 0.2, ease: 'easeInOut' }}
+              transition={{ duration: 0.15, ease: 'easeInOut' }}
               className="min-h-full"
             >
               <AnimatedOutlet />
