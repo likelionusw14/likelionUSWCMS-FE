@@ -1,4 +1,5 @@
 import { useLayoutEffect, useRef, useState } from 'react'
+import { motion, useReducedMotion } from 'framer-motion'
 import { cn } from '@utils'
 import type { CalendarDayProps } from '@types'
 
@@ -8,6 +9,7 @@ import type { CalendarDayProps } from '@types'
 // 넘치는 방향(위/아래)만 페이드된다. 이웃 달 칸은 60% 흐리게.
 export function CalendarDay({ day, inMonth = true, events, onEventClick }: CalendarDayProps) {
   const scrollRef = useRef<HTMLDivElement>(null)
+  const reduce = useReducedMotion()
   const [fade, setFade] = useState({ top: false, bottom: false })
 
   useLayoutEffect(() => {
@@ -50,14 +52,17 @@ export function CalendarDay({ day, inMonth = true, events, onEventClick }: Calen
           const chipClass =
             'w-full shrink-0 truncate rounded-8 bg-primary px-8 py-4 text-left text-r-14 text-white'
           return onEventClick ? (
-            <button
+            <motion.button
               key={event.id}
               type="button"
               onClick={(domEvent) => onEventClick(event, domEvent.currentTarget)}
-              className={cn(chipClass, 'cursor-pointer')}
+              className={cn(chipClass, 'origin-center cursor-pointer')}
+              whileHover={reduce ? undefined : { scale: 1.04 }}
+              whileTap={reduce ? undefined : { scale: 0.97 }}
+              transition={{ duration: 0.12, ease: 'easeOut' }}
             >
               {event.title}
-            </button>
+            </motion.button>
           ) : (
             <span key={event.id} className={chipClass}>
               {event.title}
