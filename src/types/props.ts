@@ -157,8 +157,6 @@ export interface SearchBarProps {
   children: ReactNode
   // 검색 아이콘 클릭. 없으면 아이콘 비활성(디자인상 항상 표시).
   onSearch?: () => void
-  // 필터 컨테이너 gap 조정 등 (기본 gap-16).
-  filtersClassName?: string
 }
 
 export interface ProjectListProps {

@@ -19,7 +19,7 @@ export function ProjectListPage() {
     <>
       <AdminTopBar breadcrumb="홈 / 프로젝트 관리" title="프로젝트 관리" />
       <div className="flex flex-col gap-24 px-24 pb-[120px] pt-32">
-        <SearchBar onSearch={() => setPage(1)} filtersClassName="gap-24">
+        <SearchBar onSearch={() => setPage(1)}>
           <Dropdown
             value={cohort}
             onChange={setCohort}
