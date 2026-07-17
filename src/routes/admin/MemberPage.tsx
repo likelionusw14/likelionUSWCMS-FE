@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { COHORT_OPTIONS, PART_OPTIONS } from '@constants'
 import { useMembers, usePendingMembers, usePagination } from '@hooks'
 import { MemberEditModal, ResultDialog, RoleEditModal } from '@molecules'
@@ -6,8 +7,9 @@ import { MemberList, PendingMemberList } from '@organisms'
 import type { Member } from '@types'
 
 
-// 사자(회원) 관리 — 승인대기 목록(승인/취소) + 회원 목록(권한 수정·회원정보 수정). Figma 15:11837.
+// 회원 관리 — 승인대기 목록(승인/취소) + 회원 목록(권한 수정·회원정보 수정). Figma 15:11837.
 export function MemberPage() {
+  const navigate = useNavigate()
   const { data: members } = useMembers()
   const { data: pending } = usePendingMembers()
   const [editMember, setEditMember] = useState<Member | null>(null)
@@ -65,10 +67,13 @@ export function MemberPage() {
       />
       <ResultDialog
         open={deleteDoneOpen}
-        onConfirm={() => setDeleteDoneOpen(false)}
+        onConfirm={() => {
+          setDeleteDoneOpen(false)
+          navigate('/admin/members')
+        }}
         title="삭제 완료"
         description="삭제처리가 완료되었습니다."
-        confirmLabel="확인"
+        confirmLabel="회원 관리로 이동"
       />
     </>
   )

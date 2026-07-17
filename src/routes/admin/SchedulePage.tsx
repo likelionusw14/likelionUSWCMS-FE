@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { ConfirmDialog, ResultDialog, ScheduleFormModal } from '@molecules'
 import { ScheduleCalendar } from '@organisms'
 import { useSchedules } from '@hooks'
@@ -6,6 +7,7 @@ import { useSchedules } from '@hooks'
 // 일정 관리 — 월 캘린더(ScheduleCalendar). 칩 클릭 시 상세 팝업(수정/삭제), + 버튼으로 일정 작성.
 // Figma 491:3357.
 export function SchedulePage() {
+  const navigate = useNavigate()
   const { data: events } = useSchedules()
   const now = new Date()
   const [year, setYear] = useState(now.getFullYear())
@@ -49,10 +51,13 @@ export function SchedulePage() {
       />
       <ResultDialog
         open={deleteDoneOpen}
-        onConfirm={() => setDeleteDoneOpen(false)}
+        onConfirm={() => {
+          setDeleteDoneOpen(false)
+          navigate('/admin/schedule')
+        }}
         title="삭제 완료"
         description="삭제처리가 완료되었습니다."
-        confirmLabel="확인"
+        confirmLabel="일정 관리로 이동"
       />
     </>
   )

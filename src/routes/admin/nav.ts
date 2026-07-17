@@ -7,7 +7,7 @@ export const ADMIN_NAV: NavItem[] = [
   { to: '/admin/notices', label: '공지' },
   { to: '/admin/schedule', label: '일정' },
   { to: '/admin/attendance', label: '출결' },
-  { to: '/admin/members', label: '사자' },
+  { to: '/admin/members', label: '회원' },
   { to: '/admin/certificates', label: '활동증명서' },
 ]
 
@@ -25,5 +25,5 @@ export const ADMIN_SIDEBAR_NAV: NavItem[] = [
   { to: '/admin/notices', label: '공지 관리' },
   { to: '/admin/schedule', label: '일정 관리' },
   { to: '/admin/attendance', label: '출결 관리' },
-  { to: '/admin/members', label: '사자 관리' },
+  { to: '/admin/members', label: '회원 관리' },
 ]
