@@ -1,9 +1,8 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { FormEvent } from 'react'
 import uploadIcon from '@/assets/icons/upload.svg'
 import { Dropdown, PinToggle } from '@atoms'
 import { FormRow } from '@molecules'
-import { cn } from '@utils'
 import type { NoticeFormProps, NoticeFormValues } from '@types'
 
 // 입력 공통 — bg-background-1 + secondary-1 테두리 (Figma 공지작성 인풋).
@@ -24,7 +23,16 @@ export function NoticeForm({
   onFileClear,
 }: NoticeFormProps) {
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const contentRef = useRef<HTMLTextAreaElement>(null)
   const [error, setError] = useState(false)
+
+  // 공지내용 auto-grow — 엔터/입력마다 scrollHeight 만큼 높이를 늘린다. 값(초기값 포함) 변화 시 재계산.
+  useEffect(() => {
+    const el = contentRef.current
+    if (!el) return
+    el.style.height = 'auto'
+    el.style.height = `${el.scrollHeight}px`
+  }, [values.content])
 
   function change(field: keyof NoticeFormValues, value: string) {
     onFieldChange(field, value)
@@ -120,7 +128,9 @@ export function NoticeForm({
           <div className="flex w-full items-stretch">
             <FormRow label="공지내용">
               <textarea
-                className={cn(FIELD, 'no-scrollbar min-h-[60px] resize-none py-[8.5px]')}
+                ref={contentRef}
+                rows={1}
+                className="no-scrollbar min-h-[60px] w-full resize-none rounded-8 border border-secondary-1 bg-background-1 px-16 py-[8.5px] text-m-14 text-black placeholder:text-primary/50 focus:outline-none"
                 value={values.content}
                 onChange={(event) => change('content', event.target.value)}
                 placeholder="공지내용을 작성해주세요"
