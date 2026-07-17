@@ -12,7 +12,7 @@ export function MenuCard({ title, description, to, className }: MenuCardProps) {
   const [hovered, setHovered] = useState(false)
 
   const ease = [0.16, 1, 0.3, 1] as const
-  const duration = reduce ? 0 : 0.5
+  const duration = reduce ? 0 : 0.7
 
   return (
     <Link to={to} className={cn('block py-px', className)}>
@@ -20,11 +20,11 @@ export function MenuCard({ title, description, to, className }: MenuCardProps) {
         onHoverStart={() => setHovered(true)}
         onHoverEnd={() => setHovered(false)}
         whileHover={reduce ? undefined : { y: -6 }}
-        transition={{ duration: reduce ? 0 : 0.25, ease }}
+        transition={{ duration: reduce ? 0 : 0.4, ease }}
       >
         <WindowPanel
           bodyClassName={cn(
-            'relative h-[235px] overflow-hidden transition-colors duration-500',
+            'relative h-[235px] overflow-hidden transition-colors duration-700',
             // cn 은 tailwind-merge 가 아니라서 `!` 로 아톰 기본값(bg-white)을 덮는다.
             hovered && '!bg-secondary-1',
           )}
@@ -45,7 +45,7 @@ export function MenuCard({ title, description, to, className }: MenuCardProps) {
             <motion.p
               className="text-m-16-home text-black"
               animate={{ opacity: hovered ? 0 : 1, y: hovered ? -8 : 0 }}
-              transition={{ duration: reduce ? 0 : 0.3, ease }}
+              transition={{ duration: reduce ? 0 : 0.45, ease }}
             >
               {description}
             </motion.p>
