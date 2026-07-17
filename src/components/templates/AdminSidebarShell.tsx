@@ -1,9 +1,25 @@
-import { Outlet } from 'react-router-dom'
+import { Outlet, useLocation } from 'react-router-dom'
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { AdminFooter, AdminSidebar, AdminTopBarRender } from '@organisms'
 import type { AdminSidebarShellProps } from '@types'
 
 // 관리 페이지 셸: 좌측 사이드바 + (상단바는 각 페이지가 렌더) 콘텐츠 + 푸터.
 export function AdminSidebarShell({ homeItem, navItems }: AdminSidebarShellProps) {
+  const location = useLocation()
+  const shouldReduceMotion = useReducedMotion()
+
+  const variants = shouldReduceMotion
+    ? {
+        initial: { opacity: 0 },
+        animate: { opacity: 1 },
+        exit: { opacity: 0 },
+      }
+    : {
+        initial: { opacity: 0, y: 15 },
+        animate: { opacity: 1, y: 0 },
+        exit: { opacity: 0, y: -15 },
+      }
+
   return (
     <div className="flex h-screen overflow-hidden bg-background-1">
       <AdminSidebar homeItem={homeItem} navItems={navItems} />
@@ -13,9 +29,19 @@ export function AdminSidebarShell({ homeItem, navItems }: AdminSidebarShellProps
 
         {/* 본문 + 푸터만 내부 스크롤 (스크롤바가 본문 우측에 형성됨) */}
         <div className="flex-1 overflow-y-auto">
-          <div className="min-h-full">
-            <Outlet />
-          </div>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={location.pathname}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              variants={variants}
+              transition={{ duration: 0.2, ease: 'easeInOut' }}
+              className="min-h-full"
+            >
+              <Outlet />
+            </motion.div>
+          </AnimatePresence>
           <AdminFooter />
         </div>
       </div>
