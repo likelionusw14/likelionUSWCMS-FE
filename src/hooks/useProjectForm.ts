@@ -17,13 +17,15 @@ const EMPTY_VALUES: ProjectFormValues = {
 function toFormValues(project: Project | undefined): ProjectFormValues {
   if (!project) return EMPTY_VALUES
   return {
-    name: project.name,
-    category: project.category,
-    startDate: project.startDate,
-    endDate: project.endDate,
+    name: project.title,
+    category: project.tags.find((tag) => tag === '해커톤' || tag === '아이디어톤') ?? '',
+    startDate: `${project.developedYear}.${String(project.developedMonth).padStart(2, '0')}`,
+    endDate: `${project.developedYear}.${String(project.developedMonth).padStart(2, '0')}`,
     githubUrl: project.githubUrl,
-    projectUrl: project.projectUrl,
-    participants: project.participants.join(', '),
+    projectUrl: project.deployUrl,
+    participants: project.participants
+      .map((participant) => `${participant.name}(${participant.cohortId}기,${participant.part})`)
+      .join(', '),
     description: project.description,
   }
 }

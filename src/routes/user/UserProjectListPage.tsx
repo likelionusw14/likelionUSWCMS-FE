@@ -1,18 +1,9 @@
-import { useState } from 'react'
-import { COHORT_OPTIONS, PROJECT_CATEGORY_OPTIONS } from '@constants'
-import { useProjects } from '@hooks'
+import { PROJECT_CATEGORY_OPTIONS, PROJECT_COHORT_OPTIONS } from '@constants'
+import { useUserProjectList } from '@hooks'
 import { ProjectFilterBar, ProjectList } from '@organisms'
 
-const PAGE_SIZE = 4
-
 export function UserProjectListPage() {
-  const { data: projects } = useProjects()
-  const [cohort, setCohort] = useState('')
-  const [category, setCategory] = useState('')
-  const [page, setPage] = useState(1)
-
-  const totalPages = Math.max(1, Math.ceil(projects.length / PAGE_SIZE))
-  const visibleProjects = projects.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
+  const { data, cohort, tag, page, setCohort, setTag, setPage, resetPage } = useUserProjectList()
 
   return (
     <div className="mx-auto flex w-full max-w-[1280px] flex-col gap-64 px-64 pb-96 pt-48">
@@ -28,20 +19,21 @@ export function UserProjectListPage() {
       <div className="flex flex-col gap-24">
         <ProjectFilterBar
           cohort={cohort}
-          filterValue={category}
+          filterValue={tag}
           onCohortChange={setCohort}
-          onFilterChange={setCategory}
-          cohortOptions={COHORT_OPTIONS}
+          onFilterChange={setTag}
+          cohortOptions={PROJECT_COHORT_OPTIONS}
           filterOptions={PROJECT_CATEGORY_OPTIONS}
           filterPlaceholder="프로젝트"
-          onSearch={() => setPage(1)}
+          onSearch={resetPage}
         />
         <ProjectList
-          projects={visibleProjects}
-          totalCount={projects.length}
+          projects={data.content}
+          totalCount={data.totalElements}
           page={page}
-          totalPages={totalPages}
+          totalPages={data.totalPages}
           onPageChange={setPage}
+          detailBasePath="/app/projects"
         />
       </div>
     </div>

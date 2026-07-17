@@ -2,4 +2,6 @@
 export const endpoints = {
   health: '/health',
   login: '/auth/login',
+  projects: '/api/projects',
+  project: (projectId: string) => `/api/projects/${projectId}`,
 } as const

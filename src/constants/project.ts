@@ -5,3 +5,9 @@ export const PROJECT_CATEGORY_OPTIONS: SelectOption[] = [
   { value: '아이디어톤', label: '아이디어톤' },
   { value: '해커톤', label: '해커톤' },
 ]
+
+// 사용자 프로젝트 기수 필터. 실제 연동 시 기수 조회 API 결과로 교체한다.
+export const PROJECT_COHORT_OPTIONS: SelectOption[] = [
+  { value: '14', label: '14기' },
+  { value: '13', label: '13기' },
+]
