@@ -8,6 +8,18 @@ const M = now.getMonth() // 0-11
 const day = (d: number) => `${Y}-${String(M + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`
 const kdt = (d: number, time: string) => `${Y}년 ${M + 1}월 ${d}일 ${time}`
 
+// 'YYYY-MM-DD' (임의 Date). 그레이존(이웃 달 spill) 칸 예시용.
+const toKey = (date: Date) =>
+  `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
+
+// 이번 달 그리드(월요일 시작)에 보이는 이웃 달 spill 날짜 하나를 구한다.
+// 1일이 월요일이 아니면 앞쪽(이전 달) spill 칸이, 월요일이면 뒤쪽(다음 달) spill 칸이 존재한다.
+const startOffset = (new Date(Y, M, 1).getDay() + 6) % 7
+const daysInMonth = new Date(Y, M + 1, 0).getDate()
+const totalCells = Math.ceil((startOffset + daysInMonth) / 7) * 7
+const spillDate =
+  startOffset > 0 ? new Date(Y, M, 1 - startOffset) : new Date(Y, M, 1 - startOffset + totalCells - 1)
+
 const MOCK_SCHEDULES: CalendarEvent[] = [
   {
     id: 's1',
@@ -42,12 +54,29 @@ const MOCK_SCHEDULES: CalendarEvent[] = [
     description: '해커톤 뒤풀이 회식.',
   },
   {
+    id: 's4b',
+    date: day(17),
+    title: '뒤풀이 정산',
+    dateTime: kdt(17, '22:00'),
+    place: '동아리방',
+    description: '해커톤·회식 비용 정산.',
+  },
+  {
     id: 's5',
     date: day(24),
     title: '스터디 발표',
     dateTime: kdt(24, '19:00'),
     place: '동아리방',
     description: '주제별 스터디 발표.',
+  },
+  {
+    // 그레이존(이웃 달 spill) 칸 예시 칩.
+    id: 's6',
+    date: toKey(spillDate),
+    title: '이웃 달 일정',
+    dateTime: `${spillDate.getFullYear()}년 ${spillDate.getMonth() + 1}월 ${spillDate.getDate()}일 12:00`,
+    place: '동아리방',
+    description: '이웃 달(회색 칸) 일정 예시.',
   },
 ]
 
