@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import topbarUserIcon from '@/assets/icons/topbar-user.svg'
+import topbarLogoutIcon from '@/assets/icons/topbar-logout.svg'
 import { useAuth } from '@hooks'
 import type { BreadcrumbSegment } from '@types'
 
@@ -178,7 +178,7 @@ export function AdminTopBar() {
         <h1 className="text-sm-22 text-black">{title}</h1>
       </div>
       <button type="button" onClick={handleLogout} aria-label="로그아웃" title="로그아웃">
-        <img src={topbarUserIcon} alt="" className="h-24 w-24" />
+        <img src={topbarLogoutIcon} alt="" className="h-24 w-24" />
       </button>
     </div>
   )
