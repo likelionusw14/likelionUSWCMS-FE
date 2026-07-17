@@ -5,7 +5,14 @@ import type { ModalProps } from '@types'
 
 // 공용 모달 셸 — 반투명 오버레이 + 중앙 카드. body 포털로 렌더한다.
 // dismissable(기본 true)이면 ESC·바깥클릭으로 닫힌다. 열린 동안 body 스크롤을 잠근다.
-export function Modal({ open, onClose, children, dismissable = true, ariaLabel }: ModalProps) {
+export function Modal({
+  open,
+  onClose,
+  children,
+  dismissable = true,
+  ariaLabel,
+  panelClassName = 'rounded-8 bg-white',
+}: ModalProps) {
   useEffect(() => {
     if (!open || !dismissable) return
 
@@ -36,7 +43,7 @@ export function Modal({ open, onClose, children, dismissable = true, ariaLabel }
         role="dialog"
         aria-modal="true"
         aria-label={ariaLabel}
-        className={cn('rounded-8 bg-white')}
+        className={cn(panelClassName)}
         onClick={(event) => event.stopPropagation()}
       >
         {children}

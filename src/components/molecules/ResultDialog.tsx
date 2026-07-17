@@ -14,7 +14,7 @@ export function ResultDialog({ open, onConfirm, title, description, confirmLabel
         <button
           type="button"
           onClick={onConfirm}
-          className="flex h-48 items-center justify-center rounded-8 bg-primary px-32 text-sm-18 text-white"
+          className="flex h-48 min-w-[128px] items-center justify-center rounded-8 bg-primary px-32 text-sm-18 text-white"
         >
           {confirmLabel}
         </button>

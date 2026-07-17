@@ -229,6 +229,8 @@ export interface ModalProps {
   dismissable?: boolean
   // 접근성 라벨(제목 텍스트).
   ariaLabel?: string
+  // 다이얼로그 카드 class. 기본 흰 카드(rounded-8 bg-white). 창(WindowPanel) 팝업은 '' 로 넘겨 카드 제거.
+  panelClassName?: string
 }
 
 // 확인 팝업(삭제 등) — 경고 아이콘 + 제목/설명 + 취소/확인 2버튼.
@@ -256,4 +258,73 @@ export interface ResultDialogProps {
   description?: string
   // 버튼 라벨. 예: '일정 관리로 이동'.
   confirmLabel: string
+}
+
+// ── 창(WindowPanel) 팝업들 (일정/회원 관리) ──
+
+// 일정 작성 팝업 값.
+export interface ScheduleFormValues {
+  title: string
+  place: string
+  // 'YYYY.MM.DD' (없으면 '').
+  date: string
+  // 'HH:MM' (없으면 '').
+  time: string
+  description: string
+}
+
+// 일정 작성 팝업 — 일정명·장소·날짜·시간·설명. 날짜/시간 필드는 내부에서 선택 팝업을 띄운다.
+export interface ScheduleFormModalProps {
+  open: boolean
+  onClose: () => void
+  onSubmit: (values: ScheduleFormValues) => void
+  initialValues?: Partial<ScheduleFormValues>
+}
+
+// 날짜 선택 팝업 — 년/월/일 3열 휠. 일정 등록·수정, 일정(날짜) 변경 공용.
+export interface DatePickerModalProps {
+  open: boolean
+  onClose: () => void
+  onConfirm: (value: string) => void // 'YYYY.MM.DD'
+  // 초기 선택값 'YYYY.MM.DD'. 없으면 오늘.
+  value?: string
+  // 제목. 기본 '날짜 선택'.
+  title?: string
+}
+
+// 시간 선택 팝업 — 시/분/오전·오후 3열 휠.
+export interface TimePickerModalProps {
+  open: boolean
+  onClose: () => void
+  onConfirm: (value: string) => void // 'HH:MM' (24h)
+  // 초기 선택값 'HH:MM'. 없으면 현재 시각.
+  value?: string
+}
+
+// 비고 작성 팝업 — 비고 textarea + 저장/취소.
+export interface RemarkModalProps {
+  open: boolean
+  onClose: () => void
+  onSubmit: (value: string) => void
+  value?: string
+}
+
+// 회원정보 수정 팝업 — 이름 + 기수·파트 드롭다운 + 저장/취소 + 회원정보 삭제 링크.
+export interface MemberEditModalProps {
+  open: boolean
+  onClose: () => void
+  onSubmit: (values: { name: string; cohort: string; part: string }) => void
+  onDelete: () => void
+  initialValues?: { name?: string; cohort?: string; part?: string }
+  cohortOptions: SelectOption[]
+  partOptions: SelectOption[]
+}
+
+// 권한 수정 팝업 — 운영진/아기사자 2분할 토글 + 저장/취소.
+export interface RoleEditModalProps {
+  open: boolean
+  onClose: () => void
+  onSubmit: (role: string) => void
+  // 현재 선택된 권한 키. 기본 첫 옵션.
+  value?: string
 }
