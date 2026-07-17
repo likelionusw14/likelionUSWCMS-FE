@@ -47,7 +47,7 @@ export function AttendancePage() {
           onGenerate={generate}
         />
 
-        <h2 className="text-sm-22 text-black">출석 내역</h2>
+        <h2 className="text-center text-sm-22 text-black">출석 내역</h2>
         <div className="flex w-full items-center justify-between rounded-16 bg-white px-32 py-12">
           <div className="flex items-center gap-16">
             <button
