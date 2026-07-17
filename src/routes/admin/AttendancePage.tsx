@@ -1,9 +1,30 @@
-import { useAttendanceCode } from '@hooks'
-import { AdminTopBar, AttendanceCodeCreate } from '@organisms'
+import { useState } from 'react'
+import searchIcon from '@/assets/icons/search.svg'
+import { RemarkModal } from '@molecules'
+import { AdminTopBar, AttendanceCodeCreate, AttendanceList } from '@organisms'
+import { useAttendance, useAttendanceCode } from '@hooks'
+import type { AttendanceRecord } from '@types'
 
-// 출결 관리 — 출석 코드 생성 섹션. (출석 내역 목록은 추후 추가)
+const PAGE_SIZE = 10
+
+// 출결 관리 — 출석 코드 생성 + 출석 내역(출석 토글·비고). Figma 29:18174.
 export function AttendancePage() {
   const { code, remainingSeconds, generate } = useAttendanceCode()
+  const { data } = useAttendance()
+  const [records, setRecords] = useState<AttendanceRecord[]>(data)
+  const [page, setPage] = useState(1)
+  const [remarkRecord, setRemarkRecord] = useState<AttendanceRecord | null>(null)
+
+  const totalPages = Math.max(1, Math.ceil(records.length / PAGE_SIZE))
+  const visible = records.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
+
+  function togglePresent(id: string) {
+    setRecords((previous) =>
+      previous.map((record) =>
+        record.id === id ? { ...record, present: !record.present } : record,
+      ),
+    )
+  }
 
   return (
     <>
@@ -14,7 +35,28 @@ export function AttendancePage() {
           remainingSeconds={remainingSeconds}
           onGenerate={generate}
         />
+        <div className="flex w-full items-center justify-end rounded-16 bg-white px-32 py-12">
+          <button type="button" aria-label="검색">
+            <img src={searchIcon} alt="" className="h-40 w-24" />
+          </button>
+        </div>
+        <AttendanceList
+          records={visible}
+          totalCount={records.length}
+          page={page}
+          totalPages={totalPages}
+          onPageChange={setPage}
+          onTogglePresent={togglePresent}
+          onEditRemark={setRemarkRecord}
+        />
       </div>
+
+      <RemarkModal
+        open={!!remarkRecord}
+        onClose={() => setRemarkRecord(null)}
+        onSubmit={() => setRemarkRecord(null)}
+        value={remarkRecord?.remark}
+      />
     </>
   )
 }

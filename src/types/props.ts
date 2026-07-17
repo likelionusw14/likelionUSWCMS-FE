@@ -9,6 +9,9 @@ import type { AreaType, Role } from './auth'
 import type { NavItem } from './nav'
 import type { Project, ProjectFormValues } from './project'
 import type { Session, SessionFormValues } from './session'
+import type { Notice } from './notice'
+import type { Member, PendingMember } from './member'
+import type { AttendanceRecord } from './attendance'
 import type { SignupProfile } from './signup'
 
 // 컴포넌트 props 타입 (컴포넌트 파일 인라인 정의 금지 규칙에 따라 여기 정의).
@@ -423,4 +426,48 @@ export interface ApprovalActionsProps {
   onCancel: () => void
   disabled?: boolean
   className?: string
+}
+
+// 공지 목록 — 건수·등록·표(필독·제목·태그·작성일)·페이지네이션.
+export interface NoticeListProps {
+  notices: Notice[]
+  totalCount: number
+  page: number
+  totalPages: number
+  onPageChange: (page: number) => void
+}
+
+// 공지 상세 — 제목·목록/수정·태그/작성일/첨부 정보표 + 공지내용.
+export interface NoticeDetailProps {
+  notice: Notice
+}
+
+// 승인대기 목록 — 이름·기수·파트 + 승인/취소.
+export interface PendingMemberListProps {
+  members: PendingMember[]
+  totalCount: number
+  onApprove: (id: string) => void
+  onReject: (id: string) => void
+}
+
+// 회원 목록 — 이름·분류(링크)·기수·파트·가입상태·수정(링크) + 페이지네이션.
+export interface MemberListProps {
+  members: Member[]
+  totalCount: number
+  page: number
+  totalPages: number
+  onPageChange: (page: number) => void
+  onEditRole: (member: Member) => void
+  onEditMember: (member: Member) => void
+}
+
+// 출석 내역 — 날짜·이름·학번·파트·출석상태(체크)·비고(버튼) + 페이지네이션.
+export interface AttendanceListProps {
+  records: AttendanceRecord[]
+  totalCount: number
+  page: number
+  totalPages: number
+  onPageChange: (page: number) => void
+  onTogglePresent: (id: string) => void
+  onEditRemark: (record: AttendanceRecord) => void
 }
