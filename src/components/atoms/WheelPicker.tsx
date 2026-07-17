@@ -151,7 +151,10 @@ export function WheelPicker({
       role="listbox"
       aria-label={ariaLabel}
       onScroll={handleScroll}
-      className={cn('no-scrollbar select-none overflow-y-scroll text-center', widthClass)}
+      className={cn(
+        'no-scrollbar select-none touch-pan-y overflow-y-scroll overflow-x-hidden text-center',
+        widthClass,
+      )}
       style={{ height: CONTAINER_H, scrollbarWidth: 'none' }}
     >
       <div style={{ height: SPACER }} aria-hidden />
