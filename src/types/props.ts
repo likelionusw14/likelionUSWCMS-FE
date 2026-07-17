@@ -59,6 +59,8 @@ export interface WindowPanelProps {
   children: ReactNode
   className?: string
   bodyClassName?: string
+  // 헤더 바 높이 등 커스텀 (기본 h-32). 큰 섹션 창은 h-40.
+  headerClassName?: string
 }
 
 export type InputProps = InputHTMLAttributes<HTMLInputElement>
