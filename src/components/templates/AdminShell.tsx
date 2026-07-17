@@ -22,9 +22,9 @@ export function AdminShell({ navItems, pageTitles }: AdminShellProps) {
   }
 
   const variants = {
-    initial: { opacity: 0, y: 8 },
-    animate: { opacity: 1, y: 0 },
-    exit: { opacity: 0, y: -8 },
+    initial: { opacity: 0, filter: 'blur(4px)' },
+    animate: { opacity: 1, filter: 'blur(0px)' },
+    exit: { opacity: 0, filter: 'blur(4px)' },
   }
   return (
     <div className="flex min-h-screen flex-col bg-background-1">
@@ -37,7 +37,7 @@ export function AdminShell({ navItems, pageTitles }: AdminShellProps) {
             animate="animate"
             exit="exit"
             variants={variants}
-            transition={{ duration: 0.25, ease: [0.2, 0.8, 0.2, 1] }}
+            transition={{ duration: 0.2, ease: 'easeInOut' }}
           >
             <AnimatedOutlet />
           </motion.div>
