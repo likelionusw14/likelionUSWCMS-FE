@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { COHORT_OPTIONS, PART_OPTIONS } from '@constants'
 import { Dropdown } from '@atoms'
 import { useProjects } from '@hooks'
-import { AdminTopBar, ProjectList, SearchBar } from '@organisms'
+import { ProjectList, SearchBar } from '@organisms'
 
 const PAGE_SIZE = 4
 
@@ -17,7 +17,6 @@ export function ProjectListPage() {
 
   return (
     <>
-      <AdminTopBar breadcrumb={[{ label: '홈', to: '/admin' }, { label: '프로젝트 관리' }]} title="프로젝트 관리" />
       <div className="flex flex-col gap-24 px-24 pb-[120px] pt-32">
         <SearchBar onSearch={() => setPage(1)}>
           <Dropdown

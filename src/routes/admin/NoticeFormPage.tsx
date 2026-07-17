@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom'
 import { NOTICE_TAG_OPTIONS } from '@constants'
 import { useNotice, useNoticeForm } from '@hooks'
-import { AdminTopBar, NoticeForm } from '@organisms'
+import { NoticeForm } from '@organisms'
 
 // 작성(/new)과 수정(/:noticeId/edit)을 같은 폼으로 처리한다.
 export function NoticeFormPage() {
@@ -11,18 +11,9 @@ export function NoticeFormPage() {
     notice ? { title: notice.title, tag: notice.tag, content: notice.content } : undefined,
   )
 
-  const label = noticeId ? '공지 수정' : '공지 작성'
 
   return (
     <>
-      <AdminTopBar
-        breadcrumb={[
-          { label: '홈', to: '/admin' },
-          { label: '공지 관리', to: '/admin/notices' },
-          { label: label },
-        ]}
-        title={label}
-      />
       <NoticeForm
         values={values}
         onFieldChange={setField}

@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react'
 import calendarIcon from '@/assets/icons/calendar.svg'
 import { Dropdown } from '@atoms'
 import { DatePickerModal, RemarkModal } from '@molecules'
-import { AdminTopBar, AttendanceCodeCreate, AttendanceList, SearchBar } from '@organisms'
+import { AttendanceCodeCreate, AttendanceList, SearchBar } from '@organisms'
 import { useAttendance, useAttendanceCode } from '@hooks'
 import { PART_OPTIONS } from '@constants'
 import type { AttendanceRecord } from '@types'
@@ -38,7 +38,6 @@ export function AttendancePage() {
 
   return (
     <>
-      <AdminTopBar breadcrumb={[{ label: '홈', to: '/admin' }, { label: '출결 관리' }]} title="출결 관리" />
       <div className="flex flex-col gap-24 px-24 pb-[120px] pt-32">
         <AttendanceCodeCreate
           code={code}

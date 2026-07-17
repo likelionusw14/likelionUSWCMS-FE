@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import { useLocation, useOutlet } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
-import { AdminFooter, AdminSidebar, AdminTopBarRender } from '@organisms'
+import { AdminFooter, AdminSidebar, AdminTopBar } from '@organisms'
 import type { AdminSidebarShellProps } from '@types'
 
-// 관리 페이지 셸: 좌측 사이드바 + (상단바는 각 페이지가 렌더) 콘텐츠 + 푸터.
+// 관리 페이지 셸: 좌측 사이드바 + 고정 상단바 + 본문 스크롤 영역 + 푸터.
 function AnimatedOutlet() {
   const o = useOutlet()
   const [outlet] = useState(o)
@@ -23,7 +23,7 @@ export function AdminSidebarShell({ homeItem, navItems }: AdminSidebarShellProps
       <AdminSidebar homeItem={homeItem} navItems={navItems} />
       <div className="flex min-w-px flex-1 flex-col overflow-hidden">
         {/* 상단바 고정 (스크롤바 밖) */}
-        <AdminTopBarRender />
+        <AdminTopBar />
 
         {/* 본문 + 푸터만 내부 스크롤 (스크롤바가 본문 우측에 형성됨) */}
         <div className="flex-1 overflow-y-auto">

@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Dropdown } from '@atoms'
 import { NOTICE_TAG_OPTIONS } from '@constants'
 import { useNotices } from '@hooks'
-import { AdminTopBar, NoticeList, SearchBar } from '@organisms'
+import { NoticeList, SearchBar } from '@organisms'
 
 const PAGE_SIZE = 20
 
@@ -17,7 +17,6 @@ export function NoticeListPage() {
 
   return (
     <>
-      <AdminTopBar breadcrumb={[{ label: '홈', to: '/admin' }, { label: '공지 관리' }]} title="공지 관리" />
       <div className="flex flex-col gap-24 px-24 pb-[120px] pt-32">
         <SearchBar onSearch={() => setPage(1)}>
           <Dropdown

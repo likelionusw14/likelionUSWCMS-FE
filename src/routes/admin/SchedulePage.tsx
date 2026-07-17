@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { ConfirmDialog, ScheduleFormModal } from '@molecules'
-import { AdminTopBar, ScheduleCalendar } from '@organisms'
+import { ScheduleCalendar } from '@organisms'
 import { useSchedules } from '@hooks'
 
 // 일정 관리 — 월 캘린더(ScheduleCalendar). 칩 클릭 시 상세 팝업(수정/삭제), + 버튼으로 일정 작성.
@@ -15,7 +15,6 @@ export function SchedulePage() {
 
   return (
     <>
-      <AdminTopBar breadcrumb={[{ label: '홈', to: '/admin' }, { label: '일정 관리' }]} title="일정 관리" />
       <div className="flex flex-col gap-24 px-24 pb-[120px] pt-32">
         <ScheduleCalendar
           year={year}

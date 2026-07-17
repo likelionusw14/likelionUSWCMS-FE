@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { COHORT_OPTIONS, PART_OPTIONS } from '@constants'
 import { useMembers, usePendingMembers } from '@hooks'
 import { MemberEditModal, RoleEditModal } from '@molecules'
-import { AdminTopBar, MemberList, PendingMemberList } from '@organisms'
+import { MemberList, PendingMemberList } from '@organisms'
 import type { Member } from '@types'
 
 const PAGE_SIZE = 20
@@ -20,7 +20,6 @@ export function MemberPage() {
 
   return (
     <>
-      <AdminTopBar breadcrumb={[{ label: '홈', to: '/admin' }, { label: '사자 관리' }]} title="사자 관리" />
       <div className="flex flex-col gap-24 px-24 pb-[120px] pt-32">
         <PendingMemberList
           members={pending}
