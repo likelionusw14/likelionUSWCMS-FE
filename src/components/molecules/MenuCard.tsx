@@ -12,7 +12,7 @@ export function MenuCard({ title, description, to, className }: MenuCardProps) {
   const [hovered, setHovered] = useState(false)
 
   const ease = [0.16, 1, 0.3, 1] as const
-  const duration = reduce ? 0 : 0.3
+  const duration = reduce ? 0 : 0.5
 
   return (
     <Link to={to} className={cn('block py-px', className)}>
@@ -24,8 +24,9 @@ export function MenuCard({ title, description, to, className }: MenuCardProps) {
       >
         <WindowPanel
           bodyClassName={cn(
-            'relative h-[235px] overflow-hidden transition-colors duration-300',
-            hovered && 'bg-secondary-1',
+            'relative h-[235px] overflow-hidden transition-colors duration-500',
+            // cn 은 tailwind-merge 가 아니라서 `!` 로 아톰 기본값(bg-white)을 덮는다.
+            hovered && '!bg-secondary-1',
           )}
         >
           {/* 기본: 제목 + 설명 — 호버 시 아래로 미끄러지며 사라진다. */}
