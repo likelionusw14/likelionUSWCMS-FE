@@ -416,3 +416,11 @@ export interface NoticeFormProps {
   onFileChange: (fileName: string) => void
   onFileClear: () => void
 }
+
+// 승인/취소 액션 버튼 쌍 — 승인대기 목록 행 등. Figma 1000:1550.
+export interface ApprovalActionsProps {
+  onApprove: () => void
+  onCancel: () => void
+  disabled?: boolean
+  className?: string
+}
