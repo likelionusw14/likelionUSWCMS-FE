@@ -3,10 +3,11 @@ import { BRAND_NAME } from '@constants'
 import { cn } from '@utils'
 import type { AdminSidebarProps } from '@types'
 
-// 메뉴 항목 — 보고 있는 페이지(선택 상태)만 배경을 칠한다.
-// Figma 사이드바 컴포넌트의 변형이 `<메뉴> 선택` 뿐이라 호버 상태는 따로 없다.
-const MENU_ITEM = 'flex h-40 items-center rounded-8 px-24 text-sm-16 text-black'
-const MENU_ITEM_ACTIVE = 'bg-background-1'
+const getMenuItemClass = (isActive: boolean) =>
+  cn(
+    'flex items-center rounded-8 px-24 text-sm-16 text-black transition-all duration-150',
+    isActive ? 'h-[44px] bg-background-1' : 'h-40',
+  )
 
 // 관리 페이지 좌측 사이드바 — 브랜드 + 대시보드 + 관리 메뉴.
 export function AdminSidebar({ homeItem, navItems }: AdminSidebarProps) {
@@ -16,7 +17,7 @@ export function AdminSidebar({ homeItem, navItems }: AdminSidebarProps) {
       <NavLink
         to={homeItem.to}
         end
-        className={({ isActive }) => cn(MENU_ITEM, isActive && MENU_ITEM_ACTIVE)}
+        className={({ isActive }) => getMenuItemClass(isActive)}
       >
         {homeItem.label}
       </NavLink>
@@ -25,7 +26,7 @@ export function AdminSidebar({ homeItem, navItems }: AdminSidebarProps) {
           <NavLink
             key={item.to}
             to={item.to}
-            className={({ isActive }) => cn(MENU_ITEM, isActive && MENU_ITEM_ACTIVE)}
+            className={({ isActive }) => getMenuItemClass(isActive)}
           >
             {item.label}
           </NavLink>
