@@ -41,7 +41,7 @@ export function MenuCard({ title, description, to, className }: MenuCardProps) {
 
           {/* 호버: 'OO 관리하기 →' — 위에서 내려오며 나타난다. */}
           <motion.div
-            className="absolute inset-0 flex items-center gap-40 px-32"
+            className="absolute inset-0 flex items-center gap-8 px-32"
             initial={false}
             animate={{ y: hovered ? 0 : -24, opacity: hovered ? 1 : 0 }}
             transition={{ duration, ease }}
