@@ -29,14 +29,26 @@ export function MenuCard({ title, description, to, className }: MenuCardProps) {
             hovered && '!bg-secondary-1',
           )}
         >
-          {/* 기본: 제목 + 설명 — 호버 시 아래로 미끄러지며 사라진다. */}
+          {/* 기본: 제목 + 설명 — 호버 시 아래로 미끄러지며, 설명은 먼저 투명해지며 접힌다. */}
           <motion.div
             className="absolute inset-0 flex flex-col justify-center gap-8 px-32"
-            animate={{ y: hovered ? 24 : 0, opacity: hovered ? 0 : 1 }}
+            animate={{ y: hovered ? 24 : 0 }}
             transition={{ duration, ease }}
           >
-            <h2 className="text-sm-22 text-black">{title}</h2>
-            <p className="text-m-16-home text-black">{description}</p>
+            <motion.h2
+              className="text-sm-22 text-black"
+              animate={{ opacity: hovered ? 0 : 1 }}
+              transition={{ duration, ease }}
+            >
+              {title}
+            </motion.h2>
+            <motion.p
+              className="text-m-16-home text-black"
+              animate={{ opacity: hovered ? 0 : 1, y: hovered ? -8 : 0 }}
+              transition={{ duration: reduce ? 0 : 0.3, ease }}
+            >
+              {description}
+            </motion.p>
           </motion.div>
 
           {/* 호버: 'OO 관리하기 →' — 위에서 내려오며 나타난다. */}
