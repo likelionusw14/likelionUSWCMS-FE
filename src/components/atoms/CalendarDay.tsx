@@ -3,8 +3,8 @@ import { cn } from '@utils'
 import type { CalendarDayProps } from '@types'
 
 // 캘린더 한 칸 — 날짜 숫자 + 일정 칩(세로 스택).
-// 칸은 Figma 비율(127:120)을 유지해 폭이 줄면 높이도 비례해 줄어든다. 일정이 넘치면
-// 이벤트 영역이 셀 안에서 스크롤(스크롤바 미표시)되고, 넘치는 방향(위/아래)만 페이드된다. 이웃 달 칸은 60% 흐리게.
+// Figma 실측: 셀 높이 120px 고정(폭은 그리드 열이 채움). 일정이 넘치면 이벤트 영역이 셀 안에서
+// 스크롤(스크롤바 미표시)되고, 넘치는 방향(위/아래)만 페이드된다. 이웃 달 칸은 60% 흐리게.
 export function CalendarDay({ day, inMonth = true, events }: CalendarDayProps) {
   const scrollRef = useRef<HTMLDivElement>(null)
   const [fade, setFade] = useState({ top: false, bottom: false })
@@ -33,7 +33,12 @@ export function CalendarDay({ day, inMonth = true, events }: CalendarDayProps) {
           : ''
 
   return (
-    <div className={cn('flex aspect-[127/120] min-h-[88px] w-full flex-col gap-8 overflow-hidden bg-white p-8', !inMonth && 'opacity-60')}>
+    <div
+      className={cn(
+        'flex h-[120px] w-full flex-col gap-8 overflow-hidden bg-white p-8',
+        !inMonth && 'opacity-60',
+      )}
+    >
       <span className="shrink-0 text-m-14 text-black">{day}</span>
       <div
         ref={scrollRef}
