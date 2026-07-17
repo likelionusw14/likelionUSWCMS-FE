@@ -53,6 +53,32 @@ export function WheelPicker({
     })
   }
 
+  // 짧고 고정된 트윈(120ms) — 네이티브 smooth 의 부유하는 관성 대신 즉각적인 detent 느낌.
+  // 트윈 동안 mandatory 스냅을 꺼 중간 위치가 스냅에 끌려가지 않게 한다(끝나면 복원).
+  const anim = useRef<number | undefined>(undefined)
+  function animateTo(top: number) {
+    const el = ref.current
+    if (!el) return
+    if (anim.current) cancelAnimationFrame(anim.current)
+    const from = el.scrollTop
+    const dist = top - from
+    if (Math.abs(dist) < 1) {
+      el.scrollTop = top
+      return
+    }
+    el.style.scrollSnapType = 'none'
+    const start = performance.now()
+    function frame(now: number) {
+      const node = ref.current
+      if (!node) return
+      const p = Math.min(1, (now - start) / 120)
+      node.scrollTop = from + dist * (1 - Math.pow(1 - p, 3))
+      if (p < 1) anim.current = requestAnimationFrame(frame)
+      else node.style.scrollSnapType = 'y mandatory'
+    }
+    anim.current = requestAnimationFrame(frame)
+  }
+
   function handleScroll() {
     if (raf.current) cancelAnimationFrame(raf.current)
     raf.current = requestAnimationFrame(paint)
@@ -93,13 +119,14 @@ export function WheelPicker({
       const dir = acc.current > 0 ? 1 : -1
       acc.current = 0
       target.current = Math.max(0, Math.min(items.length - 1, target.current + dir))
-      node.scrollTo({ top: target.current * ITEM_H, behavior: 'smooth' })
+      animateTo(target.current * ITEM_H)
     }
     el.addEventListener('wheel', onWheel, { passive: false })
 
     return () => {
       el.removeEventListener('wheel', onWheel)
       if (raf.current) cancelAnimationFrame(raf.current)
+      if (anim.current) cancelAnimationFrame(anim.current)
       if (settleTimer.current) window.clearTimeout(settleTimer.current)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -122,7 +149,10 @@ export function WheelPicker({
           data-wheel-item
           role="option"
           aria-selected={i === active}
-          onClick={() => ref.current?.scrollTo({ top: i * ITEM_H, behavior: 'smooth' })}
+          onClick={() => {
+            target.current = i
+            animateTo(i * ITEM_H)
+          }}
           className="flex w-full items-center justify-center whitespace-nowrap text-[22px] leading-none text-black [backface-visibility:hidden]"
           style={{ height: ITEM_H, scrollSnapAlign: 'center' }}
         >
