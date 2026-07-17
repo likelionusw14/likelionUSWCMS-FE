@@ -17,7 +17,7 @@ export function SessionListPage() {
 
   return (
     <>
-      <AdminTopBar breadcrumb="홈 / 세션자료 관리" title="세션자료 관리" />
+      <AdminTopBar breadcrumb={[{ label: '홈', to: '/admin' }, { label: '세션자료 관리' }]} title="세션자료 관리" />
       <div className="flex flex-col gap-24 px-24 pb-[120px] pt-32">
         <SearchBar onSearch={() => setPage(1)}>
           <Dropdown value={week} onChange={setWeek} options={WEEK_OPTIONS} placeholder="주차" />

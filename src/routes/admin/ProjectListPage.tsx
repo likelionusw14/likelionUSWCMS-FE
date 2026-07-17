@@ -17,7 +17,7 @@ export function ProjectListPage() {
 
   return (
     <>
-      <AdminTopBar breadcrumb="홈 / 프로젝트 관리" title="프로젝트 관리" />
+      <AdminTopBar breadcrumb={[{ label: '홈', to: '/admin' }, { label: '프로젝트 관리' }]} title="프로젝트 관리" />
       <div className="flex flex-col gap-24 px-24 pb-[120px] pt-32">
         <SearchBar onSearch={() => setPage(1)}>
           <Dropdown

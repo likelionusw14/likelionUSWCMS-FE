@@ -20,7 +20,7 @@ export function MemberPage() {
 
   return (
     <>
-      <AdminTopBar breadcrumb="홈 / 사자 관리" title="사자 관리" />
+      <AdminTopBar breadcrumb={[{ label: '홈', to: '/admin' }, { label: '사자 관리' }]} title="사자 관리" />
       <div className="flex flex-col gap-24 px-24 pb-[120px] pt-32">
         <PendingMemberList
           members={pending}

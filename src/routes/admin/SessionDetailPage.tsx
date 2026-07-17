@@ -8,7 +8,14 @@ export function SessionDetailPage() {
 
   return (
     <>
-      <AdminTopBar breadcrumb="홈 / 세션자료 관리 / 세션자료 상세" title="세션자료 상세" />
+      <AdminTopBar
+        breadcrumb={[
+          { label: '홈', to: '/admin' },
+          { label: '세션자료 관리', to: '/admin/sessions' },
+          { label: '세션자료 상세' },
+        ]}
+        title="세션자료 상세"
+      />
       {session ? <SessionDetail session={session} /> : <NotFoundPanel />}
     </>
   )

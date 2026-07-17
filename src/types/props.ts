@@ -129,8 +129,15 @@ export interface AdminSidebarShellProps {
   navItems: NavItem[]
 }
 
+// 상단바 브레드크럼 세그먼트 — to 가 있으면 링크(이동), 없으면 현재 페이지(텍스트).
+export interface BreadcrumbSegment {
+  label: string
+  to?: string
+}
+
 export interface AdminTopBarProps {
-  breadcrumb: string
+  // 문자열이면 기존처럼 텍스트만, 세그먼트 배열이면 각 조각을 링크로 렌더.
+  breadcrumb: string | BreadcrumbSegment[]
   title: string
 }
 

@@ -15,7 +15,14 @@ export function ProjectFormPage() {
 
   return (
     <>
-      <AdminTopBar breadcrumb={`홈 / 프로젝트 관리 / ${label}`} title={label} />
+      <AdminTopBar
+        breadcrumb={[
+          { label: '홈', to: '/admin' },
+          { label: '프로젝트 관리', to: '/admin/projects' },
+          { label: label },
+        ]}
+        title={label}
+      />
       <ProjectForm
         values={values}
         onFieldChange={setField}

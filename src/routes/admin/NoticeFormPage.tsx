@@ -15,7 +15,14 @@ export function NoticeFormPage() {
 
   return (
     <>
-      <AdminTopBar breadcrumb={`홈 / 공지 관리 / ${label}`} title={label} />
+      <AdminTopBar
+        breadcrumb={[
+          { label: '홈', to: '/admin' },
+          { label: '공지 관리', to: '/admin/notices' },
+          { label: label },
+        ]}
+        title={label}
+      />
       <NoticeForm
         values={values}
         onFieldChange={setField}

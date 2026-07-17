@@ -8,7 +8,14 @@ export function NoticeDetailPage() {
 
   return (
     <>
-      <AdminTopBar breadcrumb="홈 / 공지 관리 / 공지 상세" title="공지 상세" />
+      <AdminTopBar
+        breadcrumb={[
+          { label: '홈', to: '/admin' },
+          { label: '공지 관리', to: '/admin/notices' },
+          { label: '공지 상세' },
+        ]}
+        title="공지 상세"
+      />
       <div className="px-24 pb-[120px] pt-32">
         {notice ? <NoticeDetail notice={notice} /> : <NotFoundPanel />}
       </div>

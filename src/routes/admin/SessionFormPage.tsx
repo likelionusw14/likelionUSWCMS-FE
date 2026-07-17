@@ -13,7 +13,14 @@ export function SessionFormPage() {
 
   return (
     <>
-      <AdminTopBar breadcrumb={`홈 / 세션자료 관리 / ${label}`} title={label} />
+      <AdminTopBar
+        breadcrumb={[
+          { label: '홈', to: '/admin' },
+          { label: '세션자료 관리', to: '/admin/sessions' },
+          { label: label },
+        ]}
+        title={label}
+      />
       <SessionForm
         values={values}
         onFieldChange={setField}
