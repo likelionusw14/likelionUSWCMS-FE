@@ -19,7 +19,7 @@ const WEEKDAYS = [
 
 // 월(month) 캘린더 — 창(WindowPanel: primary 헤더바 h-40 + 엠보 흰 본문) + 월 네비 + 요일 + 날짜 그리드.
 // presentational: 데이터는 events prop 으로만 받는다. 창 크롬은 WindowPanel 아톰을 재사용한다.
-export function Calendar({ year, month, events, onMonthChange, onRegister, className }: CalendarProps) {
+export function Calendar({ year, month, events, onMonthChange, onRegister, onEventClick, className }: CalendarProps) {
   const grid = buildMonthGrid(year, month)
 
   // 날짜별 일정 묶기.
@@ -99,6 +99,7 @@ export function Calendar({ year, month, events, onMonthChange, onRegister, class
                 day={date.getDate()}
                 inMonth={inMonth}
                 events={byDate.get(key) ?? []}
+                onEventClick={onEventClick}
               />
             )
           })}
