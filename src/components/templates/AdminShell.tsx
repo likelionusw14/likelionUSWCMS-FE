@@ -1,8 +1,15 @@
-import { Outlet, useLocation, useNavigate } from 'react-router-dom'
+import { useState } from 'react'
+import { useLocation, useOutlet, useNavigate } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useAuth } from '@hooks'
 import { AdminFooter, AdminHeader } from '@organisms'
 import type { AdminShellProps } from '@types'
+
+function AnimatedOutlet() {
+  const o = useOutlet()
+  const [outlet] = useState(o)
+  return <>{outlet}</>
+}
 
 export function AdminShell({ navItems, pageTitles }: AdminShellProps) {
   const { pathname } = useLocation()
@@ -32,7 +39,7 @@ export function AdminShell({ navItems, pageTitles }: AdminShellProps) {
             variants={variants}
             transition={{ duration: 0.25, ease: [0.2, 0.8, 0.2, 1] }}
           >
-            <Outlet />
+            <AnimatedOutlet />
           </motion.div>
         </AnimatePresence>
       </main>

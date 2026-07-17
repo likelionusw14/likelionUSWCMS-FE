@@ -1,9 +1,16 @@
-import { Outlet, useLocation } from 'react-router-dom'
+import { useState } from 'react'
+import { useLocation, useOutlet } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { AdminFooter, AdminSidebar, AdminTopBarRender } from '@organisms'
 import type { AdminSidebarShellProps } from '@types'
 
 // 관리 페이지 셸: 좌측 사이드바 + (상단바는 각 페이지가 렌더) 콘텐츠 + 푸터.
+function AnimatedOutlet() {
+  const o = useOutlet()
+  const [outlet] = useState(o)
+  return <>{outlet}</>
+}
+
 export function AdminSidebarShell({ homeItem, navItems }: AdminSidebarShellProps) {
   const location = useLocation()
   const variants = {
@@ -30,7 +37,7 @@ export function AdminSidebarShell({ homeItem, navItems }: AdminSidebarShellProps
               transition={{ duration: 0.25, ease: [0.2, 0.8, 0.2, 1] }}
               className="min-h-full"
             >
-              <Outlet />
+              <AnimatedOutlet />
             </motion.div>
           </AnimatePresence>
           <AdminFooter />

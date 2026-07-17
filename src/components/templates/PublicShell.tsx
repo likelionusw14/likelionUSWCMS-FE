@@ -1,9 +1,16 @@
-import { Outlet, useLocation } from 'react-router-dom'
+import { useState } from 'react'
+import { useLocation, useOutlet } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { PublicFooter, PublicHeader } from '@organisms'
 import type { PublicShellProps } from '@types'
 
 // 로그인 전(공통) 영역 셸: 다크 배경 + 헤더 + 콘텐츠 + 푸터.
+function AnimatedOutlet() {
+  const o = useOutlet()
+  const [outlet] = useState(o)
+  return <>{outlet}</>
+}
+
 export function PublicShell({ navItems, applyItem }: PublicShellProps) {
   const location = useLocation()
   const variants = {
@@ -25,7 +32,7 @@ export function PublicShell({ navItems, applyItem }: PublicShellProps) {
             transition={{ duration: 0.25, ease: [0.2, 0.8, 0.2, 1] }}
             className="flex w-full justify-center"
           >
-            <Outlet />
+            <AnimatedOutlet />
           </motion.div>
         </AnimatePresence>
       </main>
