@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { Calendar, SchedulePopup } from '@molecules'
 import type { CalendarEvent, ScheduleCalendarProps, SchedulePopupEvent } from '@types'
 
@@ -38,6 +39,7 @@ export function ScheduleCalendar({
   className,
 }: ScheduleCalendarProps) {
   const [selected, setSelected] = useState<Selected | null>(null)
+  const reduce = useReducedMotion()
 
   function handleEventClick(event: CalendarEvent, target: HTMLElement) {
     const cell = (target.closest('[data-cell]') as HTMLElement | null) ?? target
@@ -72,21 +74,6 @@ export function ScheduleCalendar({
     }
   }, [selected])
 
-  // 가로: 셀 오른쪽/왼쪽에 배치. 세로: 클릭한 칩의 세로 중앙에 팝업(꼬리)이 오도록.
-  const position =
-    selected &&
-    (selected.tail === 'left'
-      ? {
-          left: selected.cellRect.right + GAP,
-          top: selected.chipRect.top + selected.chipRect.height / 2,
-          transform: 'translateY(-50%)',
-        }
-      : {
-          left: selected.cellRect.left - GAP,
-          top: selected.chipRect.top + selected.chipRect.height / 2,
-          transform: 'translate(-100%, -50%)',
-        })
-
   return (
     <>
       <Calendar
@@ -98,32 +85,51 @@ export function ScheduleCalendar({
         onEventClick={handleEventClick}
         className={className}
       />
-      {selected &&
-        createPortal(
-          <div data-schedule-popup className="fixed z-50" style={position ?? undefined}>
-            <SchedulePopup
-              event={toPopupEvent(selected.event)}
-              tail={selected.tail}
-              onEdit={
-                onEventEdit
-                  ? () => {
-                      onEventEdit(selected.event)
-                      setSelected(null)
-                    }
-                  : undefined
-              }
-              onDelete={
-                onEventDelete
-                  ? () => {
-                      onEventDelete(selected.event)
-                      setSelected(null)
-                    }
-                  : undefined
-              }
-            />
-          </div>,
-          document.body,
-        )}
+      {createPortal(
+        <AnimatePresence>
+          {selected && (
+            <motion.div
+              key={selected.event.id}
+              data-schedule-popup
+              className="fixed z-50"
+              style={{
+                left:
+                  selected.tail === 'left'
+                    ? selected.cellRect.right + GAP
+                    : selected.cellRect.left - GAP,
+                top: selected.chipRect.top + selected.chipRect.height / 2,
+                transformOrigin: selected.tail === 'left' ? 'left center' : 'right center',
+              }}
+              initial={{ opacity: 0, scale: reduce ? 1 : 0.95, x: selected.tail === 'left' ? 0 : '-100%', y: '-50%' }}
+              animate={{ opacity: 1, scale: 1, x: selected.tail === 'left' ? 0 : '-100%', y: '-50%' }}
+              exit={{ opacity: 0, scale: reduce ? 1 : 0.95, x: selected.tail === 'left' ? 0 : '-100%', y: '-50%' }}
+              transition={{ duration: reduce ? 0 : 0.16, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <SchedulePopup
+                event={toPopupEvent(selected.event)}
+                tail={selected.tail}
+                onEdit={
+                  onEventEdit
+                    ? () => {
+                        onEventEdit(selected.event)
+                        setSelected(null)
+                      }
+                    : undefined
+                }
+                onDelete={
+                  onEventDelete
+                    ? () => {
+                        onEventDelete(selected.event)
+                        setSelected(null)
+                      }
+                    : undefined
+                }
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>,
+        document.body,
+      )}
     </>
   )
 }
