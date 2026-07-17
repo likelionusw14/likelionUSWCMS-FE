@@ -46,16 +46,10 @@ export function useProjectForm(project?: Project) {
     event.preventDefault()
     navigate('/admin/projects')
   }
-
-  function handleDelete() {
-    navigate('/admin/projects')
-  }
-
   return {
     values,
     setField,
     handleSubmit,
-    handleDelete,
     fileName,
     setFileName,
   }

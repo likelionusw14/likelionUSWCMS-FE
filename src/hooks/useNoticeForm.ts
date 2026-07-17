@@ -20,10 +20,5 @@ export function useNoticeForm(initialValues?: Partial<NoticeFormValues>) {
     event.preventDefault()
     navigate('/admin/notices')
   }
-
-  function handleDelete() {
-    navigate('/admin/notices')
-  }
-
-  return { values, setField, handleSubmit, handleDelete, pinned, setPinned, fileName, setFileName }
+  return { values, setField, handleSubmit, pinned, setPinned, fileName, setFileName }
 }
