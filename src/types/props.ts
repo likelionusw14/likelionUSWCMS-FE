@@ -220,6 +220,33 @@ export interface SessionFormProps {
   onFileClear: () => void
 }
 
+// 목록 섹션 셸 — 제목 + 총건수(+선택 페이지정보) + 선택 추가버튼 + 툴바 슬롯 + 콘텐츠(DataTable) + 선택 페이지네이션.
+// 관리자 목록 5종(회원·승인대기·출결·공지·세션)이 공유. 가변부는 선택 prop 유무로 켠다.
+export interface ListSectionProps {
+  // 카드 안 최상단 제목 슬롯(선택). 스타일은 페이지가 소유. 예: <h2 className="text-sm-22 text-black">회원 목록</h2>
+  header?: ReactNode
+  totalCount: number
+  // 셋 다 주면 하단 Pagination + 건수에 (page/total) 표기.
+  page?: number
+  totalPages?: number
+  onPageChange?: (page: number) => void
+  // 있으면 건수 줄 우측에 + 버튼.
+  onAdd?: () => void
+  children: ReactNode
+  className?: string
+}
+
+// 공용 체크박스 — 공지 필독(round·32) / 출결 Checkpoint(square·24) 겸용.
+export interface CheckboxProps {
+  checked: boolean
+  onChange: (checked: boolean) => void
+  // round = 필독(원형 32px), square = Checkpoint(사각 24px, rounded-8). 기본 square.
+  variant?: 'round' | 'square'
+  disabled?: boolean
+  ariaLabel?: string
+  className?: string
+}
+
 // 공용 모달 셸 — 오버레이 + 중앙 카드. 포털·ESC·바깥클릭 닫기. children 은 카드 내용.
 export interface ModalProps {
   open: boolean

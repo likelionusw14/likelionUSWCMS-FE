@@ -22,8 +22,6 @@ export interface Column<T> {
   align?: ColumnAlign
   // 넘칠 때 말줄임. 기본값: fill 열이면 true.
   truncate?: boolean
-  // 헤더 클릭 정렬 가능 여부.
-  sortable?: boolean
   // 셀 공통 class (조건부 색 등은 cell 에서 처리).
   className?: string
   // 헤더 셀 class.
@@ -36,10 +34,8 @@ export interface DataTableProps<T> {
   // 행 고유 키(선택 상태·React key).
   rowKey: (row: T) => string
 
-  // 행 클릭 → 상세로 이동(Link). onRowClick 보다 우선.
+  // 행 클릭 → 상세로 이동(Link).
   getRowHref?: (row: T) => string
-  // 행 클릭 핸들러(이동이 아닌 동작).
-  onRowClick?: (row: T) => void
 
   // 로딩 중 스켈레톤 행 표시(팀 데이터훅 { data, isLoading } 계약과 연동).
   isLoading?: boolean
@@ -47,25 +43,12 @@ export interface DataTableProps<T> {
   // 데이터 없음 표시.
   emptyMessage?: ReactNode
 
-  // 헤더 행 표시(기본 true).
-  showHeader?: boolean
-  // 스크롤 시 헤더 고정.
-  stickyHeader?: boolean
-
   // 조건부 행 스타일(예: 필독 강조).
   rowClassName?: (row: T) => string
   // 컨테이너 class.
   className?: string
   // 접근성 라벨.
   ariaLabel?: string
-
-  // ── 선택(체크박스 열) ──
-  selectable?: boolean
-  selectedIds?: string[]
-  onSelectionChange?: (ids: string[]) => void
-
-  // ── 정렬 ──
-  sortBy?: string
-  sortDir?: 'asc' | 'desc'
-  onSortChange?: (id: string, dir: 'asc' | 'desc') => void
+  // 이보다 좁아지면 가로 스크롤(스크롤바 숨김). 미지정 시 컬럼 폭 합으로 자동 계산.
+  minWidth?: number
 }
