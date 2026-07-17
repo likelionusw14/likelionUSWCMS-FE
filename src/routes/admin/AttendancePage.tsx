@@ -1,8 +1,11 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
+import calendarIcon from '@/assets/icons/calendar.svg'
 import searchIcon from '@/assets/icons/search.svg'
-import { RemarkModal } from '@molecules'
+import { Dropdown } from '@atoms'
+import { DatePickerModal, RemarkModal } from '@molecules'
 import { AdminTopBar, AttendanceCodeCreate, AttendanceList } from '@organisms'
 import { useAttendance, useAttendanceCode } from '@hooks'
+import { PART_OPTIONS } from '@constants'
 import type { AttendanceRecord } from '@types'
 
 const PAGE_SIZE = 10
@@ -14,9 +17,17 @@ export function AttendancePage() {
   const [records, setRecords] = useState<AttendanceRecord[]>(data)
   const [page, setPage] = useState(1)
   const [remarkRecord, setRemarkRecord] = useState<AttendanceRecord | null>(null)
+  // 검색바 필터 — 날짜(693:3887) · 파트(693:3920). 파트로 목록을 좁힌다.
+  const [dateOpen, setDateOpen] = useState(false)
+  const [dateFilter, setDateFilter] = useState('2026.07.03')
+  const [partFilter, setPartFilter] = useState('')
 
-  const totalPages = Math.max(1, Math.ceil(records.length / PAGE_SIZE))
-  const visible = records.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
+  const filtered = useMemo(
+    () => (partFilter ? records.filter((record) => record.part === partFilter) : records),
+    [records, partFilter],
+  )
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE))
+  const visible = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
 
   function togglePresent(id: string) {
     setRecords((previous) =>
@@ -37,14 +48,33 @@ export function AttendancePage() {
         />
 
         <h2 className="text-sm-22 text-black">출석 내역</h2>
-        <div className="flex w-full items-center justify-end rounded-16 bg-white px-32 py-12">
+        <div className="flex w-full items-center justify-between rounded-16 bg-white px-32 py-12">
+          <div className="flex items-center gap-16">
+            <button
+              type="button"
+              onClick={() => setDateOpen(true)}
+              className="flex h-32 w-[160px] items-center justify-between rounded-8 border border-secondary-1 bg-background-1 px-16 py-8 text-m-14 text-background-2"
+            >
+              <span>{dateFilter}</span>
+              <img src={calendarIcon} alt="" className="h-24 w-24 shrink-0" />
+            </button>
+            <Dropdown
+              value={partFilter}
+              onChange={(value) => {
+                setPartFilter(value)
+                setPage(1)
+              }}
+              options={PART_OPTIONS}
+              placeholder="파트"
+            />
+          </div>
           <button type="button" aria-label="검색">
             <img src={searchIcon} alt="" className="h-40 w-24" />
           </button>
         </div>
         <AttendanceList
           records={visible}
-          totalCount={records.length}
+          totalCount={filtered.length}
           page={page}
           totalPages={totalPages}
           onPageChange={setPage}
@@ -53,6 +83,12 @@ export function AttendancePage() {
         />
       </div>
 
+      <DatePickerModal
+        open={dateOpen}
+        onClose={() => setDateOpen(false)}
+        onConfirm={setDateFilter}
+        value={dateFilter}
+      />
       <RemarkModal
         open={!!remarkRecord}
         onClose={() => setRemarkRecord(null)}
