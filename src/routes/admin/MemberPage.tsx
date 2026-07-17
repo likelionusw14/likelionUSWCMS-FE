@@ -1,22 +1,24 @@
 import { useState } from 'react'
 import { COHORT_OPTIONS, PART_OPTIONS } from '@constants'
-import { useMembers, usePendingMembers } from '@hooks'
+import { useMembers, usePendingMembers, usePagination } from '@hooks'
 import { MemberEditModal, RoleEditModal } from '@molecules'
 import { MemberList, PendingMemberList } from '@organisms'
 import type { Member } from '@types'
 
-const PAGE_SIZE = 20
 
 // 사자(회원) 관리 — 승인대기 목록(승인/취소) + 회원 목록(권한 수정·회원정보 수정). Figma 15:11837.
 export function MemberPage() {
   const { data: members } = useMembers()
   const { data: pending } = usePendingMembers()
-  const [page, setPage] = useState(1)
   const [editMember, setEditMember] = useState<Member | null>(null)
   const [roleMember, setRoleMember] = useState<Member | null>(null)
 
-  const totalPages = Math.max(1, Math.ceil(members.length / PAGE_SIZE))
-  const visible = members.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
+  const { page, setPage, totalPages, slice } = usePagination({
+    totalItems: members.length,
+    pageSize: 20,
+  })
+
+  const visible = slice(members)
 
   return (
     <>

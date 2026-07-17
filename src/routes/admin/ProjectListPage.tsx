@@ -1,19 +1,20 @@
 import { useState } from 'react'
 import { COHORT_OPTIONS, PART_OPTIONS } from '@constants'
 import { Dropdown } from '@atoms'
-import { useProjects } from '@hooks'
+import { useProjects, usePagination } from '@hooks'
 import { ProjectList, SearchBar } from '@organisms'
 
-const PAGE_SIZE = 4
 
 export function ProjectListPage() {
   const { data: projects } = useProjects()
   const [cohort, setCohort] = useState('')
   const [part, setPart] = useState('')
-  const [page, setPage] = useState(1)
+  const { page, setPage, totalPages, slice } = usePagination({
+    totalItems: projects.length,
+    pageSize: 4,
+  })
 
-  const totalPages = Math.max(1, Math.ceil(projects.length / PAGE_SIZE))
-  const visibleProjects = projects.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
+  const visibleProjects = slice(projects)
 
   return (
     <>

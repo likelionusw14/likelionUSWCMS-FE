@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { DataTable } from '@molecules'
-import { ListSection } from './ListSection'
+import { ListSection } from '@organisms'
 import type { Column, Session, SessionListProps } from '@types'
 
 // 세션자료 목록 — Session 라벨 + 건수·등록 + 표(파일명·주차·파트) + 페이지네이션. 행 클릭 시 상세.

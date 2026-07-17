@@ -7,8 +7,8 @@ export function SessionDetailPage() {
   const { data: session } = useSession(sessionId)
 
   return (
-    <>
+    <div className="px-24 pb-[120px] pt-32">
       {session ? <SessionDetail session={session} /> : <NotFoundPanel />}
-    </>
+    </div>
   )
 }

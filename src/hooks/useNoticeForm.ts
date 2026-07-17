@@ -21,5 +21,9 @@ export function useNoticeForm(initialValues?: Partial<NoticeFormValues>) {
     navigate('/admin/notices')
   }
 
-  return { values, setField, handleSubmit, pinned, setPinned, fileName, setFileName }
+  function handleDelete() {
+    navigate('/admin/notices')
+  }
+
+  return { values, setField, handleSubmit, handleDelete, pinned, setPinned, fileName, setFileName }
 }

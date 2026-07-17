@@ -4,9 +4,9 @@ import clockIcon from '@/assets/icons/clock.svg'
 import { WindowPanel } from '@atoms'
 import { cn } from '@utils'
 import type { ScheduleFormModalProps, ScheduleFormValues } from '@types'
-import { Modal } from './Modal'
-import { DatePickerModal } from './DatePickerModal'
-import { TimePickerModal } from './TimePickerModal'
+import { Modal } from '@molecules'
+import { DatePickerModal } from '@molecules'
+import { TimePickerModal } from '@molecules'
 
 const EMPTY: ScheduleFormValues = { title: '', place: '', date: '', time: '', description: '' }
 

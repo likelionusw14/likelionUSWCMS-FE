@@ -1,4 +1,3 @@
-export * from './Sidebar'
 export * from './LoginForm'
 export * from './AdminHeader'
 export * from './AdminFooter'

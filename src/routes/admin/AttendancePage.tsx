@@ -1,40 +1,29 @@
-import { useMemo, useState } from 'react'
 import calendarIcon from '@/assets/icons/calendar.svg'
 import { Dropdown } from '@atoms'
 import { DatePickerModal, RemarkModal } from '@molecules'
 import { AttendanceCodeCreate, AttendanceList, SearchBar } from '@organisms'
-import { useAttendance, useAttendanceCode } from '@hooks'
+import { useAttendanceCode, useAttendanceList } from '@hooks'
 import { PART_OPTIONS } from '@constants'
-import type { AttendanceRecord } from '@types'
-
-const PAGE_SIZE = 10
 
 // 출결 관리 — 출석 코드 생성 카드 + (출석 내역 제목 + 검색바 + 출석 내역 카드). Figma 29:18174 / 563:9299.
 export function AttendancePage() {
   const { code, remainingSeconds, generate } = useAttendanceCode()
-  const { data } = useAttendance()
-  const [records, setRecords] = useState<AttendanceRecord[]>(data)
-  const [page, setPage] = useState(1)
-  const [remarkRecord, setRemarkRecord] = useState<AttendanceRecord | null>(null)
-  // 검색바 필터 — 날짜(693:3887) · 파트(693:3920). 파트로 목록을 좁힌다.
-  const [dateOpen, setDateOpen] = useState(false)
-  const [dateFilter, setDateFilter] = useState('2026.07.03')
-  const [partFilter, setPartFilter] = useState('')
-
-  const filtered = useMemo(
-    () => (partFilter ? records.filter((record) => record.part === partFilter) : records),
-    [records, partFilter],
-  )
-  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE))
-  const visible = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
-
-  function togglePresent(id: string) {
-    setRecords((previous) =>
-      previous.map((record) =>
-        record.id === id ? { ...record, present: !record.present } : record,
-      ),
-    )
-  }
+  const {
+    records,
+    totalCount,
+    page,
+    setPage,
+    totalPages,
+    remarkRecord,
+    setRemarkRecord,
+    dateOpen,
+    setDateOpen,
+    dateFilter,
+    setDateFilter,
+    partFilter,
+    setPartFilter,
+    togglePresent,
+  } = useAttendanceList()
 
   return (
     <>
@@ -46,7 +35,7 @@ export function AttendancePage() {
         />
 
         <h2 className="text-center text-sm-22 text-black">출석 내역</h2>
-        <SearchBar>
+        <SearchBar onSearch={() => setPage(1)}>
           <button
             type="button"
             onClick={() => setDateOpen(true)}
@@ -66,8 +55,8 @@ export function AttendancePage() {
           />
         </SearchBar>
         <AttendanceList
-          records={visible}
-          totalCount={filtered.length}
+          records={records}
+          totalCount={totalCount}
           page={page}
           totalPages={totalPages}
           onPageChange={setPage}

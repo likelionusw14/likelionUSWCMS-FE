@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { cn } from '@utils'
+import type { WheelPickerProps } from '@types'
 
 // 휠 치수 (Figma 302×220) — 행 40, 위/아래 스페이서 90 = (220-40)/2.
 const ITEM_H = 40
@@ -11,13 +12,6 @@ const STEP = 40 // 휠 delta 누적 임계 — 노치당 1칸
 const DUR = 120 // 데스크톱 휠/클릭 트윈 시간(ms)
 const SNAP = 'y proximity' // 터치 센터링은 네이티브 스냅에 맡긴다(메인스레드 경합 없음).
 
-export interface WheelPickerProps {
-  items: string[]
-  defaultIndex: number
-  onChange: (index: number) => void
-  widthClass?: string
-  ariaLabel?: string
-}
 
 // iOS 스타일 3D 휠 한 열 — 항목별 perspective+rotateX 로 실린더 곡률.
 // 터치: 네이티브 스크롤 + CSS scroll-snap(proximity)로 센터링 → 컴포지터가 처리하므로 여러 열을

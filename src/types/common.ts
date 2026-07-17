@@ -8,3 +8,18 @@ export interface QueryResult<T> {
   data: T
   isLoading: boolean
 }
+
+export interface UsePaginationOptions {
+  totalItems: number
+  pageSize?: number
+  initialPage?: number
+}
+
+export interface UsePaginationResult {
+  page: number
+  setPage: (page: number) => void
+  totalPages: number
+  startIndex: number
+  endIndex: number
+  slice: <T>(array: T[]) => T[]
+}

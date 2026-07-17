@@ -10,6 +10,7 @@ export function NoticeForm({
   values,
   onFieldChange,
   onSubmit,
+  onDelete,
   pinned,
   onPinnedChange,
   tagOptions,
@@ -99,12 +100,23 @@ export function NoticeForm({
         {error && <p className="px-8 text-right text-r-12 text-error">작성내용을 다시 확인해주세요</p>}
       </div>
 
-      <button
-        type="submit"
-        className="flex h-48 w-full items-center justify-center rounded-8 bg-primary px-32 text-sm-18 text-white"
-      >
-        저장
-      </button>
+      <div className="flex w-full flex-col gap-16">
+        <button
+          type="submit"
+          className="flex h-48 w-full items-center justify-center rounded-8 bg-primary px-32 text-sm-18 text-white"
+        >
+          저장
+        </button>
+        {onDelete ? (
+          <button
+            type="button"
+            onClick={onDelete}
+            className="flex h-48 w-full items-center justify-center rounded-8 border border-error px-32 text-sm-18 text-error"
+          >
+            삭제
+          </button>
+        ) : null}
+      </div>
     </form>
   )
 }

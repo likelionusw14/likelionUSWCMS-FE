@@ -1,4 +1,4 @@
-import { Modal } from './Modal'
+import { Modal } from '@molecules'
 import type { ConfirmDialogProps } from '@types'
 
 // 확인 팝업(삭제 등) — 96px 원형 쓰레기통 아이콘 + 제목/설명 + 취소/확인 버튼.

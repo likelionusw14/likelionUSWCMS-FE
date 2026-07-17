@@ -1,19 +1,20 @@
 import { useState } from 'react'
 import { PART_OPTIONS, WEEK_OPTIONS } from '@constants'
 import { Dropdown } from '@atoms'
-import { useSessions } from '@hooks'
+import { useSessions, usePagination } from '@hooks'
 import { SearchBar, SessionList } from '@organisms'
 
-const PAGE_SIZE = 20
 
 export function SessionListPage() {
   const { data: sessions } = useSessions()
   const [week, setWeek] = useState('')
   const [part, setPart] = useState('')
-  const [page, setPage] = useState(1)
+  const { page, setPage, totalPages, slice } = usePagination({
+    totalItems: sessions.length,
+    pageSize: 20,
+  })
 
-  const totalPages = Math.max(1, Math.ceil(sessions.length / PAGE_SIZE))
-  const visibleSessions = sessions.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
+  const visibleSessions = slice(sessions)
 
   return (
     <>

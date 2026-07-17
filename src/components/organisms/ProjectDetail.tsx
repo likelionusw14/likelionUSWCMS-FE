@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { DetailActions } from '@molecules'
 import type { ProjectDetailProps } from '@types'
 
 // 정보 테이블 라벨 셀 공통 스타일.
@@ -19,24 +19,14 @@ export function ProjectDetail({ project }: ProjectDetailProps) {
   ]
 
   return (
-    <div className="flex flex-col gap-16 px-24 pb-[120px] pt-32">
+    <div className="flex flex-col gap-16">
       <section className="flex flex-col gap-24 overflow-hidden rounded-8 bg-white px-32 py-24">
         <div className="flex w-full items-center justify-between">
           <h2 className="text-sm-20 text-black">{project.title}</h2>
-          <div className="flex items-center gap-8">
-            <Link
-              to="/admin/projects"
-              className="flex h-32 items-center rounded-8 border border-primary px-16 text-m-14 text-primary"
-            >
-              목록
-            </Link>
-            <Link
-              to={`/admin/projects/${project.id}/edit`}
-              className="flex h-32 items-center rounded-8 bg-primary px-16 text-m-14 text-white"
-            >
-              수정
-            </Link>
-          </div>
+          <DetailActions
+            listHref="/admin/projects"
+            editHref={`/admin/projects/${project.id}/edit`}
+          />
         </div>
         <div className="flex w-full items-start rounded-8 border border-secondary-1">
           <div className="flex min-w-px flex-1 flex-col">

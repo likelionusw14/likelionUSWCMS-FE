@@ -7,9 +7,11 @@ import { NoticeForm } from '@organisms'
 export function NoticeFormPage() {
   const { noticeId } = useParams()
   const { data: notice } = useNotice(noticeId)
-  const { values, setField, handleSubmit, pinned, setPinned, fileName, setFileName } = useNoticeForm(
-    notice ? { title: notice.title, tag: notice.tag, content: notice.content } : undefined,
-  )
+  const isEdit = Boolean(noticeId)
+  const { values, setField, handleSubmit, handleDelete, pinned, setPinned, fileName, setFileName } =
+    useNoticeForm(
+      notice ? { title: notice.title, tag: notice.tag, content: notice.content } : undefined,
+    )
 
 
   return (
@@ -18,6 +20,7 @@ export function NoticeFormPage() {
         values={values}
         onFieldChange={setField}
         onSubmit={handleSubmit}
+        onDelete={isEdit ? handleDelete : undefined}
         pinned={pinned}
         onPinnedChange={setPinned}
         tagOptions={NOTICE_TAG_OPTIONS}

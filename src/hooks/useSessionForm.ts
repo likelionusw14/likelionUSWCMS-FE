@@ -28,10 +28,15 @@ export function useSessionForm(session?: Session) {
     navigate('/admin/sessions')
   }
 
+  function handleDelete() {
+    navigate('/admin/sessions')
+  }
+
   return {
     values,
     setField,
     handleSubmit,
+    handleDelete,
     fileName,
     setFileName,
   }

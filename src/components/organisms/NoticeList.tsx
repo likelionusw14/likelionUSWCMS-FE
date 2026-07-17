@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { Checkbox } from '@atoms'
 import { DataTable } from '@molecules'
-import { ListSection } from './ListSection'
+import { ListSection } from '@organisms'
 import type { Column, Notice, NoticeListProps } from '@types'
 
 // 공지 목록 — Notice 라벨 + 건수·등록 + 표(필독·제목·태그·작성일) + 페이지네이션. 행 클릭 시 상세. Figma 563:8345.

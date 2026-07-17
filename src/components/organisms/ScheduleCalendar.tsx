@@ -2,15 +2,7 @@ import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { Calendar, SchedulePopup } from '@molecules'
-import type { CalendarEvent, ScheduleCalendarProps, SchedulePopupEvent } from '@types'
-
-type Selected = {
-  event: CalendarEvent
-  // 가로 배치·꼬리 방향은 셀 기준, 세로 중심은 클릭한 칩 기준.
-  cellRect: DOMRect
-  chipRect: DOMRect
-  tail: 'left' | 'right'
-}
+import type { CalendarEvent, ScheduleCalendarProps, ScheduleCalendarSelected, SchedulePopupEvent } from '@types'
 
 const GAP = 8
 
@@ -38,7 +30,7 @@ export function ScheduleCalendar({
   onEventDelete,
   className,
 }: ScheduleCalendarProps) {
-  const [selected, setSelected] = useState<Selected | null>(null)
+  const [selected, setSelected] = useState<ScheduleCalendarSelected | null>(null)
   const reduce = useReducedMotion()
 
   function handleEventClick(event: CalendarEvent, target: HTMLElement) {

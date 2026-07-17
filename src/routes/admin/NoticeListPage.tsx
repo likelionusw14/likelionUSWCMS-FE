@@ -1,19 +1,20 @@
 import { useState } from 'react'
 import { Dropdown } from '@atoms'
 import { NOTICE_TAG_OPTIONS } from '@constants'
-import { useNotices } from '@hooks'
+import { useNotices, usePagination } from '@hooks'
 import { NoticeList, SearchBar } from '@organisms'
 
-const PAGE_SIZE = 20
 
 export function NoticeListPage() {
   const { data: notices } = useNotices()
   const [tag, setTag] = useState('')
-  const [page, setPage] = useState(1)
-
   const filtered = tag ? notices.filter((notice) => notice.tag === tag) : notices
-  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE))
-  const visible = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
+  const { page, setPage, totalPages, slice } = usePagination({
+    totalItems: filtered.length,
+    pageSize: 20,
+  })
+
+  const visible = slice(filtered)
 
   return (
     <>

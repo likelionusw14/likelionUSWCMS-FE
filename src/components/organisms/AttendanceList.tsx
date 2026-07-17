@@ -1,6 +1,6 @@
 import { Checkbox } from '@atoms'
 import { DataTable } from '@molecules'
-import { ListSection } from './ListSection'
+import { ListSection } from '@organisms'
 import type { AttendanceListProps, AttendanceRecord, Column } from '@types'
 
 // 출석 내역 카드 — 건수 + 표(날짜·이름·학번·파트·출석상태 체크·비고) + 페이지네이션.

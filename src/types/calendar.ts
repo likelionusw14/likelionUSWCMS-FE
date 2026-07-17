@@ -61,3 +61,12 @@ export interface ScheduleCalendarProps {
   onEventDelete?: (event: CalendarEvent) => void
   className?: string
 }
+
+// ScheduleCalendar 내부 — 선택된 일정 칩의 위치 정보.
+export interface ScheduleCalendarSelected {
+  event: CalendarEvent
+  // 가로 배치·꼬리 방향은 셀 기준, 세로 중심은 클릭한 칩 기준.
+  cellRect: DOMRect
+  chipRect: DOMRect
+  tail: 'left' | 'right'
+}

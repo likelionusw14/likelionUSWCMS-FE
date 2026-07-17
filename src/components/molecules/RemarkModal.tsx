@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { WindowPanel } from '@atoms'
 import type { RemarkModalProps } from '@types'
-import { Modal } from './Modal'
+import { Modal } from '@molecules'
 
 // 비고 작성 팝업 — 작은 창(WindowPanel) 안에 제목 '비고' + 단일행 입력 + 저장/취소.
 // Figma "비고 작성 팝업"(671:3837): 본문 w-320·p-24·gap-8, 라벨 M/16(px-8),

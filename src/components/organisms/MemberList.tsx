@@ -1,5 +1,5 @@
 import { DataTable } from '@molecules'
-import { ListSection } from './ListSection'
+import { ListSection } from '@organisms'
 import type { Column, Member, MemberListProps } from '@types'
 
 // 회원 목록 — 이름·분류(권한수정 링크)·기수·파트·가입상태·수정 링크 + 페이지네이션. Figma 15:12626.

@@ -1,4 +1,4 @@
-import { Modal } from './Modal'
+import { Modal } from '@molecules'
 import type { ResultDialogProps } from '@types'
 
 // 결과 팝업(삭제완료 등) — 제목/설명 + 단일 확인 버튼. 버튼으로만 닫힌다(바깥클릭·ESC 무시).

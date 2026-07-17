@@ -1,6 +1,6 @@
 import { ApprovalActions } from '@atoms'
 import { DataTable } from '@molecules'
-import { ListSection } from './ListSection'
+import { ListSection } from '@organisms'
 import type { Column, PendingMember, PendingMemberListProps } from '@types'
 
 // 승인대기 목록 — 이름·기수·파트 + 승인/취소(ApprovalActions). Figma 248:5421.

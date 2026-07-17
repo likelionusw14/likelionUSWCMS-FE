@@ -1,11 +1,12 @@
 import { Link } from 'react-router-dom'
 import closeIcon from '@/assets/icons/close.svg'
+import { DetailActions } from '@molecules'
 import type { SessionDetailProps } from '@types'
 
 // 세션자료 상세 — 파일명 헤더 + 자료 뷰어(쪽 표시줄 + 미리보기).
 export function SessionDetail({ session }: SessionDetailProps) {
   return (
-    <div className="flex flex-col px-24 pb-[120px] pt-32">
+    <div className="flex flex-col">
       <section className="flex flex-col gap-16 overflow-hidden rounded-8 bg-white px-32 py-24">
         <div className="flex w-full items-center justify-between gap-16">
           <div className="flex min-w-px flex-1 items-center gap-8">
@@ -18,20 +19,10 @@ export function SessionDetail({ session }: SessionDetailProps) {
             </Link>
             <h2 className="truncate text-sm-20 text-black">{session.fileName}</h2>
           </div>
-          <div className="flex shrink-0 items-center gap-8">
-            <Link
-              to="/admin/sessions"
-              className="flex h-32 items-center rounded-8 border border-primary px-16 text-m-14 text-primary"
-            >
-              목록
-            </Link>
-            <Link
-              to={`/admin/sessions/${session.id}/edit`}
-              className="flex h-32 items-center rounded-8 bg-primary px-16 text-m-14 text-white"
-            >
-              수정
-            </Link>
-          </div>
+          <DetailActions
+            listHref="/admin/sessions"
+            editHref={`/admin/sessions/${session.id}/edit`}
+          />
         </div>
         {/* 뷰어 — 쪽 표시줄이 미리보기 위에 얹힌다. 미리보기가 없으면 회색 판만 보인다. */}
         <div className="relative h-[584px] w-full overflow-hidden rounded-8 bg-gray-100">

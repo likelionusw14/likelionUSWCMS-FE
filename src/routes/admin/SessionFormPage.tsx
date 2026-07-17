@@ -7,7 +7,9 @@ import { SessionForm } from '@organisms'
 export function SessionFormPage() {
   const { sessionId } = useParams()
   const { data: session } = useSession(sessionId)
-  const { values, setField, handleSubmit, fileName, setFileName } = useSessionForm(session)
+  const isEdit = Boolean(sessionId)
+  const { values, setField, handleSubmit, handleDelete, fileName, setFileName } =
+    useSessionForm(session)
 
 
   return (
@@ -16,6 +18,7 @@ export function SessionFormPage() {
         values={values}
         onFieldChange={setField}
         onSubmit={handleSubmit}
+        onDelete={isEdit ? handleDelete : undefined}
         weekOptions={WEEK_OPTIONS}
         partOptions={PART_OPTIONS}
         fileName={fileName}

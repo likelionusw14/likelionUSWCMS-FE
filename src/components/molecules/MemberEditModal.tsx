@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import { Dropdown, WindowPanel } from '@atoms'
 import type { MemberEditModalProps } from '@types'
-import { Modal } from './Modal'
-import { ConfirmDialog } from './ConfirmDialog'
+import { Modal } from '@molecules'
+import { ConfirmDialog } from '@molecules'
 
 // 이름 입력 — bg-background-1 + secondary-1 테두리 (Figma 754:5754).
 const FIELD =

@@ -15,15 +15,6 @@ import type { AttendanceRecord } from './attendance'
 import type { SignupProfile } from './signup'
 
 // 컴포넌트 props 타입 (컴포넌트 파일 인라인 정의 금지 규칙에 따라 여기 정의).
-export interface SidebarProps {
-  navItems: NavItem[]
-  brandLabel?: string
-}
-
-export interface AppShellProps {
-  areaLabel: string
-  navItems: NavItem[]
-}
 
 export interface RequireRoleProps {
   area: AreaType
@@ -239,6 +230,8 @@ export interface SessionFormProps {
   values: SessionFormValues
   onFieldChange: (field: keyof SessionFormValues, value: string) => void
   onSubmit: (event: FormEvent<HTMLFormElement>) => void
+  // 수정 화면에서만 내려온다 (작성 화면에는 삭제 대상이 없다).
+  onDelete?: () => void
   weekOptions: SelectOption[]
   partOptions: SelectOption[]
   fileName: string
@@ -449,6 +442,8 @@ export interface NoticeFormProps {
   values: NoticeFormValues
   onFieldChange: (field: keyof NoticeFormValues, value: string) => void
   onSubmit: (event: FormEvent<HTMLFormElement>) => void
+  // 수정 화면에서만 내려온다 (작성 화면에는 삭제 대상이 없다).
+  onDelete?: () => void
   pinned: boolean
   onPinnedChange: (pinned: boolean) => void
   tagOptions: SelectOption[]
@@ -507,4 +502,18 @@ export interface AttendanceListProps {
   onPageChange: (page: number) => void
   onTogglePresent: (id: string) => void
   onEditRemark: (record: AttendanceRecord) => void
+}
+
+// 상세 화면 헤더의 목록/수정 버튼 쌍 (프로젝트·세션·공지 상세 공용).
+export interface DetailActionsProps {
+  listHref: string
+  editHref: string
+}
+
+export interface WheelPickerProps {
+  items: string[]
+  defaultIndex: number
+  onChange: (index: number) => void
+  widthClass?: string
+  ariaLabel?: string
 }

@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { DetailActions } from '@molecules'
 import type { NoticeDetailProps } from '@types'
 
 // 정보표 라벨/값 셀 (라벨 secondary-1 144px + 값 fill).
@@ -13,20 +13,10 @@ export function NoticeDetail({ notice }: NoticeDetailProps) {
       <div className="flex w-full flex-col items-end gap-16 rounded-8 bg-white px-32 py-24">
         <div className="flex w-full items-center justify-between">
           <h2 className="text-sm-20 text-black">{notice.title}</h2>
-          <div className="flex items-center gap-8">
-            <Link
-              to="/admin/notices"
-              className="flex h-32 items-center rounded-8 border border-primary px-16 text-m-14 text-primary"
-            >
-              목록
-            </Link>
-            <Link
-              to={`/admin/notices/${notice.id}/edit`}
-              className="flex h-32 items-center rounded-8 bg-primary px-16 text-m-14 text-white"
-            >
-              수정
-            </Link>
-          </div>
+          <DetailActions
+            listHref="/admin/notices"
+            editHref={`/admin/notices/${notice.id}/edit`}
+          />
         </div>
 
         <div className="w-full overflow-hidden rounded-8 border border-secondary-1">

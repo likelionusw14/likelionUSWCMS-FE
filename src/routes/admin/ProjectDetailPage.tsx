@@ -7,8 +7,8 @@ export function ProjectDetailPage() {
   const { data: project } = useProject(projectId)
 
   return (
-    <>
+    <div className="px-24 pb-[120px] pt-32">
       {project ? <ProjectDetail project={project} /> : <NotFoundPanel />}
-    </>
+    </div>
   )
 }
