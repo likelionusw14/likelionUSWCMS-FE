@@ -3,7 +3,7 @@ import { BRAND_NAME } from '@constants'
 import { cn } from '@utils'
 import type { AdminSidebarProps } from '@types'
 
-const MENU_ITEM = 'flex h-40 items-center rounded-8 px-24 text-sm-16 text-black'
+const MENU_ITEM = 'flex h-40 items-center rounded-8 mx-12 px-12 text-sm-16 text-black'
 const MENU_ITEM_ACTIVE = 'bg-background-1'
 
 // 관리 페이지 좌측 사이드바 — 브랜드 + 대시보드 + 관리 메뉴.
