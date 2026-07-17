@@ -8,7 +8,8 @@ const SPACER = (CONTAINER_H - ITEM_H) / 2
 const ANGLE = 20 // 항목당 회전각(deg) — 실린더 곡률
 const MAX = 4 // 중앙 기준 표시 범위(그 밖은 숨김; 4×20=80° < 90°)
 const STEP = 40 // 휠 delta 누적 임계 — 노치당 1칸
-const DUR = 120 // 센터링 트윈 시간(ms)
+const DUR = 120 // 데스크톱 휠/클릭 트윈 시간(ms)
+const SNAP = 'y proximity' // 터치 센터링은 네이티브 스냅에 맡긴다(메인스레드 경합 없음).
 
 export interface WheelPickerProps {
   items: string[]
@@ -19,10 +20,11 @@ export interface WheelPickerProps {
 }
 
 // iOS 스타일 3D 휠 한 열 — 항목별 perspective+rotateX 로 실린더 곡률.
-// 데스크톱 휠: 노치당 1칸(관성 없는 짧은 트윈). 모바일 터치: 자유 스크롤 → 멈추면 가까운 항목으로 센터링.
-// CSS scroll-snap 미사용 — mandatory 스냅의 정착 애니메이션이 모바일에서 다음 터치를 씹는 문제를 피하고,
-// 대신 '취소 가능한 JS 트윈'으로 센터링한다(터치 시작 시 즉시 취소 → 씹힘 없음).
-// 스크롤/센터링 중 React 리렌더가 없도록 DOM 을 직접 갱신(노드 캐시)해 메인스레드 부담을 줄인다.
+// 터치: 네이티브 스크롤 + CSS scroll-snap(proximity)로 센터링 → 컴포지터가 처리하므로 여러 열을
+//       동시에 만져도 메인스레드 경합/터치 씹힘이 없다. mandatory 가 아니라 proximity 라 정착 애니메이션이
+//       다음 터치를 붙잡지 않는다.
+// 데스크톱 휠/클릭: JS 트윈으로 노치당 1칸(관성 없는 detent). 트윈 동안만 스냅을 꺼 부드럽게 한다.
+// 스크롤 중 React 리렌더가 없도록 DOM 을 직접 갱신(노드 캐시)한다.
 export function WheelPicker({
   items,
   defaultIndex,
@@ -62,7 +64,7 @@ export function WheelPicker({
     })
   }
 
-  // 짧고 고정된 트윈(관성 없는 detent). 새 트윈/터치가 오면 취소된다.
+  // 데스크톱 휠/클릭 전용 트윈(관성 없는 detent). 트윈 동안 스냅을 꺼 매끄럽게, 끝나면 복원.
   function animateTo(top: number) {
     const el = ref.current
     if (!el) return
@@ -73,6 +75,7 @@ export function WheelPicker({
       el.scrollTop = top
       return
     }
+    el.style.scrollSnapType = 'none'
     const start = performance.now()
     function frame(now: number) {
       const node = ref.current
@@ -80,6 +83,7 @@ export function WheelPicker({
       const p = Math.min(1, (now - start) / DUR)
       node.scrollTop = from + dist * (1 - Math.pow(1 - p, 3))
       if (p < 1) anim.current = requestAnimationFrame(frame)
+      else node.style.scrollSnapType = SNAP
     }
     anim.current = requestAnimationFrame(frame)
   }
@@ -99,10 +103,7 @@ export function WheelPicker({
     settleTimer.current = window.setTimeout(() => {
       const el = ref.current
       if (!el) return
-      const idx = clampIdx(Math.round(el.scrollTop / ITEM_H))
-      notify(idx)
-      // 터치 후 가까운 항목으로 센터링(휠/클릭은 이미 정렬돼 no-op).
-      animateTo(idx * ITEM_H)
+      notify(clampIdx(Math.round(el.scrollTop / ITEM_H)))
     }, 90)
   }
 
@@ -126,17 +127,15 @@ export function WheelPicker({
       target.current = clampIdx(target.current + (event.deltaY > 0 ? 1 : -1))
       animateTo(target.current * ITEM_H)
     }
-    // 새 터치가 시작되면 진행 중 센터링 트윈을 즉시 멈춘다(터치 씹힘 방지).
+    // 진행 중 트윈이 있으면 새 포인터 입력 시 즉시 멈춘다(입력 경합 방지).
     function cancelAnim() {
       if (anim.current) cancelAnimationFrame(anim.current)
     }
     el.addEventListener('wheel', onWheel, { passive: false })
-    el.addEventListener('touchstart', cancelAnim, { passive: true })
     el.addEventListener('pointerdown', cancelAnim, { passive: true })
 
     return () => {
       el.removeEventListener('wheel', onWheel)
-      el.removeEventListener('touchstart', cancelAnim)
       el.removeEventListener('pointerdown', cancelAnim)
       if (raf.current) cancelAnimationFrame(raf.current)
       if (anim.current) cancelAnimationFrame(anim.current)
@@ -155,7 +154,7 @@ export function WheelPicker({
         'no-scrollbar select-none touch-pan-y overflow-y-scroll overflow-x-hidden text-center',
         widthClass,
       )}
-      style={{ height: CONTAINER_H, scrollbarWidth: 'none' }}
+      style={{ height: CONTAINER_H, scrollbarWidth: 'none', scrollSnapType: SNAP }}
     >
       <div style={{ height: SPACER }} aria-hidden />
       {items.map((it, i) => (
@@ -169,7 +168,7 @@ export function WheelPicker({
             animateTo(i * ITEM_H)
           }}
           className="flex w-full items-center justify-center whitespace-nowrap text-[22px] leading-none text-black [backface-visibility:hidden]"
-          style={{ height: ITEM_H }}
+          style={{ height: ITEM_H, scrollSnapAlign: 'center' }}
         >
           {it}
         </button>
