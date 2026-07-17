@@ -24,6 +24,7 @@ export function MemberEditModal({
   const [cohort, setCohort] = useState('')
   const [part, setPart] = useState('')
   const [confirmOpen, setConfirmOpen] = useState(false)
+  const [nameError, setNameError] = useState(false)
 
   // 팝업이 열릴 때마다 초기값으로 시드한다.
   useEffect(() => {
@@ -32,7 +33,16 @@ export function MemberEditModal({
     setCohort(initialValues?.cohort ?? '')
     setPart(initialValues?.part ?? '')
     setConfirmOpen(false)
+    setNameError(false)
   }, [open, initialValues])
+
+  function handleSave() {
+    if (!name.trim()) {
+      setNameError(true)
+      return
+    }
+    onSubmit({ name, cohort, part })
+  }
 
   return (
     <>
@@ -49,13 +59,21 @@ export function MemberEditModal({
           <div className="flex flex-col gap-8">
             <div className="flex flex-col gap-8">
               <span className="px-8 text-m-16 text-black">이름</span>
-              <div className="flex h-48 w-[280px] flex-col">
+              <div className="flex h-48 w-[280px] flex-col gap-4">
                 <input
                   className={FIELD}
                   value={name}
-                  onChange={(event) => setName(event.target.value)}
+                  onChange={(event) => {
+                    setName(event.target.value)
+                    if (nameError) setNameError(false)
+                  }}
                   placeholder="이름"
                 />
+                {nameError && (
+                  <p className="text-[10px] font-normal leading-normal text-error">
+                    이름을 다시 확인해주세요
+                  </p>
+                )}
               </div>
             </div>
             <div className="flex gap-32">
@@ -74,7 +92,7 @@ export function MemberEditModal({
         <div className="flex gap-16">
           <button
             type="button"
-            onClick={() => onSubmit({ name, cohort, part })}
+            onClick={handleSave}
             className="flex h-48 min-w-[128px] items-center justify-center rounded-8 bg-primary px-32 text-sm-18 text-white"
           >
             저장
