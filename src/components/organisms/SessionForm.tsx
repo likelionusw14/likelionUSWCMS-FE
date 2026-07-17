@@ -4,8 +4,8 @@ import { Dropdown } from '@atoms'
 import { FileUploadField, FormRow } from '@molecules'
 import type { SessionFormProps } from '@types'
 
-// 세션자료 작성·수정 폼 — 표 형태(라벨 secondary-1 + 입력): 주차·파트 + 대표이미지 업로드.
-// 저장 시 주차/파트가 비어있으면 '작성내용을 다시 확인해주세요'(R/12 error) 표시. Figma 818:16570/16569.
+// 세션자료 작성·수정 폼 — 표 형태(라벨 secondary-1 + 입력): 주차·파트 + 첨부파일.
+// 저장 시 주차/파트/첨부파일이 비어있으면 '작성내용을 다시 확인해주세요'(R/12 error) 표시. Figma 818:16570/16569.
 export function SessionForm({
   values,
   onFieldChange,
@@ -25,7 +25,7 @@ export function SessionForm({
   }
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    if (!values.week.trim() || !values.part.trim()) {
+    if (!values.week.trim() || !values.part.trim() || !fileName.trim()) {
       event.preventDefault()
       setError(true)
       return
@@ -59,14 +59,13 @@ export function SessionForm({
               />
             </FormRow>
           </div>
-          {/* 대표이미지 업로드 */}
+          {/* 첨부파일 */}
           <div className="relative z-10 flex h-[115px] w-full items-stretch">
-            <FormRow label="대표이미지 업로드" labelClassName="rounded-bl-8">
+            <FormRow label="첨부파일" labelClassName="rounded-bl-8">
               <FileUploadField
                 fileName={fileName}
                 onFileChange={onFileChange}
                 onFileClear={onFileClear}
-                accept="image/*"
               />
             </FormRow>
           </div>
