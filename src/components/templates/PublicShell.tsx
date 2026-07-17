@@ -7,9 +7,9 @@ import type { PublicShellProps } from '@types'
 export function PublicShell({ navItems, applyItem }: PublicShellProps) {
   const location = useLocation()
   const variants = {
-    initial: { opacity: 0 },
-    animate: { opacity: 1 },
-    exit: { opacity: 0 },
+    initial: { opacity: 0, y: 8 },
+    animate: { opacity: 1, y: 0 },
+    exit: { opacity: 0, y: -8 },
   }
   return (
     <div className="flex min-h-screen flex-col bg-background-2">
@@ -22,7 +22,7 @@ export function PublicShell({ navItems, applyItem }: PublicShellProps) {
             animate="animate"
             exit="exit"
             variants={variants}
-            transition={{ duration: 0.2, ease: 'easeInOut' }}
+            transition={{ duration: 0.25, ease: [0.2, 0.8, 0.2, 1] }}
             className="flex w-full justify-center"
           >
             <Outlet />
