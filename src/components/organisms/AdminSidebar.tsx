@@ -3,9 +3,7 @@ import { BRAND_NAME } from '@constants'
 import { cn } from '@utils'
 import type { AdminSidebarProps } from '@types'
 
-// 메뉴 항목 — 보고 있는 페이지(선택 상태)만 배경을 칠한다.
-// Figma 사이드바 컴포넌트의 변형이 `<메뉴> 선택` 뿐이라 호버 상태는 따로 없다.
-const MENU_ITEM = 'flex h-40 items-center rounded-8 px-24 text-sm-16 text-black'
+const MENU_ITEM = 'flex h-40 items-center rounded-8 mx-12 px-12 text-sm-16 text-black'
 const MENU_ITEM_ACTIVE = 'bg-background-1'
 
 // 관리 페이지 좌측 사이드바 — 브랜드 + 대시보드 + 관리 메뉴.

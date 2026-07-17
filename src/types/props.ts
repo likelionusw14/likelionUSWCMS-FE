@@ -9,6 +9,9 @@ import type { AreaType, Role } from './auth'
 import type { NavItem } from './nav'
 import type { Project, ProjectFormValues } from './project'
 import type { Session, SessionFormValues } from './session'
+import type { Notice } from './notice'
+import type { Member, PendingMember } from './member'
+import type { AttendanceRecord } from './attendance'
 import type { SignupProfile } from './signup'
 
 // 컴포넌트 props 타입 (컴포넌트 파일 인라인 정의 금지 규칙에 따라 여기 정의).
@@ -126,8 +129,15 @@ export interface AdminSidebarShellProps {
   navItems: NavItem[]
 }
 
+// 상단바 브레드크럼 세그먼트 — to 가 있으면 링크(이동), 없으면 현재 페이지(텍스트).
+export interface BreadcrumbSegment {
+  label: string
+  to?: string
+}
+
 export interface AdminTopBarProps {
-  breadcrumb: string
+  // 문자열이면 기존처럼 텍스트만, 세그먼트 배열이면 각 조각을 링크로 렌더.
+  breadcrumb: string | BreadcrumbSegment[]
   title: string
 }
 
@@ -147,6 +157,17 @@ export interface ProjectCardProps {
   className?: string
 }
 
+// 목록 상단 공용 검색바 — 껍데기(흰 카드)+검색 아이콘은 SearchBar 소유, 필터는 children 슬롯.
+// 관리자 목록(프로젝트·세션·공지·출결)이 공유. 검색 동작은 백엔드 연동 시 채운다(디자인에 입력창 없음).
+export interface SearchBarProps {
+  // 좌측 필터 슬롯 (Dropdown·날짜버튼 등).
+  children: ReactNode
+  // 검색 아이콘 클릭. 없으면 아이콘 비활성(디자인상 항상 표시).
+  onSearch?: () => void
+}
+
+// 사용자 프로젝트 목록 상단 검색바(기수+분류 필터). 관리자는 SearchBar 로 통일했으나
+// 사용자 화면(UserProjectListPage)이 이 컴포넌트를 그대로 사용 중이라 유지한다.
 export interface ProjectFilterBarProps {
   cohort: string
   filterValue: string
@@ -192,16 +213,6 @@ export interface ProjectFormProps {
 }
 
 // ── 세션자료 관리 ──
-export interface SessionFilterBarProps {
-  week: string
-  part: string
-  onWeekChange: (week: string) => void
-  onPartChange: (part: string) => void
-  weekOptions: SelectOption[]
-  partOptions: SelectOption[]
-  onSearch: () => void
-}
-
 export interface SessionListProps {
   sessions: Session[]
   totalCount: number
@@ -439,4 +450,48 @@ export interface ApprovalActionsProps {
   onCancel: () => void
   disabled?: boolean
   className?: string
+}
+
+// 공지 목록 — 건수·등록·표(필독·제목·태그·작성일)·페이지네이션.
+export interface NoticeListProps {
+  notices: Notice[]
+  totalCount: number
+  page: number
+  totalPages: number
+  onPageChange: (page: number) => void
+}
+
+// 공지 상세 — 제목·목록/수정·태그/작성일/첨부 정보표 + 공지내용.
+export interface NoticeDetailProps {
+  notice: Notice
+}
+
+// 승인대기 목록 — 이름·기수·파트 + 승인/취소.
+export interface PendingMemberListProps {
+  members: PendingMember[]
+  totalCount: number
+  onApprove: (id: string) => void
+  onReject: (id: string) => void
+}
+
+// 회원 목록 — 이름·분류(링크)·기수·파트·가입상태·수정(링크) + 페이지네이션.
+export interface MemberListProps {
+  members: Member[]
+  totalCount: number
+  page: number
+  totalPages: number
+  onPageChange: (page: number) => void
+  onEditRole: (member: Member) => void
+  onEditMember: (member: Member) => void
+}
+
+// 출석 내역 — 날짜·이름·학번·파트·출석상태(체크)·비고(버튼) + 페이지네이션.
+export interface AttendanceListProps {
+  records: AttendanceRecord[]
+  totalCount: number
+  page: number
+  totalPages: number
+  onPageChange: (page: number) => void
+  onTogglePresent: (id: string) => void
+  onEditRemark: (record: AttendanceRecord) => void
 }

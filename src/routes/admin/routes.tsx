@@ -10,6 +10,11 @@ import { SessionListPage } from './SessionListPage'
 import { SessionDetailPage } from './SessionDetailPage'
 import { SessionFormPage } from './SessionFormPage'
 import { AttendancePage } from './AttendancePage'
+import { SchedulePage } from './SchedulePage'
+import { NoticeListPage } from './NoticeListPage'
+import { NoticeDetailPage } from './NoticeDetailPage'
+import { NoticeFormPage } from './NoticeFormPage'
+import { MemberPage } from './MemberPage'
 
 // 관리자(운영진) 영역 — STAFF. 가드 + 셸 + 페이지를 캡슐화한다.
 // 이 영역 담당자는 이 폴더(routes/admin/)만 편집한다.
@@ -34,6 +39,12 @@ export const adminRoutes: RouteObject[] = [
           { path: '/admin/sessions/:sessionId', element: <SessionDetailPage /> },
           { path: '/admin/sessions/:sessionId/edit', element: <SessionFormPage /> },
           { path: '/admin/attendance', element: <AttendancePage /> },
+          { path: '/admin/schedule', element: <SchedulePage /> },
+          { path: '/admin/notices', element: <NoticeListPage /> },
+          { path: '/admin/notices/new', element: <NoticeFormPage /> },
+          { path: '/admin/notices/:noticeId', element: <NoticeDetailPage /> },
+          { path: '/admin/notices/:noticeId/edit', element: <NoticeFormPage /> },
+          { path: '/admin/members', element: <MemberPage /> },
         ],
       },
     ],

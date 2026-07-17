@@ -3,7 +3,8 @@ import plusIcon from '@/assets/icons/plus.svg'
 import { Pagination, ProjectCard } from '@molecules'
 import type { ProjectListProps } from '@types'
 
-// 프로젝트 목록 — 건수 + 등록 버튼 + 카드 그리드 + 페이지네이션.
+// 프로젝트 목록 — 건수 + 등록 버튼(옵션) + 카드 그리드 + 페이지네이션.
+// 관리자·사용자 화면이 공유한다 (createPath 있으면 등록 버튼 표시, 없으면 숨김).
 export function ProjectList({
   projects,
   totalCount,

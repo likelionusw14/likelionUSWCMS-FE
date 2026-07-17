@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { PART_OPTIONS, WEEK_OPTIONS } from '@constants'
+import { Dropdown } from '@atoms'
 import { useSessions } from '@hooks'
-import { AdminTopBar, SessionFilterBar, SessionList } from '@organisms'
+import { SearchBar, SessionList } from '@organisms'
 
 const PAGE_SIZE = 20
 
@@ -16,17 +17,11 @@ export function SessionListPage() {
 
   return (
     <>
-      <AdminTopBar breadcrumb="홈 / 세션자료 관리" title="세션자료 관리" />
       <div className="flex flex-col gap-24 px-24 pb-[120px] pt-32">
-        <SessionFilterBar
-          week={week}
-          part={part}
-          onWeekChange={setWeek}
-          onPartChange={setPart}
-          weekOptions={WEEK_OPTIONS}
-          partOptions={PART_OPTIONS}
-          onSearch={() => setPage(1)}
-        />
+        <SearchBar onSearch={() => setPage(1)}>
+          <Dropdown value={week} onChange={setWeek} options={WEEK_OPTIONS} placeholder="주차" />
+          <Dropdown value={part} onChange={setPart} options={PART_OPTIONS} placeholder="파트" />
+        </SearchBar>
         <SessionList
           sessions={visibleSessions}
           totalCount={sessions.length}

@@ -1,14 +1,15 @@
-import { Link } from 'react-router-dom'
-import plusIcon from '@/assets/icons/plus.svg'
-import { Pagination } from '@molecules'
-import type { SessionListProps } from '@types'
+import { useNavigate } from 'react-router-dom'
+import { DataTable } from '@molecules'
+import { ListSection } from './ListSection'
+import type { Column, Session, SessionListProps } from '@types'
 
-// 표 셀 공통 — 파일명은 남는 폭을 쓰고(넘치면 말줄임) 주차·파트는 96px 고정이다.
-const ROW = 'flex w-full items-center justify-between border-b border-secondary-1 px-32 py-8'
-const NAME_CELL = 'min-w-64 max-w-[280px] flex-1 truncate'
-const META_CELL = 'w-96 shrink-0 text-center'
+// 세션자료 목록 — Session 라벨 + 건수·등록 + 표(파일명·주차·파트) + 페이지네이션. 행 클릭 시 상세.
+const COLUMNS: Column<Session>[] = [
+  { id: 'fileName', header: '파일명', accessor: (s) => s.fileName, minWidth: 64 },
+  { id: 'week', header: '주차', accessor: (s) => s.week, width: 96, align: 'center' },
+  { id: 'part', header: '파트', accessor: (s) => s.part, width: 96, align: 'center' },
+]
 
-// 세션자료 목록 — 건수 + 등록 버튼 + 파일 표 + 페이지네이션.
 export function SessionList({
   sessions,
   totalCount,
@@ -16,40 +17,24 @@ export function SessionList({
   totalPages,
   onPageChange,
 }: SessionListProps) {
+  const navigate = useNavigate()
+
   return (
-    <div className="flex w-full flex-col gap-24 rounded-16 bg-white px-32 py-24">
-      <p className="text-m-20 text-primary">Session</p>
-      <div className="flex w-full items-center justify-between">
-        <p className="text-m-14 text-black">
-          총 {totalCount}건 ({page}/{totalPages} page)
-        </p>
-        <Link
-          to="/admin/sessions/new"
-          aria-label="세션자료 등록"
-          className="flex h-24 w-40 items-center justify-center"
-        >
-          <img src={plusIcon} alt="" className="h-16 w-16" />
-        </Link>
-      </div>
-      <div className="flex w-full flex-col">
-        <div className={`${ROW} h-32 border-t text-m-14 text-primary`}>
-          <span className={NAME_CELL}>파일명</span>
-          <span className={META_CELL}>주차</span>
-          <span className={META_CELL}>파트</span>
-        </div>
-        {sessions.map((session) => (
-          <Link
-            key={session.id}
-            to={`/admin/sessions/${session.id}`}
-            className={`${ROW} h-40 text-m-14 text-black`}
-          >
-            <span className={NAME_CELL}>{session.fileName}</span>
-            <span className={META_CELL}>{session.week}</span>
-            <span className={META_CELL}>{session.part}</span>
-          </Link>
-        ))}
-      </div>
-      <Pagination page={page} totalPages={totalPages} onPageChange={onPageChange} />
-    </div>
+    <ListSection
+      header={<p className="text-m-20 text-primary">Session</p>}
+      totalCount={totalCount}
+      page={page}
+      totalPages={totalPages}
+      onPageChange={onPageChange}
+      onAdd={() => navigate('/admin/sessions/new')}
+    >
+      <DataTable
+        columns={COLUMNS}
+        rows={sessions}
+        rowKey={(s) => s.id}
+        getRowHref={(s) => `/admin/sessions/${s.id}`}
+        ariaLabel="세션자료 목록"
+      />
+    </ListSection>
   )
 }

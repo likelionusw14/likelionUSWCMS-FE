@@ -1,5 +1,4 @@
 import { create } from 'zustand'
-
 interface UiState {
   sidebarOpen: boolean
   toggleSidebar: () => void
