@@ -54,11 +54,11 @@ export function TimePickerModal({ open, onClose, onConfirm, value }: TimePickerM
         </div>
 
         {/* 3열 휠 */}
-        <div className="relative h-[220px] w-[302px] overflow-hidden rounded-8 bg-white">
+        <div className="relative h-[220px] w-[302px] touch-pan-y overflow-hidden rounded-8 bg-white">
           {/* 중앙 선택 밴드 230×40 */}
           <div className="pointer-events-none absolute left-1/2 top-1/2 h-40 w-[230px] -translate-x-1/2 -translate-y-1/2 rounded-8 bg-black/5" />
           {/* 3열 (시 24 · 분 28 · AM/PM 34, gap 32, 좌우 76) */}
-          <div className="flex h-full items-center justify-center gap-32 px-[76px]">
+          <div className="flex h-full touch-pan-y items-center justify-center gap-32 px-[76px]">
             <WheelPicker
               items={HOURS}
               defaultIndex={initial.hourIdx}

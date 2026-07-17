@@ -52,13 +52,13 @@ export function DatePickerModal({
       <WindowPanel className="w-[408px]" bodyClassName="flex flex-col items-stretch gap-40 !p-24">
         <h2 className="text-left text-sm-22 text-black">{title}</h2>
 
-        <div className="relative mx-auto w-[360px]">
+        <div className="relative mx-auto w-[360px] touch-pan-y">
           {/* 중앙 선택 밴드 (Figma 741:3139 · 300×40) */}
           <div
             className="pointer-events-none absolute left-1/2 top-1/2 z-0 h-40 w-[300px] -translate-x-1/2 -translate-y-1/2 rounded-8 bg-black/5"
             aria-hidden
           />
-          <div className="relative z-10 flex justify-center gap-32">
+          <div className="relative z-10 flex touch-pan-y justify-center gap-32">
             <WheelPicker
               items={years.map((y) => `${y}`)}
               defaultIndex={initial.year}
