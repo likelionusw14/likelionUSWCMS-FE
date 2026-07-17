@@ -87,8 +87,8 @@ export function NoticeForm({
             <FormRow label="공지내용" labelClassName="rounded-bl-8">
               <textarea
                 ref={contentRef}
-                rows={1}
-                className="no-scrollbar min-h-[60px] w-full resize-none rounded-8 border border-secondary-1 bg-background-1 px-16 py-[8.5px] text-m-14 text-black placeholder:text-primary/50 focus:outline-none"
+                rows={6}
+                className="no-scrollbar min-h-[148px] w-full resize-none rounded-8 border border-secondary-1 bg-background-1 px-16 py-[8.5px] text-m-14 text-black placeholder:text-primary/50 focus:outline-none"
                 value={values.content}
                 onChange={(event) => change('content', event.target.value)}
                 placeholder="공지내용을 작성해주세요"
