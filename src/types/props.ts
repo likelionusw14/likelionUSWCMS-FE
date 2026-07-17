@@ -149,11 +149,12 @@ export interface ProjectCardProps {
 
 export interface ProjectFilterBarProps {
   cohort: string
-  part: string
+  filterValue: string
   onCohortChange: (cohort: string) => void
-  onPartChange: (part: string) => void
+  onFilterChange: (value: string) => void
   cohortOptions: SelectOption[]
-  partOptions: SelectOption[]
+  filterOptions: SelectOption[]
+  filterPlaceholder: string
   onSearch: () => void
 }
 
@@ -163,6 +164,8 @@ export interface ProjectListProps {
   page: number
   totalPages: number
   onPageChange: (page: number) => void
+
+  createPath?: string
 }
 
 export interface ProjectDetailProps {
@@ -220,6 +223,19 @@ export interface SessionFormProps {
   fileName: string
   onFileChange: (fileName: string) => void
   onFileClear: () => void
+}
+
+export interface UserProjectDetailProps {
+  project: Project
+}
+
+export interface UserHeaderProps {
+  navItems: NavItem[]
+  onLogout: () => void
+}
+
+export interface UserShellProps {
+  navItems: NavItem[]
 }
 
 // 출석 코드 생성 — 코드 표시 + 유효시간 카운트다운 + 생성 버튼.
