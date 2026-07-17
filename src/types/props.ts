@@ -13,6 +13,7 @@ import type { Notice } from './notice'
 import type { Member, PendingMember } from './member'
 import type { AttendanceRecord } from './attendance'
 import type { SignupProfile } from './signup'
+import type { CalendarEvent } from './calendar'
 
 // 컴포넌트 props 타입 (컴포넌트 파일 인라인 정의 금지 규칙에 따라 여기 정의).
 
@@ -57,7 +58,17 @@ export interface WindowPanelProps {
   headerClassName?: string
 }
 
-export type InputProps = InputHTMLAttributes<HTMLInputElement>
+// 입력 아톰 — variant 로 스타일 프리셋 선택: default(회원가입: h-40 흰 배경) · form(관리 폼: h-32 background-1).
+export type InputProps = InputHTMLAttributes<HTMLInputElement> & {
+  variant?: 'default' | 'form'
+}
+
+// 공용 버튼 아톰 — variant(색)와 size(치수) 프리셋. 네이티브 button 속성 확장은 컴포넌트에서 병합한다.
+export interface ButtonProps {
+  variant?: 'primary' | 'outline' | 'danger'
+  size?: 'md' | 'block' | 'sm'
+  className?: string
+}
 
 export interface SelectOption {
   value: string
@@ -126,9 +137,9 @@ export interface BreadcrumbSegment {
   to?: string
 }
 
+// 상단바 — 셸(AdminSidebarShell)이 getAdminBreadcrumb 로 계산해 내려준다.
 export interface AdminTopBarProps {
-  // 문자열이면 기존처럼 텍스트만, 세그먼트 배열이면 각 조각을 링크로 렌더.
-  breadcrumb: string | BreadcrumbSegment[]
+  breadcrumb: BreadcrumbSegment[]
   title: string
 }
 
@@ -346,7 +357,8 @@ export interface ScheduleFormModalProps {
   open: boolean
   onClose: () => void
   onSubmit: (values: ScheduleFormValues) => void
-  initialValues?: Partial<ScheduleFormValues>
+  // 수정 진입 시 채울 기존 일정(신규 등록이면 null/undefined). 폼값 변환은 모달 내부에서 한다.
+  initialEvent?: CalendarEvent | null
 }
 
 // 날짜 선택 팝업 — 년/월/일 3열 휠(granularity='month' 면 년/월 2열). 일정 등록·수정,
@@ -516,4 +528,13 @@ export interface WheelPickerProps {
   onChange: (index: number) => void
   widthClass?: string
   ariaLabel?: string
+}
+
+// 휠 데크 — 날짜/시간 피커가 공유하는 3열 휠 스캐폴드(중앙 선택 밴드 + 상하 페이드).
+// children 으로 WheelPicker 열들을 받는다.
+export interface WheelDeckProps {
+  children: ReactNode
+  // 중앙 선택 밴드 너비 (기본 w-[300px]). 시간 피커는 좁다(w-[230px]).
+  bandClassName?: string
+  className?: string
 }

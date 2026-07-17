@@ -1,23 +1,16 @@
-import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import topbarLogoutIcon from '@/assets/icons/topbar-logout.svg'
-import { useAuth } from '@hooks'
-import { getAdminBreadcrumb } from '@routes/admin/nav'
+import { useLogout } from '@hooks'
+import { pageFadeTransition } from '@templates'
+import type { AdminTopBarProps } from '@types'
 
 // 셸(AdminSidebarShell)이 상단에 고정하는 UI 컴포넌트.
-// location.pathname 이 바뀔 때 딜레이 없이 즉시 정보를 갱신한다.
-export function AdminTopBar() {
+// title·breadcrumb 는 셸에서 계산해 prop 으로 내려준다(dumb organism). 경로 변경 시 크로스페이드.
+export function AdminTopBar({ title, breadcrumb }: AdminTopBarProps) {
   const location = useLocation()
-  const navigate = useNavigate()
-  const { logout } = useAuth()
   const reduce = useReducedMotion()
-
-  const { title, breadcrumb } = getAdminBreadcrumb(location.pathname)
-
-  function handleLogout() {
-    logout()
-    navigate('/login')
-  }
+  const handleLogout = useLogout()
 
   return (
     <div className="flex w-full items-center justify-between overflow-hidden bg-white px-32 py-16 shrink-0">
@@ -28,14 +21,17 @@ export function AdminTopBar() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: reduce ? 0 : 0.35, ease: 'easeInOut' }}
+            transition={pageFadeTransition(!!reduce)}
             className="col-start-1 row-start-1 flex flex-col gap-4"
           >
             <p className="text-r-14 text-primary/60">
               {breadcrumb.map((segment, index) => (
                 <span key={`${segment.label}-${index}`}>
                   {index > 0 && <span className="px-4"> / </span>}
-                  <Link to={segment.to || location.pathname} className="transition-colors hover:text-primary">
+                  <Link
+                    to={segment.to || location.pathname}
+                    className="transition-colors hover:text-primary"
+                  >
                     {segment.label}
                   </Link>
                 </span>

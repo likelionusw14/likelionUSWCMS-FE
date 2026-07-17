@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
-import { Dropdown } from '@atoms'
+import { Button, Dropdown } from '@atoms'
 import { FileUploadField, FormRow } from '@molecules'
 import type { SessionFormProps } from '@types'
 
@@ -75,20 +75,13 @@ export function SessionForm({
       </div>
 
       <div className="flex w-full flex-col gap-16">
-        <button
-          type="submit"
-          className="flex h-48 w-full items-center justify-center rounded-8 bg-primary px-32 text-sm-18 text-white"
-        >
+        <Button type="submit" size="block">
           저장
-        </button>
+        </Button>
         {onDelete ? (
-          <button
-            type="button"
-            onClick={onDelete}
-            className="flex h-48 w-full items-center justify-center rounded-8 border border-error px-32 text-sm-18 text-error"
-          >
+          <Button size="block" variant="danger" onClick={onDelete}>
             삭제
-          </button>
+          </Button>
         ) : null}
       </div>
     </form>

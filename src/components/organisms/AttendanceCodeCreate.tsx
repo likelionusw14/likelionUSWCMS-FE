@@ -1,3 +1,4 @@
+import { Button } from '@atoms'
 import { cn } from '@utils'
 import type { AttendanceCodeCreateProps } from '@types'
 
@@ -24,6 +25,8 @@ export function AttendanceCodeCreate({
       <div className="flex h-64 w-full items-center justify-center rounded-16 bg-secondary-1 px-24">
         <span
           className={cn(
+            // 코드 숫자 표시(40px). text-h1 토큰은 fontWeight 700 을 강제 번들하는데,
+            // 여기선 발급 전/후로 weight(normal/medium)를 바꿔야 해 임의값을 유지한다.
             'flex-1 text-center text-[40px] leading-none',
             code ? 'font-medium text-black' : 'font-normal text-white',
           )}
@@ -34,13 +37,9 @@ export function AttendanceCodeCreate({
 
       <p className="text-sm-18 text-primary/90">유효시간 {formatTime(remainingSeconds)}</p>
 
-      <button
-        type="button"
-        onClick={onGenerate}
-        className="flex h-48 min-w-[128px] items-center justify-center rounded-8 bg-primary px-32 text-sm-18 text-white"
-      >
+      <Button variant="primary" onClick={onGenerate}>
         코드 생성
-      </button>
+      </Button>
     </div>
   )
 }

@@ -1,4 +1,4 @@
-import type { Member, PendingMember } from '@types'
+import type { Member, PendingMember, QueryResult } from '@types'
 
 // 백엔드 연동 전 목데이터. 연동 시 이 훅 안에서 apiClient 호출로 교체한다
 // (컴포넌트는 { data, isLoading } 모양에만 의존한다).
@@ -24,11 +24,11 @@ const MOCK_PENDING: PendingMember[] = Array.from({ length: 3 }, (_, index) => ({
 }))
 
 // 회원 목록 조회.
-export function useMembers(): { data: Member[]; isLoading: boolean } {
+export function useMembers(): QueryResult<Member[]> {
   return { data: MOCK_MEMBERS, isLoading: false }
 }
 
 // 승인대기 회원 목록 조회.
-export function usePendingMembers(): { data: PendingMember[]; isLoading: boolean } {
+export function usePendingMembers(): QueryResult<PendingMember[]> {
   return { data: MOCK_PENDING, isLoading: false }
 }

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { WindowPanel } from '@atoms'
+import { Button, WindowPanel } from '@atoms'
 import { Modal } from '@molecules'
 import { cn } from '@utils'
 import type { RoleEditModalProps } from '@types'
@@ -42,20 +42,12 @@ export function RoleEditModal({ open, onClose, onSubmit, value }: RoleEditModalP
         </div>
 
         <div className="flex items-center justify-center gap-[10px]">
-          <button
-            type="button"
-            onClick={() => onSubmit(role)}
-            className="flex h-48 min-w-[128px] items-center justify-center rounded-8 bg-primary px-32 text-sm-18 text-white"
-          >
+          <Button variant="primary" onClick={() => onSubmit(role)}>
             저장
-          </button>
-          <button
-            type="button"
-            onClick={onClose}
-            className="flex h-48 min-w-[128px] items-center justify-center rounded-8 border border-primary bg-white px-32 text-sm-18 text-primary"
-          >
+          </Button>
+          <Button variant="outline" onClick={onClose}>
             취소
-          </button>
+          </Button>
         </div>
       </WindowPanel>
     </Modal>

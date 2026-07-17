@@ -1,5 +1,7 @@
 export * from './useHealth'
 export * from './useAuth'
+export * from './useLogout'
+export * from './useEntityForm'
 export * from './useLogin'
 export * from './useLoginForm'
 export * from './useSignupProfileForm'

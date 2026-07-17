@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import type { FormEvent } from 'react'
 import calendarIcon from '@/assets/icons/calendar.svg'
-import { Dropdown, FormInput } from '@atoms'
+import { Button, Dropdown, Input } from '@atoms'
 import { DatePickerModal, FileUploadField, FormRow } from '@molecules'
 import type { ProjectFormProps, ProjectFormValues } from '@types'
 
@@ -53,7 +53,8 @@ export function ProjectForm({
           {/* 프로젝트명 */}
           <div className="relative z-50 flex h-[56px] w-full items-stretch">
             <FormRow label="프로젝트명" labelClassName="rounded-tl-8">
-              <FormInput
+              <Input
+                variant="form"
                 value={values.name}
                 onChange={(event) => change('name', event.target.value)}
                 placeholder="프로젝트명을 입력해주세요"
@@ -115,14 +116,16 @@ export function ProjectForm({
           {/* 깃허브 URL / 프로젝트 URL */}
           <div className="relative z-20 flex h-[56px] w-full items-stretch border-y border-secondary-1">
             <FormRow label="깃허브 URL">
-              <FormInput
+              <Input
+                variant="form"
                 value={values.githubUrl}
                 onChange={(event) => onFieldChange('githubUrl', event.target.value)}
                 placeholder="링크URL을 입력해주세요"
               />
             </FormRow>
             <FormRow label="프로젝트 URL">
-              <FormInput
+              <Input
+                variant="form"
                 value={values.projectUrl}
                 onChange={(event) => onFieldChange('projectUrl', event.target.value)}
                 placeholder="링크URL을 입력해주세요"
@@ -133,7 +136,8 @@ export function ProjectForm({
           {/* 프로젝트 참여자 */}
           <div className="relative z-10 flex w-full items-stretch">
             <FormRow label="프로젝트 참여자">
-              <FormInput
+              <Input
+                variant="form"
                 value={values.participants}
                 onChange={(event) => onFieldChange('participants', event.target.value)}
                 placeholder="김ㅇㅇ(14기,기획), 김ㅇㅇ(14기,기획)"
@@ -172,20 +176,13 @@ export function ProjectForm({
       </div>
 
       <div className="flex w-full flex-col gap-16">
-        <button
-          type="submit"
-          className="flex h-48 w-full items-center justify-center rounded-8 bg-primary px-32 text-sm-18 text-white"
-        >
+        <Button type="submit" size="block">
           저장
-        </button>
+        </Button>
         {onDelete ? (
-          <button
-            type="button"
-            onClick={onDelete}
-            className="flex h-48 w-full items-center justify-center rounded-8 border border-error px-32 text-sm-18 text-error"
-          >
+          <Button size="block" variant="danger" onClick={onDelete}>
             삭제
-          </button>
+          </Button>
         ) : null}
       </div>
 
