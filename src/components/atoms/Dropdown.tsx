@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import chevronDown from '@/assets/icons/chevron-down.svg'
 import { cn } from '@utils'
 import type { DropdownProps } from '@types'
@@ -8,6 +9,7 @@ import type { DropdownProps } from '@types'
 const PANEL_BOX = 'w-full rounded-8 border border-secondary-1 bg-background-1 px-16 py-8'
 
 export function Dropdown({ value, onChange, options, placeholder, className }: DropdownProps) {
+  const reduce = useReducedMotion()
   const [isOpen, setIsOpen] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
 
@@ -42,30 +44,42 @@ export function Dropdown({ value, onChange, options, placeholder, className }: D
         className={cn('flex h-32 items-center justify-between text-m-14 text-black', PANEL_BOX)}
       >
         <span className="truncate">{selected ? selected.label : placeholder}</span>
-        <img src={chevronDown} alt="" className="ml-8 h-8 w-12 shrink-0" />
+        <motion.img
+          src={chevronDown}
+          alt=""
+          className="ml-8 h-8 w-12 shrink-0"
+          animate={{ rotate: isOpen ? 180 : 0 }}
+          transition={{ duration: reduce ? 0 : 0.15 }}
+        />
       </button>
-      {isOpen ? (
-        <div
-          role="listbox"
-          className={cn('absolute left-0 top-full z-10 mt-4 flex flex-col gap-8', PANEL_BOX)}
-        >
-          {options.map((option) => (
-            <button
-              key={option.value}
-              type="button"
-              role="option"
-              aria-selected={option.value === value}
-              onClick={() => {
-                onChange(option.value)
-                setIsOpen(false)
-              }}
-              className="flex w-full items-center text-left text-m-14 text-black"
-            >
-              {option.label}
-            </button>
-          ))}
-        </div>
-      ) : null}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            role="listbox"
+            className={cn('absolute left-0 top-full z-10 mt-4 flex flex-col gap-8', PANEL_BOX)}
+            initial={reduce ? { opacity: 0 } : { opacity: 0, scale: 0.96, y: -4 }}
+            animate={reduce ? { opacity: 1 } : { opacity: 1, scale: 1, y: 0 }}
+            exit={reduce ? { opacity: 0 } : { opacity: 0, scale: 0.96, y: -4 }}
+            transition={{ duration: reduce ? 0 : 0.15, ease: [0.16, 1, 0.3, 1] }}
+          >
+            {options.map((option) => (
+              <button
+                key={option.value}
+                type="button"
+                role="option"
+                aria-selected={option.value === value}
+                onClick={() => {
+                  onChange(option.value)
+                  setIsOpen(false)
+                }}
+                className="flex w-full items-center text-left text-m-14 text-black"
+              >
+                {option.label}
+              </button>
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }
