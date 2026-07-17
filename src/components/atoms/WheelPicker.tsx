@@ -30,6 +30,8 @@ export function WheelPicker({
   const raf = useRef<number | undefined>(undefined)
   const settleTimer = useRef<number | undefined>(undefined)
   const last = useRef(defaultIndex)
+  const target = useRef(defaultIndex)
+  const acc = useRef(0)
   const [active, setActive] = useState(defaultIndex)
 
   // 현재 스크롤 위치에 맞춰 각 항목의 3D 변형/투명도/굵기를 직접 그린다.
@@ -60,6 +62,7 @@ export function WheelPicker({
       if (!el) return
       const idx = Math.max(0, Math.min(items.length - 1, Math.round(el.scrollTop / ITEM_H)))
       setActive(idx)
+      target.current = idx
       if (idx !== last.current) {
         last.current = idx
         onChange(idx)
@@ -73,10 +76,29 @@ export function WheelPicker({
     if (!el) return
     el.scrollTop = defaultIndex * ITEM_H
     last.current = defaultIndex
+    target.current = defaultIndex
     setActive(defaultIndex)
     onChange(defaultIndex)
     paint()
+
+    // 데스크톱 휠: 노치당 1칸(트랙패드는 누적)만 이동. 네이티브 스냅 애니메이션이 멈춘 뒤
+    // 입력을 씹는 문제를 피하려 wheel 을 직접 처리(preventDefault)하고 목표 항목으로 부드럽게 이동한다.
+    const STEP = 40
+    function onWheel(event: WheelEvent) {
+      const node = ref.current
+      if (!node) return
+      event.preventDefault()
+      acc.current += event.deltaY
+      if (Math.abs(acc.current) < STEP) return
+      const dir = acc.current > 0 ? 1 : -1
+      acc.current = 0
+      target.current = Math.max(0, Math.min(items.length - 1, target.current + dir))
+      node.scrollTo({ top: target.current * ITEM_H, behavior: 'smooth' })
+    }
+    el.addEventListener('wheel', onWheel, { passive: false })
+
     return () => {
+      el.removeEventListener('wheel', onWheel)
       if (raf.current) cancelAnimationFrame(raf.current)
       if (settleTimer.current) window.clearTimeout(settleTimer.current)
     }
