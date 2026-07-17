@@ -3,11 +3,8 @@ import { BRAND_NAME } from '@constants'
 import { cn } from '@utils'
 import type { AdminSidebarProps } from '@types'
 
-const getMenuItemClass = (isActive: boolean) =>
-  cn(
-    'flex items-center rounded-8 px-24 text-sm-16 text-black transition-all duration-150',
-    isActive ? 'h-[44px] bg-background-1' : 'h-40',
-  )
+const MENU_ITEM = 'flex h-40 items-center rounded-8 px-24 text-sm-16 text-black'
+const MENU_ITEM_ACTIVE = 'bg-background-1'
 
 // 관리 페이지 좌측 사이드바 — 브랜드 + 대시보드 + 관리 메뉴.
 export function AdminSidebar({ homeItem, navItems }: AdminSidebarProps) {
@@ -17,7 +14,7 @@ export function AdminSidebar({ homeItem, navItems }: AdminSidebarProps) {
       <NavLink
         to={homeItem.to}
         end
-        className={({ isActive }) => getMenuItemClass(isActive)}
+        className={({ isActive }) => cn(MENU_ITEM, isActive && MENU_ITEM_ACTIVE)}
       >
         {homeItem.label}
       </NavLink>
@@ -26,7 +23,7 @@ export function AdminSidebar({ homeItem, navItems }: AdminSidebarProps) {
           <NavLink
             key={item.to}
             to={item.to}
-            className={({ isActive }) => getMenuItemClass(isActive)}
+            className={({ isActive }) => cn(MENU_ITEM, isActive && MENU_ITEM_ACTIVE)}
           >
             {item.label}
           </NavLink>
