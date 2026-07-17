@@ -140,8 +140,8 @@ function getTopBarMeta(pathname: string): { title: string; breadcrumb: Breadcrum
   // 6. 회원(사자)
   if (pathname === '/admin/members') {
     return {
-      title: '사자 관리',
-      breadcrumb: [{ label: '홈', to: '/admin' }, { label: '사자 관리' }],
+      title: '회원 관리',
+      breadcrumb: [{ label: '홈', to: '/admin' }, { label: '회원 관리' }],
     }
   }
 
@@ -163,8 +163,8 @@ export function AdminTopBar() {
   }
 
   return (
-    <div className="flex h-[100px] w-full items-center justify-between overflow-hidden bg-white px-32 py-24 shrink-0">
-      <div className="flex flex-col gap-8">
+    <div className="flex w-full items-center justify-between overflow-hidden bg-white px-32 py-16 shrink-0">
+      <div className="flex flex-col gap-4">
         <p className="text-r-14 text-primary/60">
           {breadcrumb.map((segment, index) => (
             <span key={`${segment.label}-${index}`}>
@@ -178,7 +178,7 @@ export function AdminTopBar() {
         <h1 className="text-sm-22 text-black">{title}</h1>
       </div>
       <button type="button" onClick={handleLogout} aria-label="로그아웃" title="로그아웃">
-        <img src={topbarUserIcon} alt="" className="h-40 w-40" />
+        <img src={topbarUserIcon} alt="" className="h-24 w-24" />
       </button>
     </div>
   )
