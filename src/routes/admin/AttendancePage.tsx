@@ -13,10 +13,17 @@ export function AttendancePage() {
   const { data } = useAttendance()
   const [records, setRecords] = useState<AttendanceRecord[]>(data)
   const [page, setPage] = useState(1)
+  const [query, setQuery] = useState('')
   const [remarkRecord, setRemarkRecord] = useState<AttendanceRecord | null>(null)
 
-  const totalPages = Math.max(1, Math.ceil(records.length / PAGE_SIZE))
-  const visible = records.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
+  const keyword = query.trim()
+  const filtered = keyword
+    ? records.filter(
+        (record) => record.name.includes(keyword) || record.studentId.includes(keyword),
+      )
+    : records
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE))
+  const visible = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
 
   function togglePresent(id: string) {
     setRecords((previous) =>
@@ -35,14 +42,23 @@ export function AttendancePage() {
           remainingSeconds={remainingSeconds}
           onGenerate={generate}
         />
-        <div className="flex w-full items-center justify-end rounded-16 bg-white px-32 py-12">
-          <button type="button" aria-label="검색">
+        <div className="flex w-full items-center gap-16 rounded-16 bg-white px-32 py-12">
+          <input
+            value={query}
+            onChange={(event) => {
+              setQuery(event.target.value)
+              setPage(1)
+            }}
+            placeholder="이름 · 학번 검색"
+            className="h-40 min-w-px flex-1 bg-transparent text-m-14 text-black placeholder:text-gray-500 focus:outline-none"
+          />
+          <button type="button" aria-label="검색" className="shrink-0">
             <img src={searchIcon} alt="" className="h-40 w-24" />
           </button>
         </div>
         <AttendanceList
           records={visible}
-          totalCount={records.length}
+          totalCount={filtered.length}
           page={page}
           totalPages={totalPages}
           onPageChange={setPage}
