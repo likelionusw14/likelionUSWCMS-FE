@@ -207,10 +207,19 @@ export interface ProjectFormProps {
   onSubmit: (event: FormEvent<HTMLFormElement>) => void
   // 수정 화면에서만 내려온다 (작성 화면에는 삭제 대상이 없다).
   onDelete?: () => void
+  cohortOptions: SelectOption[]
   categoryOptions: SelectOption[]
   fileName: string
   onFileChange: (fileName: string) => void
   onFileClear: () => void
+}
+
+// 관리 폼 공용 업로드 박스 — 아이콘 + 파일명 + 찾기/삭제 버튼. 공지·세션자료·프로젝트 작성이 공유한다.
+export interface FileUploadFieldProps {
+  fileName: string
+  onFileChange: (fileName: string) => void
+  onFileClear: () => void
+  accept?: string
 }
 
 // ── 세션자료 관리 ──

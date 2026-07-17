@@ -5,6 +5,7 @@ import type { Project, ProjectFormValues } from '@types'
 
 const EMPTY_VALUES: ProjectFormValues = {
   name: '',
+  cohort: '',
   category: '',
   startDate: '',
   endDate: '',
@@ -18,6 +19,7 @@ function toFormValues(project: Project | undefined): ProjectFormValues {
   if (!project) return EMPTY_VALUES
   return {
     name: project.title,
+    cohort: `${project.cohortId}기`,
     category: project.tags.find((tag) => tag === '해커톤' || tag === '아이디어톤') ?? '',
     startDate: `${project.developedYear}.${String(project.developedMonth).padStart(2, '0')}`,
     endDate: `${project.developedYear}.${String(project.developedMonth).padStart(2, '0')}`,

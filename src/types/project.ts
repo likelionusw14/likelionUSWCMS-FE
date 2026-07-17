@@ -78,6 +78,7 @@ export interface Project extends ProjectSummary {
 // 프로젝트 작성·수정 폼 값. 관리자 폼은 백엔드 쓰기 명세 확정 전 기존 입력 구조를 유지한다.
 export interface ProjectFormValues {
   name: string
+  cohort: string
   category: string
   startDate: string
   endDate: string

@@ -1,13 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import type { FormEvent } from 'react'
-import uploadIcon from '@/assets/icons/upload.svg'
-import { Dropdown, PinToggle } from '@atoms'
-import { FormRow } from '@molecules'
+import { Dropdown, FormInput, PinToggle } from '@atoms'
+import { FileUploadField, FormRow } from '@molecules'
 import type { NoticeFormProps, NoticeFormValues } from '@types'
-
-// 입력 공통 — bg-background-1 + secondary-1 테두리 (Figma 공지작성 인풋).
-const FIELD =
-  'h-32 w-full rounded-8 border border-secondary-1 bg-background-1 px-16 text-m-14 text-black placeholder:text-primary/50 focus:outline-none'
 
 // 공지 작성 폼 — 표 형태(라벨 secondary-1 + 입력): 제목·태그·고정여부·첨부링크·공지내용.
 // 저장 시 제목/내용이 비어있으면 '작성내용을 다시 확인해주세요'(R/12 error) 표시. Figma 818:16948/16949.
@@ -22,7 +17,6 @@ export function NoticeForm({
   onFileChange,
   onFileClear,
 }: NoticeFormProps) {
-  const fileInputRef = useRef<HTMLInputElement>(null)
   const contentRef = useRef<HTMLTextAreaElement>(null)
   const [error, setError] = useState(false)
 
@@ -37,11 +31,6 @@ export function NoticeForm({
   function change(field: keyof NoticeFormValues, value: string) {
     onFieldChange(field, value)
     if (error) setError(false)
-  }
-
-  function handleFileClear() {
-    if (fileInputRef.current) fileInputRef.current.value = ''
-    onFileClear()
   }
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -61,8 +50,7 @@ export function NoticeForm({
           {/* 제목 / 태그 */}
           <div className="flex h-[56px] w-full items-stretch border-b border-secondary-1">
             <FormRow label="제목">
-              <input
-                className={FIELD}
+              <FormInput
                 value={values.title}
                 onChange={(event) => change('title', event.target.value)}
                 placeholder="제목을 입력해주세요"
@@ -89,38 +77,7 @@ export function NoticeForm({
           {/* 첨부링크 */}
           <div className="flex h-[115px] w-full items-stretch border-y border-secondary-1">
             <FormRow label="첨부링크">
-              <div className="flex items-center gap-8">
-                <button
-                  type="button"
-                  onClick={() => fileInputRef.current?.click()}
-                  className="flex h-[83px] w-[188px] flex-col items-center justify-center gap-8 rounded-8 border border-secondary-1 bg-background-1 p-16"
-                >
-                  <img src={uploadIcon} alt="" className="h-[20px] w-[29px]" />
-                  <span className="w-full truncate text-center text-m-14 text-primary/50">
-                    {fileName || '파일을 선택해주세요'}
-                  </span>
-                </button>
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  className="hidden"
-                  onChange={(event) => onFileChange(event.target.files?.[0]?.name ?? '')}
-                />
-                <button
-                  type="button"
-                  onClick={() => fileInputRef.current?.click()}
-                  className="flex h-32 items-center rounded-8 bg-primary px-16 text-m-14 text-white"
-                >
-                  찾기
-                </button>
-                <button
-                  type="button"
-                  onClick={handleFileClear}
-                  className="flex h-32 items-center rounded-8 border border-error px-16 text-m-14 text-error"
-                >
-                  삭제
-                </button>
-              </div>
+              <FileUploadField fileName={fileName} onFileChange={onFileChange} onFileClear={onFileClear} />
             </FormRow>
           </div>
 

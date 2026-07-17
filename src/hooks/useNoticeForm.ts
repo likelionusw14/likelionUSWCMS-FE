@@ -1,11 +1,13 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
+import { useNavigate } from 'react-router-dom'
 import type { NoticeFormValues } from '@types'
 
 const EMPTY: NoticeFormValues = { title: '', tag: '', content: '' }
 
-// 공지 작성 폼 상태. 백엔드 연동 전: 제출은 no-op. 연동 시 handleSubmit 에서 apiClient 호출로 교체.
+// 공지 작성 폼 상태. 백엔드 연동 전: 저장은 목록으로 돌아가기만 한다.
 export function useNoticeForm(initialValues?: Partial<NoticeFormValues>) {
+  const navigate = useNavigate()
   const [values, setValues] = useState<NoticeFormValues>({ ...EMPTY, ...initialValues })
   const [pinned, setPinned] = useState(false)
   const [fileName, setFileName] = useState('')
@@ -16,7 +18,7 @@ export function useNoticeForm(initialValues?: Partial<NoticeFormValues>) {
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    // 저장 처리(백엔드 연동 시 구현).
+    navigate('/admin/notices')
   }
 
   return { values, setField, handleSubmit, pinned, setPinned, fileName, setFileName }

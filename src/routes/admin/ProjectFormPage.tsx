@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom'
-import { PROJECT_CATEGORY_OPTIONS } from '@constants'
+import { COHORT_OPTIONS, PROJECT_CATEGORY_OPTIONS } from '@constants'
 import { useProject, useProjectForm } from '@hooks'
 import { ProjectForm } from '@organisms'
 
@@ -19,6 +19,7 @@ export function ProjectFormPage() {
         onFieldChange={setField}
         onSubmit={handleSubmit}
         onDelete={isEdit ? handleDelete : undefined}
+        cohortOptions={COHORT_OPTIONS}
         categoryOptions={PROJECT_CATEGORY_OPTIONS}
         fileName={fileName}
         onFileChange={setFileName}
