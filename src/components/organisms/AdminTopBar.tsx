@@ -1,5 +1,5 @@
 import { useLayoutEffect } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import topbarUserIcon from '@/assets/icons/topbar-user.svg'
 import { useAuth } from '@hooks'
 import { useUiStore } from '@store'
@@ -23,10 +23,10 @@ export function AdminTopBar({ breadcrumb, title }: AdminTopBarProps) {
 // 2. 셸(AdminSidebarShell)이 실제로 상단에 그리는 UI 컴포넌트 (스크롤 고정 영역).
 export function AdminTopBarRender() {
   const navigate = useNavigate()
+  const location = useLocation()
   const { logout } = useAuth()
   const title = useUiStore((state) => state.topBarTitle)
   const breadcrumb = useUiStore((state) => state.topBarBreadcrumb)
-
   function handleLogout() {
     logout()
     navigate('/login')
@@ -39,13 +39,9 @@ export function AdminTopBarRender() {
           {breadcrumb.map((segment, index) => (
             <span key={`${segment.label}-${index}`}>
               {index > 0 && <span className="px-4"> / </span>}
-              {segment.to ? (
-                <Link to={segment.to} className="transition-colors hover:text-primary">
-                  {segment.label}
-                </Link>
-              ) : (
-                segment.label
-              )}
+              <Link to={segment.to || location.pathname} className="transition-colors hover:text-primary">
+                {segment.label}
+              </Link>
             </span>
           ))}
         </p>
