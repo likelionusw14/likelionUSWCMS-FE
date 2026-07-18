@@ -1,14 +1,14 @@
 import { NavLink } from 'react-router-dom'
-import headerBackground from '@/assets/header-bg.png'
 import userIcon from '@/assets/icons/user-white.svg'
 import { BRAND_NAME } from '@constants'
 import type { PublicHeaderProps } from '@types'
 
 // 로그인 전(공통) 헤더 — 다크 배경 위 브랜드 + 유리 알약 메뉴 + 지원하기.
+// UserHeader 와 동일한 앱바 속성: backdrop-blur(2.5)+Primary 세로 그라디언트(30%->2%) 유리판.
+// sticky 로 콘텐츠 위에 얹어야 블러 대상(아래 다크 배경/히어로)이 있어 효과가 성립한다.
 export function PublicHeader({ navItems, applyItem }: PublicHeaderProps) {
   return (
-    <header className="relative w-full overflow-hidden">
-      <img src={headerBackground} alt="" className="absolute inset-0 h-full w-full object-cover" />
+    <header className="sticky top-0 z-10 w-full bg-gradient-user-header backdrop-blur-header">
       <div className="relative mx-auto flex w-full max-w-[1280px] items-center justify-between px-64 py-16">
         <span className="text-h1 text-secondary-2">{BRAND_NAME}</span>
         <div className="flex items-center gap-24">
