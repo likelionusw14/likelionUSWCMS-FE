@@ -121,6 +121,9 @@ export default {
         // 위치·반경은 Figma gradientTransform 을 오브젝트 좌표계로 역변환해 얻은 값이다.
         'gradient-user-menu':
           'radial-gradient(ellipse 56.4% 440% at 95.5% 34%, rgb(215 226 255 / 0.3) 0%, rgb(215 226 255 / 0) 100%), linear-gradient(#3A60FB, #3A60FB)',
+        // 사용자 헤더 배경: 유리판 위에 Primary 를 위->아래로 옅게 겹치는 세로 그라디언트.
+        'gradient-user-header':
+          'linear-gradient(180deg, rgb(58 96 251 / 0.3) 0%, rgb(58 96 251 / 0.02) 100%)',
       },
       // 사용자 헤더 배경 흐림(2.5) · 알약 메뉴 배경 흐림(5.9). Figma 실측치.
       backdropBlur: {
