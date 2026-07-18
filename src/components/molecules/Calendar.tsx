@@ -141,7 +141,7 @@ export function Calendar({
           animate={{ height: gridHeight ?? 'auto' }}
           transition={{ duration: reduce ? 0 : 0.35, ease: 'easeInOut' }}
         >
-          <AnimatePresence mode="sync">
+          <AnimatePresence mode="sync" initial={false}>
             <motion.div
               key={`${year}-${month}`}
               ref={activeGridRef}
