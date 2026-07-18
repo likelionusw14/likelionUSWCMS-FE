@@ -35,6 +35,7 @@ export function NoticeFormPage() {
         open={confirmOpen}
         onClose={() => setConfirmOpen(false)}
         onConfirm={() => {
+          // 스펙상 공지 삭제(DELETE) 엔드포인트가 없어 실제 삭제는 no-op. UI 흐름만 유지하고 목록으로 이동한다.
           setConfirmOpen(false)
           setDeleteDoneOpen(true)
         }}

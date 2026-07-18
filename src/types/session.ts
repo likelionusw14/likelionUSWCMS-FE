@@ -12,6 +12,8 @@ export interface Session extends Entity {
   previewUrl: string
   // 자료 전체 쪽수 — 뷰어의 Page (1/N) 표기에 쓴다.
   pageCount: number
+  // 낙관적 동시성 토큰 — 수정 요청(UpdateLearningResourceRequest.version)에 그대로 전달한다.
+  version: number
 }
 
 // 세션자료 작성·수정 폼 값 (파일은 별도 상태로 다룬다).

@@ -9,6 +9,10 @@ export interface CalendarEvent {
   dateTime?: string
   place?: string
   description?: string
+  // 낙관적 동시성 — 수정(UpdateScheduleRequest) 시 응답의 version 을 그대로 전달한다.
+  version?: number
+  // 소속 기수(ApiScheduleResponse.cohort.cohortId). 수정 시 유지용.
+  cohortId?: number
 }
 
 // 월 그리드 한 칸.
