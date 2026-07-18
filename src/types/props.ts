@@ -148,6 +148,21 @@ export interface ChipProps {
   className?: string
 }
 
+export interface CountUpProps {
+  // 목표 숫자 — 뷰포트 진입 시 0 → to 로 1회 증가한다.
+  to: number
+  // 숫자 뒤 접미사 (예: '년', '+').
+  suffix?: string
+  // 카운트업 길이(초). 기본 1.6.
+  duration?: number
+  className?: string
+}
+
+export interface SpeechBubbleProps {
+  // 말풍선 SVG 에 얹을 클래스 (위치·좌우 반전 등).
+  className?: string
+}
+
 export interface PaginationProps {
   page: number
   totalPages: number

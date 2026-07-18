@@ -1,30 +1,67 @@
+import { motion, useReducedMotion } from 'framer-motion'
 import emojiBar from '@/assets/home/hero/emoji-bar.svg'
 import floorOverlay from '@/assets/home/hero/floor.png'
 import folderReflection from '@/assets/home/hero/folder-reflection.svg'
 import folderIllustration from '@/assets/home/hero/folder.svg'
 import logoSticker from '@/assets/home/hero/logo-sticker.svg'
 import musicPlayer from '@/assets/home/hero/music-player.png'
-import volumeCard from '@/assets/home/hero/volume.svg'
+import volumeCard from '@/assets/home/hero/volume.png'
 import { BRAND_NAME } from '@constants'
 import { cn } from '@utils'
 
-// 떠 있는 그래픽 3종 — 좌표는 Figma 1280x1600 프레임 기준 절대 위치다.
-// 음악 플레이어와 볼륨은 디자인에서 프레임 좌/우 경계에 잘려 있어, 잘린 폭 그대로 익스포트해
-// 각각 컨테이너 왼쪽·오른쪽 끝에 붙인다(그래서 left-0 / right-0).
-const FLOATING_GRAPHICS = [
-  { id: 'music-player', src: musicPlayer, box: 'left-0 top-[223px] h-[277.15px] w-[325.26px]' },
-  { id: 'emoji-bar', src: emojiBar, box: 'left-[760px] top-[92px] h-[120.11px] w-[426.9px]' },
-  { id: 'volume', src: volumeCard, box: 'right-0 top-[321.23px] h-[260.49px] w-[233.78px]' },
+// 떠 있는 그래픽 4종 — Figma 1280 프레임 좌표 기준 절대배치한다.
+// 각 그래픽은 로드 시 아래·회전된 위치에서 제자리로 1회 낙하·정착한다(Figma 프로토타입 모션).
+// from = 초기 오프셋(Figma 키프레임의 시작 transform, rest 대비), delay = 등장 시차.
+// music-player/volume 은 Figma 에선 프레임 좌/우 경계를 넘어가(블리드) overflow-hidden 에 잘리는데,
+// 전체 그래픽 PNG 로 교체했으므로 좌/우 끝(left-0/right-0)에 붙여 카드 전체가 보이게 한다.
+const GRAPHICS = [
+  {
+    id: 'music-player',
+    src: musicPlayer,
+    alt: '',
+    box: 'left-0 top-[223px] h-[277.153px] w-[361.257px]',
+    from: { x: 350, y: 629, rotate: 5 },
+    delay: 0.2,
+  },
+  {
+    id: 'emoji-bar',
+    src: emojiBar,
+    alt: '',
+    box: 'left-[calc(50%+333.45px)] top-[92px] h-[120.105px] w-[426.902px] -translate-x-1/2',
+    from: { x: -232, y: 851, rotate: 8.7 },
+    delay: 0.3,
+  },
+  {
+    id: 'volume',
+    src: volumeCard,
+    alt: '',
+    box: 'right-0 top-[321.23px] h-[260.492px] w-[260.492px]',
+    from: { x: -354, y: 585, rotate: 5.7 },
+    delay: 0.25,
+  },
+  {
+    id: 'logo-sticker',
+    src: logoSticker,
+    alt: BRAND_NAME,
+    box: 'left-[119.91px] top-[570px] h-[105.528px] w-[226.528px]',
+    from: { x: 266, y: 487, rotate: 36.7 },
+    delay: 0,
+  },
 ] as const
 
-// 홈 히어로(메인 비주얼) — 다크 배경 위 중앙 헤딩 + 3D 파일 일러스트와 바닥 반사, 떠 있는 그래픽 3종.
+// 낙하·정착 easing — Figma 키프레임 x/y 베지어(끝에서 살짝 오버슈트).
+const SETTLE_EASE: [number, number, number, number] = [0.45, 1.45, 0.8, 1]
+
+// 홈 히어로(메인 비주얼) — 다크 배경 위 중앙 헤딩 + 3D 파일 일러스트와 바닥 반사, 떠 있는 그래픽 4종.
 // 디자인이 1280x1600 고정 합성이라 내부 요소는 프레임 좌표 그대로 절대배치한다.
 export function HomeHero() {
+  const reduceMotion = useReducedMotion()
+
   return (
     <section className="relative w-full bg-background-2">
       {/* 컨테이너에서 잘라내야 디자인처럼 좌/우 그래픽이 1280 경계에서 잘린다. */}
       <div className="relative mx-auto h-[1600px] w-full max-w-[1280px] overflow-hidden">
-        {/* 파일 일러스트 — 파트 목록 카드까지 한 장의 벡터로 익스포트했다. */}
+        {/* 파일 일러스트 — 파트 목록 카드까지 한 장의 벡터로 익스포트했다. (정지) */}
         <img
           src={folderIllustration}
           alt="Planning, Frontend, Design, Backend 파트 목록이 담긴 파일 일러스트레이션"
@@ -63,22 +100,25 @@ export function HomeHero() {
           </span>
         </h1>
 
-        {/* 떠 있는 그래픽 — 디자인 그대로 정지 배치 (원본에 모션 없음). */}
-        {FLOATING_GRAPHICS.map((graphic) => (
-          <img
-            key={graphic.id}
-            src={graphic.src}
-            alt=""
-            className={cn('pointer-events-none absolute', graphic.box)}
-          />
+        {/* 떠 있는 그래픽 — 로드 시 1회 낙하·정착. 위치 래퍼(-translate-x-1/2 등 레이아웃 transform)와
+            모션 transform(x/y/rotate)이 충돌하지 않도록 래퍼 안에 motion.img 를 둔다. */}
+        {GRAPHICS.map((graphic) => (
+          <div key={graphic.id} className={cn('pointer-events-none absolute', graphic.box)}>
+            <motion.img
+              src={graphic.src}
+              alt={graphic.alt}
+              className="h-full w-full"
+              initial={reduceMotion ? false : { opacity: 0, ...graphic.from }}
+              animate={{ opacity: 1, x: 0, y: 0, rotate: 0 }}
+              transition={{
+                duration: 0.6,
+                delay: graphic.delay,
+                ease: SETTLE_EASE,
+                opacity: { duration: 0.4, delay: graphic.delay, ease: 'easeOut' },
+              }}
+            />
+          </div>
         ))}
-
-        {/* 좌상단 브랜드 스티커 */}
-        <img
-          src={logoSticker}
-          alt={BRAND_NAME}
-          className="absolute left-[119.91px] top-[570px] h-[105.53px] w-[226.53px]"
-        />
       </div>
     </section>
   )
