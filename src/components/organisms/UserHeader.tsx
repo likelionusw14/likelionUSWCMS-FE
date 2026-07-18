@@ -6,6 +6,8 @@ import { BRAND_NAME } from '@constants'
 import type { UserHeaderProps } from '@types'
 import { cn } from '@utils'
 
+const MotionNavLink = motion.create(NavLink)
+
 // 사용자 영역 상단 헤더 — 브랜드 + 알약형 메뉴(활성 항목은 유리 캡슐 강조) + 계정 버튼.
 // Figma 717:1684. 헤더는 backdrop-blur(2.5)위에 Primary 세로 그라디언트(30%->2%)를 얹은
 // 유리판이라, 아래 본문이 옅게 비쳐 흐리게 보인다 — sticky 로 스크롤 컨테이너 위에 얹어야
@@ -15,8 +17,9 @@ import { cn } from '@utils'
 // (Figma 717:1689 히든 idle 레이어에서 확인 — 활성 glass 상태의 px-16 과는 별개).
 // 유리 캡슐(rounded-full bg-white/20 effect-glass-shadow)은 활성 상태뿐 아니라 키보드 포커스
 // 상태도 공유한다 — Figma 는 focus 를 모델링하지 않지만, 별도 링 대신 이 캡슐을 그대로
-// 재사용한다. 활성/포커스 캡슐(motion.span)만 layoutId 로 슬라이딩 애니메이션을 타고,
-// nav 전체/개별 링크에는 layout 을 부여하지 않아 메뉴바 전체가 찌그러지거나 흔들리는 현상을 방지한다.
+// 재사용한다. 활성/포커스 캡슐(motion.span)은 layoutId 로 슬라이딩하고, nav 전체·각 항목·버튼은
+// layout 으로 부드럽게 크기가 변하며, 텍스트/아이콘 내부 요소에는 layout="position" 카운터 스케일을
+// 적용해 스케일 변형 중 글자나 아이콘이 찌그러지거나 흔들리지 않도록 방지한다.
 export function UserHeader({ navItems, onLogout }: UserHeaderProps) {
   const reduce = useReducedMotion()
   const transition = { duration: reduce ? 0 : 0.3, ease: [0.16, 1, 0.3, 1] as const }
@@ -32,11 +35,17 @@ export function UserHeader({ navItems, onLogout }: UserHeaderProps) {
           {BRAND_NAME}
         </NavLink>
 
-        <nav className="flex items-center gap-24 rounded-full bg-gradient-user-menu p-4 backdrop-blur-menu">
+        <motion.nav
+          layout
+          transition={transition}
+          className="flex items-center gap-24 rounded-full bg-gradient-user-menu p-4 backdrop-blur-menu"
+        >
           {navItems.map((item, index) => (
-            <NavLink
+            <MotionNavLink
               key={item.to}
               to={item.to}
+              layout
+              transition={transition}
               onFocus={() => setFocusedTo(item.to)}
               onBlur={() => setFocusedTo((prev) => (prev === item.to ? null : prev))}
               className={({ isActive }) => {
@@ -59,22 +68,26 @@ export function UserHeader({ navItems, onLogout }: UserHeaderProps) {
                         className="absolute inset-0 -z-10 rounded-full bg-white/20 effect-glass-shadow"
                       />
                     )}
-                    {item.label}
+                    <motion.span layout="position" transition={transition}>
+                      {item.label}
+                    </motion.span>
                   </>
                 )
               }}
-            </NavLink>
+            </MotionNavLink>
           ))}
-          <button
+          <motion.button
+            layout
+            transition={transition}
             type="button"
             onClick={onLogout}
             aria-label="로그아웃"
             title="로그아웃"
             className="h-40 w-40 shrink-0 rounded-full outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-white"
           >
-            <img src={userIcon} alt="" className="h-full w-full" />
-          </button>
-        </nav>
+            <motion.img layout="position" transition={transition} src={userIcon} alt="" className="h-full w-full" />
+          </motion.button>
+        </motion.nav>
       </div>
     </header>
   )
