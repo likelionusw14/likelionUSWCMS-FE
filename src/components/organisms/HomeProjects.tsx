@@ -5,6 +5,7 @@ import arrowRight from '@/assets/home/projects/arrow-right.svg'
 import projectBitemind from '@/assets/home/projects/project-3.jpg'
 import projectMealdo from '@/assets/home/projects/project-2.png'
 import projectMidnight from '@/assets/home/projects/project-1.png'
+import type { HomeProjectsProps } from '@types'
 import { cn } from '@utils'
 
 // 프로젝트 썸네일 목록 (Figma 588:4572 — 484x272).
@@ -39,7 +40,7 @@ const MARQUEE_ITEMS = [...PROJECTS, ...PROJECTS]
 const MARQUEE_DURATION = 24
 
 // 홈 "프로젝트" 섹션 (Figma 588:4565 — 1280x995, 밝은 배경 background-1).
-export function HomeProjects() {
+export function HomeProjects({ moreHref = '/projects' }: HomeProjectsProps) {
   const reduceMotion = useReducedMotion()
   // 모션을 끄면 흐름이 없으니 한 벌만 렌더한다 (중복 낭독 방지).
   const items = reduceMotion ? MARQUEE_ITEMS.slice(0, PROJECTS.length) : MARQUEE_ITEMS
@@ -108,7 +109,7 @@ export function HomeProjects() {
               지금 멋쟁이사자처럼 수원대학교의 프로젝트를 확인해보세요!
             </p>
             <Link
-              to="/projects"
+              to={moreHref}
               className="flex shrink-0 items-center gap-12 rounded-full bg-secondary-2 px-24 py-12 text-m-20 text-white transition-opacity hover:opacity-90"
             >
               프로젝트 더보기

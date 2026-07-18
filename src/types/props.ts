@@ -280,10 +280,15 @@ export interface UserProjectDetailProps {
 export interface UserHeaderProps {
   navItems: NavItem[]
   onLogout: () => void
+  variant?: 'default' | 'home'
 }
 
 export interface UserShellProps {
   navItems: NavItem[]
+}
+
+export interface HomeProjectsProps {
+  moreHref?: string
 }
 
 // 출석 코드 생성 — 코드 표시 + 유효시간 카운트다운 + 생성 버튼.
