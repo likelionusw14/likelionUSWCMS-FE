@@ -1,10 +1,18 @@
 import { useParams } from 'react-router-dom'
-import { useProject } from '@hooks'
+import { useUserProjectDetail } from '@hooks'
 import { NotFoundPanel, UserProjectDetail } from '@organisms'
 
 export function UserProjectDetailPage() {
   const { projectId } = useParams()
-  const { data: project } = useProject(projectId)
+  const { data: project, isLoading } = useUserProjectDetail(projectId)
+
+  if (isLoading) {
+    return (
+      <div className="flex min-h-[480px] items-center justify-center text-m-18 text-gray-700">
+        프로젝트를 불러오는 중입니다.
+      </div>
+    )
+  }
 
   if (!project) return <NotFoundPanel />
 

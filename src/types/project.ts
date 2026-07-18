@@ -1,4 +1,5 @@
 import type { Entity } from './common'
+import type { ApiProjectType } from '@api'
 
 export type ProjectTag = '해커톤' | '아이디어톤'
 
@@ -73,6 +74,43 @@ export interface Project extends ProjectSummary {
   githubUrl: string
   participants: ProjectParticipant[]
   updatedAt: string
+}
+
+// 최종 OpenAPI 응답을 사용자 화면에서 사용하는 형태로 변환한 모델.
+export interface UserProjectSummary extends ProjectSummary {
+  projectType: ApiProjectType
+  cohortName: string
+  startedMonth: string
+  endedMonth: string
+}
+
+export interface UserProject extends UserProjectSummary {
+  description: string
+  deployUrl: string | null
+  githubUrl: string | null
+  participants: Array<{
+    userId: number
+    name: string
+    role: string
+  }>
+  version: number
+  updatedAt: string
+}
+
+export interface UserProjectPage {
+  content: UserProjectSummary[]
+  page: number
+  size: number
+  totalElements: number
+  totalPages: number
+  hasNext: boolean
+}
+
+export interface UserProjectQuery {
+  page?: number
+  size?: number
+  cohortId?: number
+  projectTypes?: ApiProjectType[]
 }
 
 // 프로젝트 작성·수정 폼 값. 관리자 폼은 백엔드 쓰기 명세 확정 전 기존 입력 구조를 유지한다.

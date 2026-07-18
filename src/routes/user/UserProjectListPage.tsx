@@ -1,9 +1,10 @@
-import { PROJECT_CATEGORY_OPTIONS, PROJECT_COHORT_OPTIONS } from '@constants'
-import { useUserProjectList } from '@hooks'
+import { PROJECT_COHORT_OPTIONS, USER_PROJECT_TYPE_OPTIONS } from '@constants'
+import { useUserProjectListPage } from '@hooks'
 import { ProjectFilterBar, ProjectList } from '@organisms'
 
 export function UserProjectListPage() {
-  const { data, cohort, tag, page, setCohort, setTag, setPage, resetPage } = useUserProjectList()
+  const { data, cohort, projectType, page, setCohort, setProjectType, setPage, resetPage } =
+    useUserProjectListPage()
 
   return (
     <div className="mx-auto flex w-full max-w-[1280px] flex-col gap-64 px-64 pb-96 pt-48">
@@ -19,11 +20,11 @@ export function UserProjectListPage() {
       <div className="flex flex-col gap-24">
         <ProjectFilterBar
           cohort={cohort}
-          filterValue={tag}
+          filterValue={projectType}
           onCohortChange={setCohort}
-          onFilterChange={setTag}
+          onFilterChange={setProjectType}
           cohortOptions={PROJECT_COHORT_OPTIONS}
-          filterOptions={PROJECT_CATEGORY_OPTIONS}
+          filterOptions={USER_PROJECT_TYPE_OPTIONS}
           filterPlaceholder="프로젝트"
           onSearch={resetPage}
         />
