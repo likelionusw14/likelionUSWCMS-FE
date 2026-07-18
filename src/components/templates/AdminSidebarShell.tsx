@@ -1,6 +1,6 @@
 import { useLocation } from 'react-router-dom'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
-import { AdminFooter, AdminSidebar, AdminTopBar } from '@organisms'
+import { AdminSidebar, AdminTopBar, SiteFooter } from '@organisms'
 import { getAdminBreadcrumb } from '@routes/admin/nav'
 import type { AdminSidebarShellProps } from '@types'
 import { AnimatedOutlet } from './AnimatedOutlet'
@@ -37,7 +37,7 @@ export function AdminSidebarShell({ homeItem, navItems }: AdminSidebarShellProps
               </motion.div>
             </AnimatePresence>
           </div>
-          <AdminFooter />
+          <SiteFooter variant="light" />
         </div>
       </div>
     </div>

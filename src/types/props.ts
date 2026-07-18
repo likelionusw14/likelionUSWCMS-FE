@@ -163,6 +163,11 @@ export interface SpeechBubbleProps {
   className?: string
 }
 
+export interface SiteFooterProps {
+  // 배경·글자 색 테마. 'dark'=공개 홈(background-2), 'light'=사용자·관리자(secondary-1).
+  variant: 'light' | 'dark'
+}
+
 export interface PaginationProps {
   page: number
   totalPages: number
