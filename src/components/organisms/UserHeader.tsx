@@ -1,54 +1,84 @@
+import { motion, useReducedMotion } from 'framer-motion'
 import { NavLink } from 'react-router-dom'
-import headerBackground from '@/assets/header-bg.png'
 import userIcon from '@/assets/icons/user-white.svg'
 import { BRAND_NAME } from '@constants'
 import type { UserHeaderProps } from '@types'
 import { cn } from '@utils'
 
-// 사용자 영역 상단 헤더 — 브랜드 + 알약형 메뉴 + 계정 버튼.
-export function UserHeader({ navItems, onLogout, variant = 'default' }: UserHeaderProps) {
-  const isHome = variant === 'home'
+const MotionNavLink = motion.create(NavLink)
+
+// 사용자 영역 상단 헤더 — 브랜드 + 알약형 메뉴(활성 항목은 유리 캡슐 강조) + 계정 버튼.
+// Figma 717:1684. 헤더는 backdrop-blur(2.5)위에 Primary 세로 그라디언트(30%->2%)를 얹은
+// 유리판이라, 아래 본문이 옅게 비쳐 흐리게 보인다 — sticky 로 스크롤 컨테이너 위에 얹어야
+// 이 효과가 성립한다.
+// 메뉴 항목 사이는 균일 gap-24 (좌표 계산 검증됨). 활성 캡슐은 별도 "OO 유리" 레이어 —
+// 좌우 대칭 px-16. 단 첫 항목(프로젝트)은 비활성 상태일 때만 pl-24 여백이 추가로 있다
+// (Figma 717:1689 히든 idle 레이어에서 확인 — 활성 glass 상태의 px-16 과는 별개).
+// 활성 캡슐(motion.span layoutId)은 라우트 변경 시에만 부드럽게 슬라이딩하고,
+// 키보드 포커스는 focus-visible: 유리 캡슐 유틸로 처리해 마우스 클릭/release 시
+// focusedTo ↔ isActive 간의 1-2 프레임 레이스 조건으로 인한 메뉴바 움찔거림(twitch)을 원천 차단한다.
+export function UserHeader({ navItems, onLogout }: UserHeaderProps) {
+  const reduce = useReducedMotion()
+  const transition = { duration: reduce ? 0 : 0.3, ease: [0.16, 1, 0.3, 1] as const }
 
   return (
-    <header
-      className={cn(
-        'relative w-full overflow-hidden',
-        isHome ? 'bg-background-2' : 'bg-gradient-user-header backdrop-blur-header',
-      )}
-    >
-      {isHome && (
-        <img src={headerBackground} alt="" className="absolute inset-0 h-full w-full object-cover" />
-      )}
+    <header className="sticky top-0 z-10 w-full bg-gradient-user-header backdrop-blur-header">
       <div className="relative mx-auto flex w-full max-w-[1280px] items-center justify-between px-64 py-16">
-        <NavLink to="/app" className="text-h1 text-secondary-2">
+        <NavLink
+          to="/app"
+          className="rounded-8 text-h1 text-secondary-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2"
+        >
           {BRAND_NAME}
         </NavLink>
 
-        <nav className="flex h-48 items-center rounded-full bg-gradient-primary p-4 shadow-emboss-light">
-          {navItems.map((item) => (
-            <NavLink
+        <motion.nav
+          layout
+          transition={transition}
+          className="flex items-center gap-24 rounded-full bg-gradient-user-menu p-4 backdrop-blur-menu"
+        >
+          {navItems.map((item, index) => (
+            <MotionNavLink
               key={item.to}
               to={item.to}
+              layout
+              transition={transition}
               className={({ isActive }) =>
                 cn(
-                  'flex h-40 items-center rounded-full px-16 text-sm-16 text-white',
-                  isActive && 'bg-white/10 shadow-emboss-light',
+                  'relative flex h-40 items-center whitespace-nowrap rounded-full text-sm-18 text-white outline-none',
+                  'focus-visible:bg-white/20 focus-visible:px-16 focus-visible:effect-glass-shadow',
+                  index === 0 && !isActive && 'pl-24',
+                  isActive && 'px-16',
                 )
               }
             >
-              {item.label}
-            </NavLink>
+              {({ isActive }) => (
+                <>
+                  {isActive && (
+                    <motion.span
+                      layoutId="user-nav-active-pill"
+                      transition={transition}
+                      className="absolute inset-0 -z-10 rounded-full bg-white/20 effect-glass-shadow"
+                    />
+                  )}
+                  <motion.span layout="position" transition={transition}>
+                    {item.label}
+                  </motion.span>
+                </>
+              )}
+            </MotionNavLink>
           ))}
-          <button
+          <motion.button
+            layout
+            transition={transition}
             type="button"
             onClick={onLogout}
             aria-label="로그아웃"
             title="로그아웃"
-            className="flex h-40 w-40 items-center justify-center"
+            className="h-40 w-40 shrink-0 rounded-full outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-white"
           >
-            <img src={userIcon} alt="" className="h-24 w-24" />
-          </button>
-        </nav>
+            <motion.img layout="position" transition={transition} src={userIcon} alt="" className="h-full w-full" />
+          </motion.button>
+        </motion.nav>
       </div>
     </header>
   )
