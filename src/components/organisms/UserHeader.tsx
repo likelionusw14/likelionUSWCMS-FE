@@ -15,8 +15,9 @@ const MotionNavLink = motion.create(NavLink)
 // (Figma 717:1689 히든 idle 레이어에서 확인 — 활성 glass 상태의 px-16 과는 별개).
 // 활성 캡슐은 layoutId 공유 레이아웃 애니메이션으로 항목 사이를 슬라이딩하고, 각 항목·메뉴바
 // 자체도 layout 으로 폭 변화가 부드럽게 이어지도록 한다.
-// 키보드 focus 는 Figma 에 정의되지 않아(디자인 툴 자체가 focus 상태를 모델링하지 않음)
-// 브라우저 기본(각진 검정 아웃라인) 대신 디자인 언어에 맞는 focus-visible 링을 직접 정의한다.
+// 키보드 focus 는 Figma 에 정의되지 않았지만(디자인 툴이 focus 상태를 모델링하지 않음),
+// 메뉴 항목·계정 버튼은 별도 링 대신 활성 상태와 동일한 유리 캡슐(rounded-full bg-white/20
+// shadow-drop)을 그대로 포커스 표시로 재사용한다. 유리 캡슐이 없는 브랜드 링크만 링을 쓴다.
 export function UserHeader({ navItems, onLogout }: UserHeaderProps) {
   const reduce = useReducedMotion()
   const transition = { duration: reduce ? 0 : 0.3, ease: [0.16, 1, 0.3, 1] as const }
@@ -45,7 +46,7 @@ export function UserHeader({ navItems, onLogout }: UserHeaderProps) {
               className={({ isActive }) =>
                 cn(
                   'relative flex h-40 items-center whitespace-nowrap rounded-full text-sm-18 text-white',
-                  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2',
+                  'focus-visible:bg-white/20 focus-visible:px-16 focus-visible:shadow-drop focus-visible:outline-none',
                   index === 0 && !isActive && 'pl-24',
                   isActive && 'px-16',
                 )
@@ -70,7 +71,7 @@ export function UserHeader({ navItems, onLogout }: UserHeaderProps) {
             onClick={onLogout}
             aria-label="로그아웃"
             title="로그아웃"
-            className="h-40 w-40 shrink-0 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2"
+            className="h-40 w-40 shrink-0 rounded-full focus-visible:bg-white/20 focus-visible:shadow-drop focus-visible:outline-none"
           >
             <img src={userIcon} alt="" className="h-full w-full" />
           </button>
