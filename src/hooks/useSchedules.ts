@@ -1,7 +1,21 @@
-import type { CalendarEvent, QueryResult } from '@types'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import {
+  createSchedule,
+  deleteSchedule,
+  fetchSchedules,
+  updateSchedule,
+} from '@api'
+import type {
+  ApiCreateScheduleRequest,
+  ApiScheduleResponse,
+  ApiUpdateScheduleRequest,
+} from '@api'
+import { isBackendConnected } from '@config'
+import type { CalendarEvent, QueryResult, ScheduleFormValues } from '@types'
 
-// 백엔드 연동 전 목데이터. 연동 시 이 훅 안에서 apiClient(월 단위 조회 + 인접 달 prefetch)로 교체한다
-// (컴포넌트는 { data, isLoading } 모양에만 의존한다).
+const SCHEDULES_KEY = 'admin-schedules'
+
+// 백엔드 미연동 데모용 목데이터(현재 월 기준). 연동 시엔 fetchSchedules 응답을 사용한다.
 const now = new Date()
 const Y = now.getFullYear()
 const M = now.getMonth() // 0-11
@@ -13,7 +27,6 @@ const toKey = (date: Date) =>
   `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
 
 // 이번 달 그리드(월요일 시작)에 보이는 이웃 달 spill 날짜 하나를 구한다.
-// 1일이 월요일이 아니면 앞쪽(이전 달) spill 칸이, 월요일이면 뒤쪽(다음 달) spill 칸이 존재한다.
 const startOffset = (new Date(Y, M, 1).getDay() + 6) % 7
 const daysInMonth = new Date(Y, M + 1, 0).getDate()
 const totalCells = Math.ceil((startOffset + daysInMonth) / 7) * 7
@@ -80,7 +93,122 @@ const MOCK_SCHEDULES: CalendarEvent[] = [
   },
 ]
 
-// 일정(캘린더 이벤트) 목록 조회.
-export function useSchedules(): QueryResult<CalendarEvent[]> {
-  return { data: MOCK_SCHEDULES, isLoading: false }
+// 폼에 기수 선택이 없어 임시 기본 기수를 사용한다. [추정] 실제 기수 선택 UI 도입 전까지의 기본값.
+const DEFAULT_COHORT_ID = 1
+
+// scheduleDate('YYYY-MM-DD') + startTime('HH:MM'|null) → 상세 팝업용 한글 dateTime.
+function toDisplayDateTime(scheduleDate: string, startTime?: string | null): string {
+  const [y, mo, d] = scheduleDate.split('-')
+  const base = `${Number(y)}년 ${Number(mo)}월 ${Number(d)}일`
+  // startTime 은 'HH:MM' 또는 'HH:MM:SS' 로 올 수 있으므로 시:분만 취한다.
+  const time = startTime ? startTime.slice(0, 5) : ''
+  return time ? `${base} ${time}` : base
+}
+
+// ApiScheduleResponse → CalendarEvent(화면모델).
+function toCalendarEvent(response: ApiScheduleResponse): CalendarEvent {
+  return {
+    id: String(response.scheduleId),
+    date: response.scheduleDate,
+    title: response.title,
+    dateTime: toDisplayDateTime(response.scheduleDate, response.startTime),
+    place: response.location ?? undefined,
+    description: response.description ?? undefined,
+    version: response.version,
+    cohortId: response.cohort?.cohortId,
+  }
+}
+
+// ScheduleFormValues → CreateScheduleRequest. 폼에 기수 필드가 없어 cohortId 는 기본값 사용.
+export function toCreateScheduleRequest(
+  values: ScheduleFormValues,
+  cohortId: number = DEFAULT_COHORT_ID,
+): ApiCreateScheduleRequest {
+  const hasTime = Boolean(values.time.trim())
+  return {
+    title: values.title.trim(),
+    description: values.description.trim() || null,
+    cohortId,
+    scheduleDate: values.date.replace(/\./g, '-'),
+    // 시간 입력이 없으면 종일 일정으로 처리한다.
+    isAllDay: !hasTime,
+    startTime: hasTime ? values.time : null,
+    location: values.place.trim() || null,
+  }
+}
+
+// ScheduleFormValues → UpdateScheduleRequest. version 은 수정 대상(editingEvent)의 값을 필수 전달.
+export function toUpdateScheduleRequest(
+  values: ScheduleFormValues,
+  version: number,
+  cohortId: number = DEFAULT_COHORT_ID,
+): ApiUpdateScheduleRequest {
+  const hasTime = Boolean(values.time.trim())
+  return {
+    version,
+    title: values.title.trim(),
+    description: values.description.trim() || null,
+    cohortId,
+    scheduleDate: values.date.replace(/\./g, '-'),
+    isAllDay: !hasTime,
+    startTime: hasTime ? values.time : null,
+    location: values.place.trim() || null,
+  }
+}
+
+// 월별 일정(캘린더 이벤트) 조회. month 는 0-11(JS Date 월 인덱스).
+// 백엔드 미연동이면 현재 월 목데이터를 반환한다(데모 유지).
+export function useSchedules(year: number, month: number): QueryResult<CalendarEvent[]> {
+  const yearMonth = `${year}-${String(month + 1).padStart(2, '0')}`
+  const request = useQuery({
+    queryKey: [SCHEDULES_KEY, yearMonth],
+    queryFn: () => fetchSchedules({ yearMonth }),
+    enabled: isBackendConnected,
+  })
+
+  const data = request.data ? request.data.map(toCalendarEvent) : MOCK_SCHEDULES
+  return { data, isLoading: isBackendConnected && request.isLoading }
+}
+
+// 일정 등록.
+export function useCreateSchedule() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: async (body: ApiCreateScheduleRequest) => {
+      // 미연동 데모: 서버 호출 없이 성공 처리.
+      if (!isBackendConnected) return
+      await createSchedule(body)
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: [SCHEDULES_KEY] }),
+  })
+}
+
+// 일정 수정. version 필수(낙관적 동시성).
+export function useUpdateSchedule() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: async ({
+      scheduleId,
+      body,
+    }: {
+      scheduleId: string
+      body: ApiUpdateScheduleRequest
+    }) => {
+      if (!isBackendConnected) return
+      await updateSchedule(scheduleId, body)
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: [SCHEDULES_KEY] }),
+  })
+}
+
+// 일정 삭제.
+export function useDeleteSchedule() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: async (scheduleId: string) => {
+      if (!isBackendConnected) return
+      await deleteSchedule(scheduleId)
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: [SCHEDULES_KEY] }),
+  })
 }

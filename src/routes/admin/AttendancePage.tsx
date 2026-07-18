@@ -23,6 +23,7 @@ export function AttendancePage() {
     partFilter,
     setPartFilter,
     togglePresent,
+    saveRemark,
   } = useAttendanceList()
 
   return (
@@ -74,7 +75,7 @@ export function AttendancePage() {
       <RemarkModal
         open={!!remarkRecord}
         onClose={() => setRemarkRecord(null)}
-        onSubmit={() => setRemarkRecord(null)}
+        onSubmit={saveRemark}
         value={remarkRecord?.remark}
       />
     </>

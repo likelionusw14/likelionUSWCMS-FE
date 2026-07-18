@@ -74,6 +74,8 @@ export interface Project extends ProjectSummary {
   githubUrl: string
   participants: ProjectParticipant[]
   updatedAt: string
+  // 낙관적 동시성 토큰. 수정 요청(UpdateProjectRequest)에 그대로 전달한다.
+  version: number
 }
 
 // 최종 OpenAPI 응답을 사용자 화면에서 사용하는 형태로 변환한 모델.

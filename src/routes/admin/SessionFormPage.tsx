@@ -29,6 +29,8 @@ export function SessionFormPage() {
         onFileClear={() => setFileName('')}
       />
 
+      {/* 스펙상 Resource 엔 삭제(DELETE) 엔드포인트가 없다. 기존 UI 는 유지하되 실제
+          삭제는 수행하지 않고 확인 후 목록으로만 이동한다(no-op). */}
       <ConfirmDialog
         open={confirmOpen}
         onClose={() => setConfirmOpen(false)}

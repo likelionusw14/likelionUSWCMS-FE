@@ -1,8 +1,10 @@
+import { useState } from 'react'
 import calendarNext from '@/assets/icons/calendar-next.svg'
 import calendarPrev from '@/assets/icons/calendar-prev.svg'
 import plusIcon from '@/assets/icons/plus.svg'
 import { motion, useReducedMotion } from 'framer-motion'
 import { CalendarDay, WindowPanel } from '@atoms'
+import { DatePickerModal } from '@molecules'
 import { buildMonthGrid, toDateKey } from '@utils'
 import { cn } from '@utils'
 import type { CalendarEvent, CalendarProps } from '@types'
@@ -23,6 +25,7 @@ const WEEKDAYS = [
 export function Calendar({ year, month, events, onMonthChange, onRegister, onEventClick, className }: CalendarProps) {
   const grid = buildMonthGrid(year, month)
   const reduce = useReducedMotion()
+  const [monthPickerOpen, setMonthPickerOpen] = useState(false)
 
   // 날짜별 일정 묶기.
   const byDate = new Map<string, CalendarEvent[]>()
@@ -39,6 +42,7 @@ export function Calendar({ year, month, events, onMonthChange, onRegister, onEve
   }
 
   return (
+    <>
     <WindowPanel
       className={className}
       headerClassName="h-40"
@@ -56,9 +60,13 @@ export function Calendar({ year, month, events, onMonthChange, onRegister, onEve
           >
             <img src={calendarPrev} alt="" className="h-24 w-24" />
           </button>
-          <span className="text-sm-22 text-black underline decoration-gray-500 underline-offset-4">
+          <button
+            type="button"
+            onClick={() => setMonthPickerOpen(true)}
+            className="text-sm-22 text-black underline decoration-gray-500 underline-offset-4"
+          >
             {year}년 {month + 1}월
-          </span>
+          </button>
           <button
             type="button"
             onClick={() => shift(1)}
@@ -114,5 +122,18 @@ export function Calendar({ year, month, events, onMonthChange, onRegister, onEve
         </motion.div>
       </div>
     </WindowPanel>
+
+    <DatePickerModal
+      open={monthPickerOpen}
+      onClose={() => setMonthPickerOpen(false)}
+      title="날짜 변경"
+      granularity="month"
+      value={`${year}.${String(month + 1).padStart(2, '0')}`}
+      onConfirm={(v) => {
+        const [y, m] = v.split('.').map(Number)
+        onMonthChange?.(y, m - 1)
+      }}
+    />
+  </>
   )
 }

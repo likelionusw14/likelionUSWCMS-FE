@@ -2,21 +2,47 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ConfirmDialog, ResultDialog, ScheduleFormModal } from '@molecules'
 import { ScheduleCalendar } from '@organisms'
-import { useSchedules } from '@hooks'
-import type { CalendarEvent } from '@types'
+import {
+  toCreateScheduleRequest,
+  toUpdateScheduleRequest,
+  useCreateSchedule,
+  useDeleteSchedule,
+  useSchedules,
+  useUpdateSchedule,
+} from '@hooks'
+import type { CalendarEvent, ScheduleFormValues } from '@types'
 
 // 일정 관리 — 월 캘린더(ScheduleCalendar). 칩 클릭 시 상세 팝업(수정/삭제), + 버튼으로 일정 작성.
 // Figma 491:3357.
 export function SchedulePage() {
   const navigate = useNavigate()
-  const { data: events } = useSchedules()
   const now = new Date()
   const [year, setYear] = useState(now.getFullYear())
   const [month, setMonth] = useState(now.getMonth())
+  const { data: events } = useSchedules(year, month)
+  const createSchedule = useCreateSchedule()
+  const updateSchedule = useUpdateSchedule()
+  const deleteSchedule = useDeleteSchedule()
   const [formOpen, setFormOpen] = useState(false)
   const [editingEvent, setEditingEvent] = useState<CalendarEvent | null>(null)
   const [deleteOpen, setDeleteOpen] = useState(false)
+  const [deleteTarget, setDeleteTarget] = useState<CalendarEvent | null>(null)
   const [deleteDoneOpen, setDeleteDoneOpen] = useState(false)
+
+  // 저장(등록/수정) — editingEvent 유무로 분기. 미연동이면 mutation 이 no-op 이라 그대로 닫힌다.
+  function handleSubmit(values: ScheduleFormValues) {
+    if (editingEvent) {
+      updateSchedule.mutate({
+        scheduleId: editingEvent.id,
+        // version 은 낙관적 동시성 필수. 응답에서 받은 값을 그대로 전달한다.
+        body: toUpdateScheduleRequest(values, editingEvent.version ?? 0, editingEvent.cohortId),
+      })
+    } else {
+      createSchedule.mutate(toCreateScheduleRequest(values))
+    }
+    setFormOpen(false)
+    setEditingEvent(null)
+  }
 
   return (
     <>
@@ -37,7 +63,10 @@ export function SchedulePage() {
             setEditingEvent(event)
             setFormOpen(true)
           }}
-          onEventDelete={() => setDeleteOpen(true)}
+          onEventDelete={(event) => {
+            setDeleteTarget(event)
+            setDeleteOpen(true)
+          }}
           className="w-full"
         />
       </div>
@@ -49,16 +78,15 @@ export function SchedulePage() {
           setFormOpen(false)
           setEditingEvent(null)
         }}
-        onSubmit={() => {
-          setFormOpen(false)
-          setEditingEvent(null)
-        }}
+        onSubmit={handleSubmit}
       />
       <ConfirmDialog
         open={deleteOpen}
         onClose={() => setDeleteOpen(false)}
         onConfirm={() => {
+          if (deleteTarget) deleteSchedule.mutate(deleteTarget.id)
           setDeleteOpen(false)
+          setDeleteTarget(null)
           setDeleteDoneOpen(true)
         }}
         title="일정 삭제"
