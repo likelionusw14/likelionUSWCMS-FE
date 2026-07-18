@@ -20,7 +20,16 @@ const WEEKDAYS = [
 
 // 월(month) 캘린더 — 창(WindowPanel: primary 헤더바 h-40 + 엠보 흰 본문) + 월 네비 + 요일 + 날짜 그리드.
 // presentational: 데이터는 events prop 으로만 받는다. 창 크롬은 WindowPanel 아톰을 재사용한다.
-export function Calendar({ year, month, events, onMonthChange, onRegister, onEventClick, className }: CalendarProps) {
+export function Calendar({
+  year,
+  month,
+  events,
+  onMonthChange,
+  onDateSelect,
+  onRegister,
+  onEventClick,
+  className,
+}: CalendarProps) {
   const grid = buildMonthGrid(year, month)
   const reduce = useReducedMotion()
 
@@ -56,9 +65,20 @@ export function Calendar({ year, month, events, onMonthChange, onRegister, onEve
           >
             <img src={calendarPrev} alt="" className="h-24 w-24" />
           </button>
-          <span className="text-sm-22 text-black underline decoration-gray-500 underline-offset-4">
-            {year}년 {month + 1}월
-          </span>
+          {onDateSelect ? (
+            <button
+              type="button"
+              onClick={onDateSelect}
+              className="text-sm-22 text-black underline decoration-gray-500 underline-offset-4"
+              aria-label="날짜 선택"
+            >
+              {year}년 {month + 1}월
+            </button>
+          ) : (
+            <span className="text-sm-22 text-black underline decoration-gray-500 underline-offset-4">
+              {year}년 {month + 1}월
+            </span>
+          )}
           <button
             type="button"
             onClick={() => shift(1)}

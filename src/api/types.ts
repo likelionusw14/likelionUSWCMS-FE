@@ -13,3 +13,4 @@ export type ApiDownloadUrlResponse = components['schemas']['DownloadUrlResponse'
 export type ApiNoticeTag = components['schemas']['NoticeTag']
 export type ApiNoticeResponse = components['schemas']['NoticeResponse']
 export type ApiNoticePage = components['schemas']['NoticePage']
+export type ApiScheduleResponse = components['schemas']['ScheduleResponse']

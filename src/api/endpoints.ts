@@ -9,4 +9,5 @@ export const endpoints = {
   resourceDownloadUrl: (resourceId: string) => `/api/resources/${resourceId}/download-url`,
   notices: '/api/notices',
   notice: (noticeId: string) => `/api/notices/${noticeId}`,
+  schedules: '/api/schedules',
 } as const
