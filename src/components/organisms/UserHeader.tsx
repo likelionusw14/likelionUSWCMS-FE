@@ -1,5 +1,4 @@
 import { motion, useReducedMotion } from 'framer-motion'
-import { useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import userIcon from '@/assets/icons/user-white.svg'
 import { BRAND_NAME } from '@constants'
@@ -15,15 +14,12 @@ const MotionNavLink = motion.create(NavLink)
 // 메뉴 항목 사이는 균일 gap-24 (좌표 계산 검증됨). 활성 캡슐은 별도 "OO 유리" 레이어 —
 // 좌우 대칭 px-16. 단 첫 항목(프로젝트)은 비활성 상태일 때만 pl-24 여백이 추가로 있다
 // (Figma 717:1689 히든 idle 레이어에서 확인 — 활성 glass 상태의 px-16 과는 별개).
-// 유리 캡슐(rounded-full bg-white/20 effect-glass-shadow)은 활성 상태뿐 아니라 키보드 포커스
-// 상태도 공유한다 — Figma 는 focus 를 모델링하지 않지만, 별도 링 대신 이 캡슐을 그대로
-// 재사용한다. 활성/포커스 캡슐(motion.span)은 layoutId 로 슬라이딩하고, nav 전체·각 항목·버튼은
-// layout 으로 부드럽게 크기가 변하며, 텍스트/아이콘 내부 요소에는 layout="position" 카운터 스케일을
-// 적용해 스케일 변형 중 글자나 아이콘이 찌그러지거나 흔들리지 않도록 방지한다.
+// 활성 캡슐(motion.span layoutId)은 라우트 변경 시에만 부드럽게 슬라이딩하고,
+// 키보드 포커스는 focus-visible: 유리 캡슐 유틸로 처리해 마우스 클릭/release 시
+// focusedTo ↔ isActive 간의 1-2 프레임 레이스 조건으로 인한 메뉴바 움찔거림(twitch)을 원천 차단한다.
 export function UserHeader({ navItems, onLogout }: UserHeaderProps) {
   const reduce = useReducedMotion()
   const transition = { duration: reduce ? 0 : 0.3, ease: [0.16, 1, 0.3, 1] as const }
-  const [focusedTo, setFocusedTo] = useState<string | null>(null)
 
   return (
     <header className="sticky top-0 z-10 w-full bg-gradient-user-header backdrop-blur-header">
@@ -46,34 +42,29 @@ export function UserHeader({ navItems, onLogout }: UserHeaderProps) {
               to={item.to}
               layout
               transition={transition}
-              onFocus={() => setFocusedTo(item.to)}
-              onBlur={() => setFocusedTo((prev) => (prev === item.to ? null : prev))}
-              className={({ isActive }) => {
-                const highlighted = focusedTo ? item.to === focusedTo : isActive
-                return cn(
+              className={({ isActive }) =>
+                cn(
                   'relative flex h-40 items-center whitespace-nowrap rounded-full text-sm-18 text-white outline-none',
-                  index === 0 && !highlighted && 'pl-24',
-                  highlighted && 'px-16',
+                  'focus-visible:bg-white/20 focus-visible:px-16 focus-visible:effect-glass-shadow',
+                  index === 0 && !isActive && 'pl-24',
+                  isActive && 'px-16',
                 )
-              }}
+              }
             >
-              {({ isActive }) => {
-                const highlighted = focusedTo ? item.to === focusedTo : isActive
-                return (
-                  <>
-                    {highlighted && (
-                      <motion.span
-                        layoutId="user-nav-active-pill"
-                        transition={transition}
-                        className="absolute inset-0 -z-10 rounded-full bg-white/20 effect-glass-shadow"
-                      />
-                    )}
-                    <motion.span layout="position" transition={transition}>
-                      {item.label}
-                    </motion.span>
-                  </>
-                )
-              }}
+              {({ isActive }) => (
+                <>
+                  {isActive && (
+                    <motion.span
+                      layoutId="user-nav-active-pill"
+                      transition={transition}
+                      className="absolute inset-0 -z-10 rounded-full bg-white/20 effect-glass-shadow"
+                    />
+                  )}
+                  <motion.span layout="position" transition={transition}>
+                    {item.label}
+                  </motion.span>
+                </>
+              )}
             </MotionNavLink>
           ))}
           <motion.button
