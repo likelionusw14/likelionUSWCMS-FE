@@ -18,8 +18,10 @@ const MotionNavLink = motion.create(NavLink)
 // 상태도 공유한다 — Figma 는 focus 를 모델링하지 않지만, 별도 링 대신 이 캡슐을 그대로
 // 재사용한다. 활성/포커스 캡슐 둘 다 같은 layoutId 공유 레이아웃 애니메이션을 타므로,
 // 라우트 이동이든 Tab 키 이동이든 캡슐이 항목 사이를 슬라이딩하며 이동한다(포커스 우선).
-// 계정 버튼은 Figma 에 "OO 유리" 같은 hover/focus 변형이 없는 고정 40x40 아이콘이라
-// 유리 캡슐 대신 브랜드 링크와 같은 링으로 포커스를 표시한다.
+// 계정 버튼은 Figma 에 "OO 유리" 같은 hover/focus 변형이 없는 고정 40x40 아이콘이라 유리
+// 캡슐 대신 링으로 포커스를 표시하되, 메뉴바 자체가 rounded-full 이고 버튼이 그 우측 끝에
+// p-4 여백만 두고 붙어 있어 바깥쪽 링(ring-offset)을 쓰면 메뉴바의 둥근 모서리와 정확히
+// 맞닿아 뒤섞여 보인다 — ring-inset 으로 버튼 안쪽에 그려 이 충돌을 피한다.
 export function UserHeader({ navItems, onLogout }: UserHeaderProps) {
   const reduce = useReducedMotion()
   const transition = { duration: reduce ? 0 : 0.3, ease: [0.16, 1, 0.3, 1] as const }
@@ -81,7 +83,7 @@ export function UserHeader({ navItems, onLogout }: UserHeaderProps) {
             onClick={onLogout}
             aria-label="로그아웃"
             title="로그아웃"
-            className="h-40 w-40 shrink-0 rounded-full outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2"
+            className="h-40 w-40 shrink-0 rounded-full outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-white"
           >
             <img src={userIcon} alt="" className="h-full w-full" />
           </motion.button>
