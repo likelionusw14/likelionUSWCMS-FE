@@ -1,4 +1,4 @@
-// 백엔드 OpenAPI(Swagger) 스키마를 내려받아 openapi/openapi.json 으로 저장한다.
+// 백엔드 OpenAPI(Swagger) 스키마를 내려받아 openapi/openapi.yaml 로 저장한다.
 // 사용: SWAGGER_URL=https://api.example.com/openapi.json npm run api:fetch
 // 이후 `npm run api:types` 로 src/api/types.generated.ts 를 생성한다. (api:sync = 둘 다)
 import { writeFile, mkdir } from 'node:fs/promises'
@@ -11,7 +11,7 @@ if (!url) {
   process.exit(1)
 }
 
-const out = resolve('openapi/openapi.json')
+const out = resolve('openapi/openapi.yaml')
 
 const res = await fetch(url)
 if (!res.ok) {
@@ -19,7 +19,7 @@ if (!res.ok) {
   process.exit(1)
 }
 
-const json = await res.json()
+const schema = await res.text()
 await mkdir(dirname(out), { recursive: true })
-await writeFile(out, JSON.stringify(json, null, 2) + '\n', 'utf8')
+await writeFile(out, schema.endsWith('\n') ? schema : `${schema}\n`, 'utf8')
 console.log(`[api:fetch] 저장 완료 → ${out}`)

@@ -7,7 +7,7 @@ import type {
 } from 'react'
 import type { AreaType, Role } from './auth'
 import type { NavItem } from './nav'
-import type { Project, ProjectFormValues, ProjectSummary } from './project'
+import type { Project, ProjectFormValues, ProjectSummary, UserProject } from './project'
 import type { Session, SessionFormValues } from './session'
 import type { Notice } from './notice'
 import type { Member, PendingMember } from './member'
@@ -251,7 +251,7 @@ export interface SessionFormProps {
 }
 
 export interface UserProjectDetailProps {
-  project: Project
+  project: UserProject
 }
 
 export interface UserHeaderProps {
