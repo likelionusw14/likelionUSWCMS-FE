@@ -39,6 +39,7 @@ export function Calendar({
   // 셀이 aspect-ratio 로 가변폭이라 픽셀을 직접 못 구하므로 렌더 후 측정한다.
   // rows(줄 수)가 바뀔 때마다 재측정 → 5↔6주 전환 시 마지막 줄이 부드럽게 늘고 준다.
   const activeGridRef = useRef<HTMLDivElement>(null)
+  const isFirstMeasureRef = useRef(true)
   const [gridHeight, setGridHeight] = useState<number | undefined>(undefined)
   useLayoutEffect(() => {
     const el = activeGridRef.current
@@ -138,8 +139,12 @@ export function Calendar({
             추가/제거되는 마지막 줄만 자연스럽게 늘었다 줄었다 하게 한다. */}
         <motion.div
           className="relative overflow-hidden"
+          initial={false}
           animate={{ height: gridHeight ?? 'auto' }}
-          transition={{ duration: reduce ? 0 : 0.35, ease: 'easeInOut' }}
+          transition={{ duration: reduce || isFirstMeasureRef.current ? 0 : 0.35, ease: 'easeInOut' }}
+          onAnimationComplete={() => {
+            isFirstMeasureRef.current = false
+          }}
         >
           <AnimatePresence mode="sync" initial={false}>
             <motion.div
