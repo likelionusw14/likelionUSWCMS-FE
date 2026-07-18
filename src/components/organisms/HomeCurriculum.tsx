@@ -1,6 +1,6 @@
 import { motion, useReducedMotion } from 'framer-motion'
+import { SpeechBubble } from '@atoms'
 import { cn } from '@utils'
-import bubbleShape from '@/assets/home/curriculum/bubble.svg'
 import timelineLine from '@/assets/home/curriculum/timeline.svg'
 
 // 커리큘럼 6단계. side 는 타임라인 기준 말풍선이 놓이는 방향이다.
@@ -55,16 +55,15 @@ export function HomeCurriculum() {
   const renderStep = (step: (typeof CURRICULUM_STEPS)[number]) => (
     <motion.div
       key={step.id}
-      className="relative h-[148px] w-[440px] shrink-0"
+      className="group relative h-[148px] w-[440px] shrink-0"
       initial={reduceMotion ? false : { opacity: 0, x: step.side === 'left' ? -32 : 32 }}
       whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true, amount: 0.3 }}
       transition={{ duration: 0.5 }}
     >
-      {/* 말풍선 벡터 — 원본은 꼬리가 좌하단(우측 카드용)이라 좌측 카드는 좌우 반전한다. */}
-      <img
-        src={bubbleShape}
-        alt=""
+      {/* 말풍선 벡터 — 원본은 꼬리가 좌하단(우측 카드용)이라 좌측 카드는 좌우 반전한다.
+          호버 시 흰→primary 로 색이 전환된다(SpeechBubble 내부 group-hover). */}
+      <SpeechBubble
         className={cn(
           'absolute inset-0 h-[148px] w-[440px]',
           step.side === 'left' && '-scale-x-100',
@@ -72,12 +71,12 @@ export function HomeCurriculum() {
       />
       <div
         className={cn(
-          'absolute inset-y-0 flex flex-col justify-center gap-8',
+          'absolute inset-y-0 flex flex-col justify-center gap-8 text-black transition-colors duration-300 group-hover:text-white motion-reduce:transition-none',
           step.side === 'left' ? 'left-40 right-40' : 'left-[44px] right-[36px]',
         )}
       >
-        <p className="text-sm-20 text-black">{step.title}</p>
-        <p className="text-m-16-home text-black">{step.description}</p>
+        <p className="text-sm-20">{step.title}</p>
+        <p className="text-m-16-home">{step.description}</p>
       </div>
     </motion.div>
   )

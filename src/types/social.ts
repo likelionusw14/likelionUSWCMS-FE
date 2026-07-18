@@ -6,10 +6,3 @@ export interface SocialLink {
   icon: string
   iconOnDark: string
 }
-
-// 푸터 링크 칼럼.
-export interface FooterColumn {
-  id: string
-  title: string
-  items: string[]
-}

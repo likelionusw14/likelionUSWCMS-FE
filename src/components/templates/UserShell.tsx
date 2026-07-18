@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '@hooks'
-import { UserFooter, UserHeader } from '@organisms'
+import { SiteFooter, UserHeader } from '@organisms'
 import type { UserShellProps } from '@types'
 
 // 사용자 영역 공통 셸 — 상단 내비게이션(sticky) + 콘텐츠 + 푸터를 한 스크롤 컨테이너에 둔다.
@@ -30,7 +30,7 @@ export function UserShell({ navItems }: UserShellProps) {
         <main>
           <Outlet />
         </main>
-        <UserFooter />
+        <SiteFooter variant="light" />
       </div>
     </div>
   )

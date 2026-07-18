@@ -9,8 +9,8 @@ import {
   HomeProjects,
   HomeReviews,
   HomeStats,
-  PublicFooter,
   PublicHeader,
+  SiteFooter,
 } from '@organisms'
 import { PUBLIC_APPLY, PUBLIC_NAV } from './nav'
 
@@ -35,7 +35,7 @@ export function CommonHomePage() {
         <HomeReviews />
         <HomeApply />
       </main>
-      <PublicFooter />
+      <SiteFooter variant="dark" />
     </div>
   )
 }

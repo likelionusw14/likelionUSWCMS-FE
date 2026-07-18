@@ -1,10 +1,11 @@
 import { motion, useReducedMotion } from 'framer-motion'
+import { CountUp } from '@atoms'
 
-// 주요 성과 지표 — 말풍선 바 3칸
+// 주요 성과 지표 — 말풍선 바 3칸. 숫자는 뷰포트 진입 시 카운트업한다.
 const STATS = [
-  { label: '시작된 지', value: '14년' },
-  { label: '멋대 출신 학생 수', value: '15,000+' },
-  { label: '누적 완성 서비스 수', value: '2,300+' },
+  { label: '시작된 지', to: 14, suffix: '년' },
+  { label: '멋대 출신 학생 수', to: 15000, suffix: '+' },
+  { label: '누적 완성 서비스 수', to: 2300, suffix: '+' },
 ] as const
 
 // 홈 소개 섹션 — 동아리 소개 문구 + 주요 성과(말풍선 바).
@@ -53,7 +54,7 @@ export function HomeStats() {
                   className="flex flex-1 flex-col items-center justify-center gap-8 text-center whitespace-nowrap text-white"
                 >
                   <span className="text-sm-22">{stat.label}</span>
-                  <span className="text-h1">{stat.value}</span>
+                  <CountUp to={stat.to} suffix={stat.suffix} className="text-h1" />
                 </li>
               ))}
             </ul>

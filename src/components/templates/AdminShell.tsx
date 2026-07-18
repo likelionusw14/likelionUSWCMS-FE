@@ -1,7 +1,7 @@
 import { useLocation } from 'react-router-dom'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { useLogout } from '@hooks'
-import { AdminFooter, AdminHeader } from '@organisms'
+import { AdminHeader, SiteFooter } from '@organisms'
 import type { AdminShellProps } from '@types'
 import { AnimatedOutlet } from './AnimatedOutlet'
 import { pageFadeTransition, pageFadeVariants } from './transitions'
@@ -29,7 +29,7 @@ export function AdminShell({ navItems, pageTitles }: AdminShellProps) {
           </motion.div>
         </AnimatePresence>
       </main>
-      <AdminFooter />
+      <SiteFooter variant="light" />
     </div>
   )
 }
