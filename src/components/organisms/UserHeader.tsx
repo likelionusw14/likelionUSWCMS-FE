@@ -1,4 +1,5 @@
 import { motion, useReducedMotion } from 'framer-motion'
+import { useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import userIcon from '@/assets/icons/user-white.svg'
 import { BRAND_NAME } from '@constants'
@@ -13,14 +14,14 @@ const MotionNavLink = motion.create(NavLink)
 // 메뉴 항목 사이는 균일 gap-24 (좌표 계산 검증됨). 활성 캡슐은 별도 "OO 유리" 레이어 —
 // 좌우 대칭 px-16. 단 첫 항목(프로젝트)은 비활성 상태일 때만 pl-24 여백이 추가로 있다
 // (Figma 717:1689 히든 idle 레이어에서 확인 — 활성 glass 상태의 px-16 과는 별개).
-// 활성 캡슐은 layoutId 공유 레이아웃 애니메이션으로 항목 사이를 슬라이딩하고, 각 항목·메뉴바
-// 자체도 layout 으로 폭 변화가 부드럽게 이어지도록 한다.
-// 키보드 focus 는 Figma 에 정의되지 않았지만(디자인 툴이 focus 상태를 모델링하지 않음),
-// 메뉴 항목·계정 버튼은 별도 링 대신 활성 상태와 동일한 유리 캡슐(rounded-full bg-white/20
-// shadow-drop)을 그대로 포커스 표시로 재사용한다. 유리 캡슐이 없는 브랜드 링크만 링을 쓴다.
+// 유리 캡슐(rounded-full bg-white/20 effect-glass-shadow)은 활성 상태뿐 아니라 키보드 포커스 상태도
+// 공유한다 — Figma 는 focus 를 모델링하지 않지만, 별도 링 대신 이 캡슐을 그대로 재사용한다.
+// 활성/포커스 캡슐 둘 다 같은 layoutId 공유 레이아웃 애니메이션을 타므로, 라우트 이동이든
+// Tab 키 이동이든 캡슐이 항목 사이를 슬라이딩하며 이동한다(포커스가 있으면 포커스가 우선).
 export function UserHeader({ navItems, onLogout }: UserHeaderProps) {
   const reduce = useReducedMotion()
   const transition = { duration: reduce ? 0 : 0.3, ease: [0.16, 1, 0.3, 1] as const }
+  const [focusedTo, setFocusedTo] = useState<string | null>(null)
 
   return (
     <header className="sticky top-0 z-10 w-full backdrop-blur-header">
@@ -43,27 +44,32 @@ export function UserHeader({ navItems, onLogout }: UserHeaderProps) {
               to={item.to}
               layout
               transition={transition}
-              className={({ isActive }) =>
-                cn(
-                  'relative flex h-40 items-center whitespace-nowrap rounded-full text-sm-18 text-white',
-                  'focus-visible:bg-white/20 focus-visible:px-16 focus-visible:shadow-drop focus-visible:outline-none',
-                  index === 0 && !isActive && 'pl-24',
-                  isActive && 'px-16',
+              onFocus={() => setFocusedTo(item.to)}
+              onBlur={() => setFocusedTo((prev) => (prev === item.to ? null : prev))}
+              className={({ isActive }) => {
+                const highlighted = focusedTo ? item.to === focusedTo : isActive
+                return cn(
+                  'relative flex h-40 items-center whitespace-nowrap rounded-full text-sm-18 text-white outline-none',
+                  index === 0 && !highlighted && 'pl-24',
+                  highlighted && 'px-16',
                 )
-              }
+              }}
             >
-              {({ isActive }) => (
-                <>
-                  {isActive && (
-                    <motion.span
-                      layoutId="user-nav-active-pill"
-                      transition={transition}
-                      className="absolute inset-0 -z-10 rounded-full bg-white/20 shadow-drop"
-                    />
-                  )}
-                  {item.label}
-                </>
-              )}
+              {({ isActive }) => {
+                const highlighted = focusedTo ? item.to === focusedTo : isActive
+                return (
+                  <>
+                    {highlighted && (
+                      <motion.span
+                        layoutId="user-nav-active-pill"
+                        transition={transition}
+                        className="absolute inset-0 -z-10 rounded-full bg-white/20 effect-glass-shadow"
+                      />
+                    )}
+                    {item.label}
+                  </>
+                )
+              }}
             </MotionNavLink>
           ))}
           <button
@@ -71,7 +77,7 @@ export function UserHeader({ navItems, onLogout }: UserHeaderProps) {
             onClick={onLogout}
             aria-label="로그아웃"
             title="로그아웃"
-            className="h-40 w-40 shrink-0 rounded-full focus-visible:bg-white/20 focus-visible:shadow-drop focus-visible:outline-none"
+            className="h-40 w-40 shrink-0 rounded-full outline-none focus-visible:bg-white/20 focus-visible:effect-glass-shadow"
           >
             <img src={userIcon} alt="" className="h-full w-full" />
           </button>
