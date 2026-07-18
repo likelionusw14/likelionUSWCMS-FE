@@ -9,7 +9,7 @@ import type { AreaType, Role } from './auth'
 import type { NavItem } from './nav'
 import type { Project, ProjectFormValues, ProjectSummary, UserProject } from './project'
 import type { Session, SessionFormValues, UserSessionResource } from './session'
-import type { Notice } from './notice'
+import type { Notice, UserNotice } from './notice'
 import type { Member, PendingMember } from './member'
 import type { AttendanceRecord } from './attendance'
 import type { SignupProfile } from './signup'
@@ -507,6 +507,26 @@ export interface NoticeListProps {
 // 공지 상세 — 제목·목록/수정·태그/작성일/첨부 정보표 + 공지내용.
 export interface NoticeDetailProps {
   notice: Notice
+}
+
+export interface UserNoticeFilterBarProps {
+  tag: string
+  tagOptions: SelectOption[]
+  onTagChange: (tag: string) => void
+  onSearch: () => void
+}
+
+export interface UserNoticeListProps {
+  notices: UserNotice[]
+  totalCount: number
+  page: number
+  totalPages: number
+  isLoading: boolean
+  onPageChange: (page: number) => void
+}
+
+export interface UserNoticeDetailProps {
+  notice: UserNotice
 }
 
 // 승인대기 목록 — 이름·기수·파트 + 승인/취소.

@@ -7,4 +7,6 @@ export const endpoints = {
   resources: '/api/resources',
   resource: (resourceId: string) => `/api/resources/${resourceId}`,
   resourceDownloadUrl: (resourceId: string) => `/api/resources/${resourceId}/download-url`,
+  notices: '/api/notices',
+  notice: (noticeId: string) => `/api/notices/${noticeId}`,
 } as const
