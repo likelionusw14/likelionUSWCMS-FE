@@ -74,14 +74,17 @@ export function UserHeader({ navItems, onLogout }: UserHeaderProps) {
               }}
             </MotionNavLink>
           ))}
-          <button
+          <motion.button
+            layout
+            transition={transition}
             type="button"
             onClick={onLogout}
             aria-label="로그아웃"
+            title="로그아웃"
             className="h-40 w-40 shrink-0 rounded-full outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2"
           >
             <img src={userIcon} alt="" className="h-full w-full" />
-          </button>
+          </motion.button>
         </motion.nav>
       </div>
     </header>
