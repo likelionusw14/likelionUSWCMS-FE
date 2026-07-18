@@ -6,3 +6,7 @@ export type ApiPaths = paths
 export type ApiProjectType = components['schemas']['ProjectType']
 export type ApiProjectResponse = components['schemas']['ProjectResponse']
 export type ApiProjectPage = components['schemas']['ProjectPage']
+export type ApiPartType = components['schemas']['PartType']
+export type ApiLearningResourceResponse = components['schemas']['LearningResourceResponse']
+export type ApiResourcePage = components['schemas']['ResourcePage']
+export type ApiDownloadUrlResponse = components['schemas']['DownloadUrlResponse']

@@ -117,6 +117,13 @@ export default {
         // 서브컬러 타이포 그라디언트(히어로 "멋쟁이사자처럼"): amber → secondary-2 세로.
         'gradient-typo-secondary':
           'linear-gradient(to bottom, #FFBD2F 0%, #FF9D2F 26.13%, #FF7B2F 100%)',
+        // 사용자 헤더: Primary 색상을 옅게 겹치는 세로 그라데이션.
+        'gradient-user-header':
+          'linear-gradient(to bottom, rgb(58 96 251 / 0.5) 0%, rgb(58 96 251 / 0.05) 100%)',
+      },
+      // 사용자 헤더의 Figma 배경 흐림 5.
+      backdropBlur: {
+        header: '5px',
       },
       // ── 효과(그림자): Figma 효과 스타일. ──
       boxShadow: {
@@ -172,8 +179,10 @@ export default {
           '-webkit-mask-image': 'linear-gradient(to bottom, transparent 0, #000 12px, #000 100%)',
         },
         '.scroll-fade-bottom': {
-          'mask-image': 'linear-gradient(to bottom, #000 0, #000 calc(100% - 12px), transparent 100%)',
-          '-webkit-mask-image': 'linear-gradient(to bottom, #000 0, #000 calc(100% - 12px), transparent 100%)',
+          'mask-image':
+            'linear-gradient(to bottom, #000 0, #000 calc(100% - 12px), transparent 100%)',
+          '-webkit-mask-image':
+            'linear-gradient(to bottom, #000 0, #000 calc(100% - 12px), transparent 100%)',
         },
       })
     }),

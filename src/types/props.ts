@@ -8,7 +8,7 @@ import type {
 import type { AreaType, Role } from './auth'
 import type { NavItem } from './nav'
 import type { Project, ProjectFormValues, ProjectSummary, UserProject } from './project'
-import type { Session, SessionFormValues } from './session'
+import type { Session, SessionFormValues, UserSessionResource } from './session'
 import type { Notice } from './notice'
 import type { Member, PendingMember } from './member'
 import type { AttendanceRecord } from './attendance'
@@ -235,6 +235,29 @@ export interface SessionListProps {
 
 export interface SessionDetailProps {
   session: Session
+}
+
+export interface UserSessionFilterBarProps {
+  week: string
+  part: string
+  weekOptions: SelectOption[]
+  partOptions: SelectOption[]
+  onWeekChange: (value: string) => void
+  onPartChange: (value: string) => void
+  onSearch: () => void
+}
+
+export interface UserSessionListProps {
+  sessions: UserSessionResource[]
+  totalCount: number
+  page: number
+  totalPages: number
+  isLoading: boolean
+  onPageChange: (page: number) => void
+}
+
+export interface UserSessionDetailProps {
+  session: UserSessionResource
 }
 
 export interface SessionFormProps {

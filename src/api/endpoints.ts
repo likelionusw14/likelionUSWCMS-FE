@@ -4,4 +4,7 @@ export const endpoints = {
   login: '/auth/login',
   projects: '/api/projects',
   project: (projectId: string) => `/api/projects/${projectId}`,
+  resources: '/api/resources',
+  resource: (resourceId: string) => `/api/resources/${resourceId}`,
+  resourceDownloadUrl: (resourceId: string) => `/api/resources/${resourceId}/download-url`,
 } as const
