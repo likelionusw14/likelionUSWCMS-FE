@@ -8,7 +8,7 @@ import { NoticeList, SearchBar } from '@organisms'
 export function NoticeListPage() {
   const { data: notices } = useNotices()
   const [tag, setTag] = useState('')
-  const filtered = tag ? notices.filter((notice) => notice.tag === tag) : notices
+  const filtered = tag ? notices.filter((notice) => notice.tagValue === tag) : notices
   const { page, setPage, totalPages, slice } = usePagination({
     totalItems: filtered.length,
     pageSize: 20,

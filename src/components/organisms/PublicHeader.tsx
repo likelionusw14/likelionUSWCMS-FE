@@ -1,11 +1,11 @@
 import { NavLink, useNavigate } from 'react-router-dom'
-import headerBackground from '@/assets/header-bg.png'
 import userIcon from '@/assets/icons/user-white.svg'
 import { BRAND_NAME } from '@constants'
 import { useAuth } from '@hooks'
 import type { PublicHeaderProps } from '@types'
 
-// 공통(마케팅) 헤더 — 다크 배경 위 브랜드 + 유리 알약 메뉴.
+// 공통(마케팅) 헤더 — UserHeader 와 동일한 앱바(backdrop-blur + Primary 세로 그라디언트 유리판) 위
+// 브랜드 + 유리 알약 메뉴. sticky 로 콘텐츠 위에 얹어야 블러 대상(아래 다크 배경/히어로)이 성립한다.
 // 게스트: 계정 아이콘 + 지원하기 CTA. 로그인: 마이페이지(/app) 링크 + 로그아웃.
 export function PublicHeader({ navItems, applyItem }: PublicHeaderProps) {
   const { isAuthenticated, logout } = useAuth()
@@ -17,8 +17,7 @@ export function PublicHeader({ navItems, applyItem }: PublicHeaderProps) {
   }
 
   return (
-    <header className="relative w-full overflow-hidden">
-      <img src={headerBackground} alt="" className="absolute inset-0 h-full w-full object-cover" />
+    <header className="sticky top-0 z-10 w-full bg-gradient-user-header backdrop-blur-header">
       <div className="relative mx-auto flex w-full max-w-[1280px] items-center justify-between px-64 py-16">
         <NavLink to="/" className="text-h1 text-secondary-2">
           {BRAND_NAME}

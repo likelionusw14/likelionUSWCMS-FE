@@ -117,6 +117,18 @@ export default {
         // 서브컬러 타이포 그라디언트(히어로 "멋쟁이사자처럼"): amber → secondary-2 세로.
         'gradient-typo-secondary':
           'linear-gradient(to bottom, #FFBD2F 0%, #FF9D2F 26.13%, #FF7B2F 100%)',
+        // 사용자 헤더 알약 메뉴: Primary 솔리드 위에 우상단 대각선 하이라이트(반사) 그라디언트.
+        // 위치·반경은 Figma gradientTransform 을 오브젝트 좌표계로 역변환해 얻은 값이다.
+        'gradient-user-menu':
+          'radial-gradient(ellipse 56.4% 440% at 95.5% 34%, rgb(215 226 255 / 0.3) 0%, rgb(215 226 255 / 0) 100%), linear-gradient(#3A60FB, #3A60FB)',
+        // 사용자 헤더 배경: 유리판 위에 Primary 를 위->아래로 옅게 겹치는 세로 그라디언트.
+        'gradient-user-header':
+          'linear-gradient(180deg, rgb(58 96 251 / 0.3) 0%, rgb(58 96 251 / 0.02) 100%)',
+      },
+      // 사용자 헤더 배경 흐림(2.5) · 알약 메뉴 배경 흐림(5.9). Figma 실측치.
+      backdropBlur: {
+        header: '2.5px',
+        menu: '5.9px',
       },
       // ── 효과(그림자): Figma 효과 스타일. ──
       boxShadow: {
@@ -172,8 +184,10 @@ export default {
           '-webkit-mask-image': 'linear-gradient(to bottom, transparent 0, #000 12px, #000 100%)',
         },
         '.scroll-fade-bottom': {
-          'mask-image': 'linear-gradient(to bottom, #000 0, #000 calc(100% - 12px), transparent 100%)',
-          '-webkit-mask-image': 'linear-gradient(to bottom, #000 0, #000 calc(100% - 12px), transparent 100%)',
+          'mask-image':
+            'linear-gradient(to bottom, #000 0, #000 calc(100% - 12px), transparent 100%)',
+          '-webkit-mask-image':
+            'linear-gradient(to bottom, #000 0, #000 calc(100% - 12px), transparent 100%)',
         },
       })
     }),

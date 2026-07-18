@@ -7,28 +7,33 @@ const INFO_LABEL = 'w-[160px] shrink-0 text-sm-18 text-black'
 const INFO_VALUE = 'min-w-px flex-1 text-right text-m-16 text-gray-500'
 
 export function UserProjectDetail({ project }: UserProjectDetailProps) {
-  const developedDate = `${project.developedYear}.${String(project.developedMonth).padStart(2, '0')}`
+  const developedDate = `${project.startedMonth.replace('-', '.')} - ${project.endedMonth.replace('-', '.')}`
   const participants = project.participants
-    .map(
-      (participant) =>
-        `${participant.name}(${participant.part}${participant.role === '팀장' ? ', 팀장' : ''})`,
-    )
+    .map((participant) => `${participant.name}(${participant.role})`)
     .join(', ')
 
   return (
     <article className="flex flex-col gap-48">
       <WindowPanel bodyClassName="flex flex-col gap-16 p-16">
-        <img
-          src={project.thumbnailUrl}
-          alt={`${project.title} 대표 이미지`}
-          className="aspect-[1120/630] w-full rounded-8 object-cover"
-        />
-        <div className="grid grid-cols-5 gap-16">
+        {project.thumbnailUrl ? (
           <img
             src={project.thumbnailUrl}
-            alt="선택된 프로젝트 이미지"
-            className="aspect-[16/9] w-full rounded-4 object-cover"
+            alt={`${project.title} 대표 이미지`}
+            className="aspect-[1120/630] w-full rounded-8 object-cover"
           />
+        ) : (
+          <div className="aspect-[1120/630] w-full rounded-8 bg-gray-100" />
+        )}
+        <div className="grid grid-cols-5 gap-16">
+          {project.thumbnailUrl ? (
+            <img
+              src={project.thumbnailUrl}
+              alt="선택된 프로젝트 이미지"
+              className="aspect-[16/9] w-full rounded-4 object-cover"
+            />
+          ) : (
+            <div aria-hidden="true" className="aspect-[16/9] w-full rounded-4 bg-gray-100" />
+          )}
           {Array.from({ length: 4 }, (_, index) => (
             <div
               key={index}
@@ -61,27 +66,35 @@ export function UserProjectDetail({ project }: UserProjectDetailProps) {
         <div className={INFO_ROW}>
           <dt className={INFO_LABEL}>Link</dt>
           <dd className={INFO_VALUE}>
-            <a
-              href={project.deployUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="hover:text-primary"
-            >
-              {project.deployUrl}
-            </a>
+            {project.deployUrl ? (
+              <a
+                href={project.deployUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="hover:text-primary"
+              >
+                {project.deployUrl}
+              </a>
+            ) : (
+              '등록된 링크가 없습니다.'
+            )}
           </dd>
         </div>
         <div className={INFO_ROW}>
           <dt className={INFO_LABEL}>GitHub</dt>
           <dd className={INFO_VALUE}>
-            <a
-              href={project.githubUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="hover:text-primary"
-            >
-              {project.githubUrl}
-            </a>
+            {project.githubUrl ? (
+              <a
+                href={project.githubUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="hover:text-primary"
+              >
+                {project.githubUrl}
+              </a>
+            ) : (
+              '등록된 링크가 없습니다.'
+            )}
           </dd>
         </div>
       </dl>

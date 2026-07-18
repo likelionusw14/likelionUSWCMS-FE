@@ -1,7 +1,8 @@
+import { useLayoutEffect, useRef, useState } from 'react'
 import calendarNext from '@/assets/icons/calendar-next.svg'
 import calendarPrev from '@/assets/icons/calendar-prev.svg'
 import plusIcon from '@/assets/icons/plus.svg'
-import { motion, useReducedMotion } from 'framer-motion'
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { CalendarDay, WindowPanel } from '@atoms'
 import { buildMonthGrid, toDateKey } from '@utils'
 import { cn } from '@utils'
@@ -20,9 +21,39 @@ const WEEKDAYS = [
 
 // 월(month) 캘린더 — 창(WindowPanel: primary 헤더바 h-40 + 엠보 흰 본문) + 월 네비 + 요일 + 날짜 그리드.
 // presentational: 데이터는 events prop 으로만 받는다. 창 크롬은 WindowPanel 아톰을 재사용한다.
-export function Calendar({ year, month, events, onMonthChange, onRegister, onEventClick, className }: CalendarProps) {
+export function Calendar({
+  year,
+  month,
+  events,
+  onMonthChange,
+  onDateSelect,
+  onRegister,
+  onEventClick,
+  className,
+}: CalendarProps) {
   const grid = buildMonthGrid(year, month)
   const reduce = useReducedMotion()
+  const rows = grid.length / 7
+
+  // 현재 달 그리드의 실제 높이를 측정해 컨테이너 높이 애니메이션 목표로 삼는다.
+  // 셀이 aspect-ratio 로 가변폭이라 픽셀을 직접 못 구하므로 렌더 후 측정한다.
+  // rows(줄 수)가 바뀔 때마다 재측정 → 5↔6주 전환 시 마지막 줄이 부드럽게 늘고 준다.
+  const activeGridRef = useRef<HTMLDivElement>(null)
+  const isFirstMeasureRef = useRef(true)
+  const [gridHeight, setGridHeight] = useState<number | undefined>(undefined)
+  useLayoutEffect(() => {
+    const el = activeGridRef.current
+    if (!el) return
+    const measure = () => setGridHeight(el.getBoundingClientRect().height)
+    measure()
+    const observer = new ResizeObserver(measure)
+    observer.observe(el)
+    window.addEventListener('resize', measure)
+    return () => {
+      observer.disconnect()
+      window.removeEventListener('resize', measure)
+    }
+  }, [year, month, rows])
 
   // 날짜별 일정 묶기.
   const byDate = new Map<string, CalendarEvent[]>()
@@ -56,9 +87,20 @@ export function Calendar({ year, month, events, onMonthChange, onRegister, onEve
           >
             <img src={calendarPrev} alt="" className="h-24 w-24" />
           </button>
-          <span className="text-sm-22 text-black underline decoration-gray-500 underline-offset-4">
-            {year}년 {month + 1}월
-          </span>
+          {onDateSelect ? (
+            <button
+              type="button"
+              onClick={onDateSelect}
+              className="text-sm-22 text-black underline decoration-gray-500 underline-offset-4"
+              aria-label="날짜 선택"
+            >
+              {year}년 {month + 1}월
+            </button>
+          ) : (
+            <span className="text-sm-22 text-black underline decoration-gray-500 underline-offset-4">
+              {year}년 {month + 1}월
+            </span>
+          )}
           <button
             type="button"
             onClick={() => shift(1)}
@@ -92,25 +134,42 @@ export function Calendar({ year, month, events, onMonthChange, onRegister, onEve
           ))}
         </div>
 
+        {/* 월 전환 — 크로스페이드(이전 흐려짐 + 새 진해짐 동시).
+            줄 수가 다른 달(5↔6주)로 넘어갈 때 컨테이너 높이를 애니메이트해
+            추가/제거되는 마지막 줄만 자연스럽게 늘었다 줄었다 하게 한다. */}
         <motion.div
-          key={`${year}-${month}`}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: reduce ? 0 : 0.12 }}
-          className="grid grid-cols-7 gap-px overflow-hidden rounded-16 border border-secondary-1 bg-secondary-1"
+          className="relative overflow-hidden"
+          initial={false}
+          animate={{ height: gridHeight ?? 'auto' }}
+          transition={{ duration: reduce || isFirstMeasureRef.current ? 0 : 0.35, ease: 'easeInOut' }}
+          onAnimationComplete={() => {
+            isFirstMeasureRef.current = false
+          }}
         >
-          {grid.map(({ date, inMonth }) => {
-            const key = toDateKey(date)
-            return (
-              <CalendarDay
-                key={key}
-                day={date.getDate()}
-                inMonth={inMonth}
-                events={byDate.get(key) ?? []}
-                onEventClick={onEventClick}
-              />
-            )
-          })}
+          <AnimatePresence mode="sync" initial={false}>
+            <motion.div
+              key={`${year}-${month}`}
+              ref={activeGridRef}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: reduce ? 0 : 0.35, ease: 'easeInOut' }}
+              className="absolute inset-x-0 top-0 grid grid-cols-7 gap-px overflow-hidden rounded-16 border border-secondary-1 bg-secondary-1"
+            >
+              {grid.map(({ date, inMonth }) => {
+                const key = toDateKey(date)
+                return (
+                  <CalendarDay
+                    key={key}
+                    day={date.getDate()}
+                    inMonth={inMonth}
+                    events={byDate.get(key) ?? []}
+                    onEventClick={onEventClick}
+                  />
+                )
+              })}
+            </motion.div>
+          </AnimatePresence>
         </motion.div>
       </div>
     </WindowPanel>

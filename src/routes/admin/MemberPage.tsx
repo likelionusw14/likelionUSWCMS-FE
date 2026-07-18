@@ -1,7 +1,16 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { COHORT_OPTIONS, PART_OPTIONS } from '@constants'
-import { useMembers, usePendingMembers, usePagination } from '@hooks'
+import {
+  toPartCode,
+  toRoleCode,
+  useDeleteAccount,
+  useMemberListPage,
+  usePendingMembers,
+  useUpdateAccount,
+  useUpdateAccountRole,
+  useUpdateAccountStatus,
+} from '@hooks'
 import { MemberEditModal, ResultDialog, RoleEditModal } from '@molecules'
 import { MemberList, PendingMemberList } from '@organisms'
 import type { Member } from '@types'
@@ -10,18 +19,16 @@ import type { Member } from '@types'
 // 회원 관리 — 승인대기 목록(승인/취소) + 회원 목록(권한 수정·회원정보 수정). Figma 15:11837.
 export function MemberPage() {
   const navigate = useNavigate()
-  const { data: members } = useMembers()
+  const { data: members, page, setPage } = useMemberListPage()
   const { data: pending } = usePendingMembers()
   const [editMember, setEditMember] = useState<Member | null>(null)
   const [roleMember, setRoleMember] = useState<Member | null>(null)
   const [deleteDoneOpen, setDeleteDoneOpen] = useState(false)
 
-  const { page, setPage, totalPages, slice } = usePagination({
-    totalItems: members.length,
-    pageSize: 20,
-  })
-
-  const visible = slice(members)
+  const updateStatus = useUpdateAccountStatus()
+  const updateRole = useUpdateAccountRole()
+  const updateAccount = useUpdateAccount()
+  const deleteAccount = useDeleteAccount()
 
   return (
     <>
@@ -29,14 +36,24 @@ export function MemberPage() {
         <PendingMemberList
           members={pending}
           totalCount={pending.length}
-          onApprove={() => {}}
-          onReject={() => {}}
+          onApprove={(id) => {
+            const target = pending.find((member) => member.id === id)
+            if (target) {
+              updateStatus.mutate({ userId: id, status: 'ACTIVE', version: target.version })
+            }
+          }}
+          onReject={(id) => {
+            const target = pending.find((member) => member.id === id)
+            if (target) {
+              updateStatus.mutate({ userId: id, status: 'REJECTED', version: target.version })
+            }
+          }}
         />
         <MemberList
-          members={visible}
-          totalCount={members.length}
+          members={members.content}
+          totalCount={members.totalElements}
           page={page}
-          totalPages={totalPages}
+          totalPages={members.totalPages}
           onPageChange={setPage}
           onEditRole={setRoleMember}
           onEditMember={setEditMember}
@@ -46,8 +63,21 @@ export function MemberPage() {
       <MemberEditModal
         open={!!editMember}
         onClose={() => setEditMember(null)}
-        onSubmit={() => setEditMember(null)}
+        onSubmit={(values) => {
+          if (editMember) {
+            updateAccount.mutate({
+              userId: editMember.id,
+              version: editMember.version,
+              name: values.name,
+              part: toPartCode(values.part),
+            })
+          }
+          setEditMember(null)
+        }}
         onDelete={() => {
+          if (editMember) {
+            deleteAccount.mutate(editMember.id)
+          }
           setEditMember(null)
           setDeleteDoneOpen(true)
         }}
@@ -62,7 +92,16 @@ export function MemberPage() {
       <RoleEditModal
         open={!!roleMember}
         onClose={() => setRoleMember(null)}
-        onSubmit={() => setRoleMember(null)}
+        onSubmit={(role) => {
+          if (roleMember) {
+            updateRole.mutate({
+              userId: roleMember.id,
+              role: toRoleCode(role),
+              version: roleMember.version,
+            })
+          }
+          setRoleMember(null)
+        }}
         value={roleMember?.role}
       />
       <ResultDialog

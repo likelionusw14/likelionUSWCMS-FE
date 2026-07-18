@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { COHORT_OPTIONS, PROJECT_CATEGORY_OPTIONS } from '@constants'
-import { useProject, useProjectForm } from '@hooks'
+import { isBackendConnected } from '@config'
+import { useDeleteProject, useProject, useProjectForm } from '@hooks'
 import { ConfirmDialog, ResultDialog } from '@molecules'
 import { ProjectForm } from '@organisms'
 
@@ -12,8 +13,18 @@ export function ProjectFormPage() {
   const { data: project } = useProject(projectId)
   const isEdit = Boolean(projectId)
   const { values, setField, handleSubmit, fileName, setFileName } = useProjectForm(project)
+  const deleteProject = useDeleteProject()
   const [confirmOpen, setConfirmOpen] = useState(false)
   const [deleteDoneOpen, setDeleteDoneOpen] = useState(false)
+
+  async function handleDelete() {
+    setConfirmOpen(false)
+    // 미연동 데모: 서버 호출 없이 완료 처리. 연동 시에만 삭제 요청을 보낸다.
+    if (isBackendConnected && projectId) {
+      await deleteProject.mutateAsync(projectId)
+    }
+    setDeleteDoneOpen(true)
+  }
 
   return (
     <>
@@ -32,10 +43,7 @@ export function ProjectFormPage() {
       <ConfirmDialog
         open={confirmOpen}
         onClose={() => setConfirmOpen(false)}
-        onConfirm={() => {
-          setConfirmOpen(false)
-          setDeleteDoneOpen(true)
-        }}
+        onConfirm={handleDelete}
         title="프로젝트 삭제"
         description="해당 프로젝트를 삭제하시겠습니까?"
       />

@@ -12,4 +12,6 @@ export interface AttendanceRecord extends Entity {
   present: boolean
   // 비고(없으면 빈 문자열).
   remark: string
+  // 낙관적 동시성 버전(실 API 응답의 version). mock 은 undefined.
+  version?: number
 }
