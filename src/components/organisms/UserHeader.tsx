@@ -15,6 +15,8 @@ const MotionNavLink = motion.create(NavLink)
 // (Figma 717:1689 히든 idle 레이어에서 확인 — 활성 glass 상태의 px-16 과는 별개).
 // 활성 캡슐은 layoutId 공유 레이아웃 애니메이션으로 항목 사이를 슬라이딩하고, 각 항목·메뉴바
 // 자체도 layout 으로 폭 변화가 부드럽게 이어지도록 한다.
+// 키보드 focus 는 Figma 에 정의되지 않아(디자인 툴 자체가 focus 상태를 모델링하지 않음)
+// 브라우저 기본(각진 검정 아웃라인) 대신 디자인 언어에 맞는 focus-visible 링을 직접 정의한다.
 export function UserHeader({ navItems, onLogout }: UserHeaderProps) {
   const reduce = useReducedMotion()
   const transition = { duration: reduce ? 0 : 0.3, ease: [0.16, 1, 0.3, 1] as const }
@@ -22,7 +24,10 @@ export function UserHeader({ navItems, onLogout }: UserHeaderProps) {
   return (
     <header className="sticky top-0 z-10 w-full backdrop-blur-header">
       <div className="relative mx-auto flex w-full max-w-[1280px] items-center justify-between px-64 py-16">
-        <NavLink to="/app" className="text-h1 text-secondary-2">
+        <NavLink
+          to="/app"
+          className="rounded-8 text-h1 text-secondary-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2"
+        >
           {BRAND_NAME}
         </NavLink>
 
@@ -39,7 +44,8 @@ export function UserHeader({ navItems, onLogout }: UserHeaderProps) {
               transition={transition}
               className={({ isActive }) =>
                 cn(
-                  'relative flex h-40 items-center whitespace-nowrap text-sm-18 text-white',
+                  'relative flex h-40 items-center whitespace-nowrap rounded-full text-sm-18 text-white',
+                  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2',
                   index === 0 && !isActive && 'pl-24',
                   isActive && 'px-16',
                 )
@@ -64,7 +70,7 @@ export function UserHeader({ navItems, onLogout }: UserHeaderProps) {
             onClick={onLogout}
             aria-label="로그아웃"
             title="로그아웃"
-            className="h-40 w-40 shrink-0"
+            className="h-40 w-40 shrink-0 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2"
           >
             <img src={userIcon} alt="" className="h-full w-full" />
           </button>
