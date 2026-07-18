@@ -10,7 +10,9 @@ export function PublicHeader({ navItems, applyItem }: PublicHeaderProps) {
   return (
     <header className="sticky top-0 z-10 w-full bg-gradient-user-header backdrop-blur-header">
       <div className="relative mx-auto flex w-full max-w-[1280px] items-center justify-between px-64 py-16">
-        <span className="text-h1 text-secondary-2">{BRAND_NAME}</span>
+        <NavLink to="/" className="text-h1 text-secondary-2">
+          {BRAND_NAME}
+        </NavLink>
         <div className="flex items-center gap-24">
           <nav className="flex h-48 items-center gap-24 rounded-full bg-gradient-primary p-4 pl-24 backdrop-blur-[6px]">
             {navItems.map((item) => (
