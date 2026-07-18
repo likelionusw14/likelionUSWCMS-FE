@@ -280,7 +280,6 @@ export interface UserProjectDetailProps {
 export interface UserHeaderProps {
   navItems: NavItem[]
   onLogout: () => void
-  variant?: 'default' | 'home'
 }
 
 export interface UserShellProps {
