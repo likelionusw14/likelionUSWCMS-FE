@@ -7,8 +7,8 @@ import { cn } from '@utils'
 // 사용자 영역 상단 헤더 — 브랜드 + 알약형 메뉴 + 계정 버튼.
 export function UserHeader({ navItems, onLogout }: UserHeaderProps) {
   return (
-    <header className="w-full bg-background-1">
-      <div className="mx-auto flex w-full max-w-[1280px] items-center justify-between px-64 py-16">
+    <header className="relative w-full overflow-hidden bg-gradient-user-header backdrop-blur-header">
+      <div className="relative mx-auto flex w-full max-w-[1280px] items-center justify-between px-64 py-16">
         <NavLink to="/app" className="text-h1 text-secondary-2">
           {BRAND_NAME}
         </NavLink>

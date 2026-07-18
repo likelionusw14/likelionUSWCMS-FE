@@ -1,4 +1,5 @@
 import type { Entity } from './common'
+import type { ApiPartType } from '@api'
 
 // 세션자료 (Entity: id 필수).
 export interface Session extends Entity {
@@ -17,4 +18,35 @@ export interface Session extends Entity {
 export interface SessionFormValues {
   week: string
   part: string
+}
+
+// 사용자 세션자료 조회 화면 모델. 관리자 Session 모델과 분리한다.
+export interface UserSessionResource extends Entity {
+  title: string
+  fileName: string
+  week: number
+  targetPart: ApiPartType
+  partLabel: string
+  mimeType: string
+  sizeBytes: number
+  previewUrl: string
+  pageCount: number | null
+  createdAt: string
+  updatedAt: string
+}
+
+export interface UserSessionPage {
+  content: UserSessionResource[]
+  page: number
+  size: number
+  totalElements: number
+  totalPages: number
+  hasNext: boolean
+}
+
+export interface UserSessionQuery {
+  page?: number
+  size?: number
+  week?: number
+  targetPart?: ApiPartType
 }
