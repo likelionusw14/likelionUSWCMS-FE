@@ -15,9 +15,10 @@ const AREA_MIN_ROLE: Record<AreaType, Role> = {
 }
 
 // 역할별 홈 경로 (로그인 후/진입 시 리다이렉트 대상).
+// MEMBER 의 홈은 로그인 사용자용 마케팅 홈(`/`, 로그인 헤더). /app 은 대시보드 하위 영역.
 const ROLE_HOME: Record<Role, string> = {
   GUEST: '/',
-  MEMBER: '/app',
+  MEMBER: '/',
   STAFF: '/admin',
 }
 
