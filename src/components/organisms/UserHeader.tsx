@@ -83,7 +83,7 @@ export function UserHeader({ navItems, onLogout }: UserHeaderProps) {
             onClick={onLogout}
             aria-label="로그아웃"
             title="로그아웃"
-            className="h-40 w-40 shrink-0 rounded-full outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-white"
+            className="h-40 w-40 shrink-0 -translate-x-24 rounded-full outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-white"
           >
             <img src={userIcon} alt="" className="h-full w-full" />
           </motion.button>
