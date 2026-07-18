@@ -6,49 +6,49 @@ export const endpoints = {
   login: '/auth/login',
 
   // Cohorts (기수 선택지)
-  cohorts: '/cohorts',
+  cohorts: '/api/cohorts',
 
   // Files (관리자 파일 업로드)
-  fileUploadUrls: '/admin/file-upload-urls',
-  files: '/admin/files',
+  fileUploadUrls: '/api/admin/file-upload-urls',
+  files: '/api/admin/files',
 
   // Projects (사용자 조회)
-  projects: '/projects',
-  project: (projectId: string) => `/projects/${projectId}`,
+  projects: '/api/projects',
+  project: (projectId: string) => `/api/projects/${projectId}`,
   // Projects (관리자 CRUD)
-  adminProjects: '/admin/projects',
-  adminProject: (projectId: string) => `/admin/projects/${projectId}`,
+  adminProjects: '/api/admin/projects',
+  adminProject: (projectId: string) => `/api/admin/projects/${projectId}`,
 
   // Resources (세션자료) — 사용자 조회
-  resources: '/resources',
-  resource: (resourceId: string) => `/resources/${resourceId}`,
-  resourceDownloadUrl: (resourceId: string) => `/resources/${resourceId}/download-url`,
+  resources: '/api/resources',
+  resource: (resourceId: string) => `/api/resources/${resourceId}`,
+  resourceDownloadUrl: (resourceId: string) => `/api/resources/${resourceId}/download-url`,
   // Resources (관리자 CRUD)
-  adminResources: '/admin/resources',
-  adminResource: (resourceId: string) => `/admin/resources/${resourceId}`,
+  adminResources: '/api/admin/resources',
+  adminResource: (resourceId: string) => `/api/admin/resources/${resourceId}`,
 
   // Notices — 사용자 조회
-  notices: '/notices',
-  notice: (noticeId: string) => `/notices/${noticeId}`,
+  notices: '/api/notices',
+  notice: (noticeId: string) => `/api/notices/${noticeId}`,
   // Notices (관리자 CRUD)
-  adminNotices: '/admin/notices',
-  adminNotice: (noticeId: string) => `/admin/notices/${noticeId}`,
+  adminNotices: '/api/admin/notices',
+  adminNotice: (noticeId: string) => `/api/admin/notices/${noticeId}`,
 
   // Accounts (관리자 회원 관리)
-  adminAccounts: '/admin/accounts',
-  adminAccount: (userId: string) => `/admin/accounts/${userId}`,
-  adminAccountStatus: (userId: string) => `/admin/accounts/${userId}/status`,
-  adminAccountRole: (userId: string) => `/admin/accounts/${userId}/role`,
+  adminAccounts: '/api/admin/accounts',
+  adminAccount: (userId: string) => `/api/admin/accounts/${userId}`,
+  adminAccountStatus: (userId: string) => `/api/admin/accounts/${userId}/status`,
+  adminAccountRole: (userId: string) => `/api/admin/accounts/${userId}/role`,
 
   // Schedules — 사용자 조회
-  schedules: '/schedules',
-  schedule: (scheduleId: string) => `/schedules/${scheduleId}`,
+  schedules: '/api/schedules',
+  schedule: (scheduleId: string) => `/api/schedules/${scheduleId}`,
   // Schedules (관리자 CRUD)
-  adminSchedules: '/admin/schedules',
-  adminSchedule: (scheduleId: string) => `/admin/schedules/${scheduleId}`,
+  adminSchedules: '/api/admin/schedules',
+  adminSchedule: (scheduleId: string) => `/api/admin/schedules/${scheduleId}`,
 
   // Attendances (관리자)
-  adminAttendances: '/admin/attendances',
-  adminAttendance: (attendanceId: string) => `/admin/attendances/${attendanceId}`,
-  adminAttendanceCode: (scheduleId: string) => `/admin/schedules/${scheduleId}/attendance-code`,
+  adminAttendances: '/api/admin/attendances',
+  adminAttendance: (attendanceId: string) => `/api/admin/attendances/${attendanceId}`,
+  adminAttendanceCode: (scheduleId: string) => `/api/admin/schedules/${scheduleId}/attendance-code`,
 } as const

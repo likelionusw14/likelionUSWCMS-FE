@@ -37,6 +37,8 @@ export interface CalendarProps {
   //  · 훅은 { data: CalendarEvent[], isLoading } 계약 유지 → 이 events 로 그대로 전달.
   events: CalendarEvent[]
   onMonthChange?: (year: number, month: number) => void
+  // 월 제목 클릭. 사용자 캘린더의 날짜 선택 팝업 연결에만 사용한다.
+  onDateSelect?: () => void
   // ＋ 등록.
   onRegister?: () => void
   // 일정 칩 클릭 — 클릭된 DOM(위치 계산용)과 함께 전달. ScheduleCalendar 가 이걸로 팝업을 띄운다.
@@ -59,6 +61,7 @@ export interface ScheduleCalendarProps {
   month: number
   events: CalendarEvent[]
   onMonthChange?: (year: number, month: number) => void
+  onDateSelect?: () => void
   onRegister?: () => void
   // 팝업의 수정/삭제. 없으면 읽기 전용으로 뜬다.
   onEventEdit?: (event: CalendarEvent) => void

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ConfirmDialog, ResultDialog, ScheduleFormModal } from '@molecules'
+import { ConfirmDialog, DatePickerModal, ResultDialog, ScheduleFormModal } from '@molecules'
 import { ScheduleCalendar } from '@organisms'
 import {
   toCreateScheduleRequest,
@@ -28,6 +28,16 @@ export function SchedulePage() {
   const [deleteOpen, setDeleteOpen] = useState(false)
   const [deleteTarget, setDeleteTarget] = useState<CalendarEvent | null>(null)
   const [deleteDoneOpen, setDeleteDoneOpen] = useState(false)
+  const [datePickerOpen, setDatePickerOpen] = useState(false)
+
+  const pad2 = (value: number) => String(value).padStart(2, '0')
+
+  // 월 제목 클릭 → 날짜 선택 팝업으로 원하는 달로 점프.
+  function selectMonth(value: string) {
+    const [nextYear, nextMonth] = value.split('.').map(Number)
+    setYear(nextYear)
+    setMonth(nextMonth - 1)
+  }
 
   // 저장(등록/수정) — editingEvent 유무로 분기. 미연동이면 mutation 이 no-op 이라 그대로 닫힌다.
   function handleSubmit(values: ScheduleFormValues) {
@@ -55,6 +65,7 @@ export function SchedulePage() {
             setYear(y)
             setMonth(m)
           }}
+          onDateSelect={() => setDatePickerOpen(true)}
           onRegister={() => {
             setEditingEvent(null)
             setFormOpen(true)
@@ -71,6 +82,14 @@ export function SchedulePage() {
         />
       </div>
 
+      <DatePickerModal
+        open={datePickerOpen}
+        onClose={() => setDatePickerOpen(false)}
+        onConfirm={selectMonth}
+        value={`${year}.${pad2(month + 1)}.01`}
+        title="월 선택"
+        granularity="month"
+      />
       <ScheduleFormModal
         open={formOpen}
         initialEvent={editingEvent}
