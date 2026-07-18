@@ -14,10 +14,12 @@ const MotionNavLink = motion.create(NavLink)
 // 메뉴 항목 사이는 균일 gap-24 (좌표 계산 검증됨). 활성 캡슐은 별도 "OO 유리" 레이어 —
 // 좌우 대칭 px-16. 단 첫 항목(프로젝트)은 비활성 상태일 때만 pl-24 여백이 추가로 있다
 // (Figma 717:1689 히든 idle 레이어에서 확인 — 활성 glass 상태의 px-16 과는 별개).
-// 유리 캡슐(rounded-full bg-white/20 effect-glass-shadow)은 활성 상태뿐 아니라 키보드 포커스 상태도
-// 공유한다 — Figma 는 focus 를 모델링하지 않지만, 별도 링 대신 이 캡슐을 그대로 재사용한다.
-// 활성/포커스 캡슐 둘 다 같은 layoutId 공유 레이아웃 애니메이션을 타므로, 라우트 이동이든
-// Tab 키 이동이든 캡슐이 항목 사이를 슬라이딩하며 이동한다(포커스가 있으면 포커스가 우선).
+// 유리 캡슐(rounded-full bg-white/20 effect-glass-shadow)은 활성 상태뿐 아니라 키보드 포커스
+// 상태도 공유한다 — Figma 는 focus 를 모델링하지 않지만, 별도 링 대신 이 캡슐을 그대로
+// 재사용한다. 활성/포커스 캡슐 둘 다 같은 layoutId 공유 레이아웃 애니메이션을 타므로,
+// 라우트 이동이든 Tab 키 이동이든 캡슐이 항목 사이를 슬라이딩하며 이동한다(포커스 우선).
+// 계정 버튼은 Figma 에 "OO 유리" 같은 hover/focus 변형이 없는 고정 40x40 아이콘이라
+// 유리 캡슐 대신 브랜드 링크와 같은 링으로 포커스를 표시한다.
 export function UserHeader({ navItems, onLogout }: UserHeaderProps) {
   const reduce = useReducedMotion()
   const transition = { duration: reduce ? 0 : 0.3, ease: [0.16, 1, 0.3, 1] as const }
@@ -76,8 +78,7 @@ export function UserHeader({ navItems, onLogout }: UserHeaderProps) {
             type="button"
             onClick={onLogout}
             aria-label="로그아웃"
-            title="로그아웃"
-            className="h-40 w-40 shrink-0 rounded-full outline-none focus-visible:bg-white/20 focus-visible:effect-glass-shadow"
+            className="h-40 w-40 shrink-0 rounded-full outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2"
           >
             <img src={userIcon} alt="" className="h-full w-full" />
           </button>
