@@ -1,13 +1,24 @@
 import { NavLink } from 'react-router-dom'
+import headerBackground from '@/assets/header-bg.png'
 import userIcon from '@/assets/icons/user-white.svg'
 import { BRAND_NAME } from '@constants'
 import type { UserHeaderProps } from '@types'
 import { cn } from '@utils'
 
 // 사용자 영역 상단 헤더 — 브랜드 + 알약형 메뉴 + 계정 버튼.
-export function UserHeader({ navItems, onLogout }: UserHeaderProps) {
+export function UserHeader({ navItems, onLogout, variant = 'default' }: UserHeaderProps) {
+  const isHome = variant === 'home'
+
   return (
-    <header className="relative w-full overflow-hidden bg-gradient-user-header backdrop-blur-header">
+    <header
+      className={cn(
+        'relative w-full overflow-hidden',
+        isHome ? 'bg-background-2' : 'bg-gradient-user-header backdrop-blur-header',
+      )}
+    >
+      {isHome && (
+        <img src={headerBackground} alt="" className="absolute inset-0 h-full w-full object-cover" />
+      )}
       <div className="relative mx-auto flex w-full max-w-[1280px] items-center justify-between px-64 py-16">
         <NavLink to="/app" className="text-h1 text-secondary-2">
           {BRAND_NAME}

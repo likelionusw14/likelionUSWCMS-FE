@@ -8,7 +8,7 @@ import type { UserNotice, UserNoticePage, UserNoticeQuery } from '@types'
 const TAG_LABEL: Record<ApiNoticeTag, string> = {
   SCHEDULE: '일정',
   PROJECT: '프로젝트',
-  PROMOTION_EVENT: '홍보/이벤트',
+  PROMOTION_EVENT: '홍보 / 이벤트',
   OTHER: '기타',
 }
 
