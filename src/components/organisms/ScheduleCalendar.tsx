@@ -25,6 +25,7 @@ export function ScheduleCalendar({
   month,
   events,
   onMonthChange,
+  onDateSelect,
   onRegister,
   onEventEdit,
   onEventDelete,
@@ -73,6 +74,7 @@ export function ScheduleCalendar({
         month={month}
         events={events}
         onMonthChange={onMonthChange}
+        onDateSelect={onDateSelect}
         onRegister={onRegister}
         onEventClick={handleEventClick}
         className={className}
