@@ -3,7 +3,7 @@ import { canAccess, roleHome } from '@constants'
 import { useAuth } from '@hooks'
 import type { RequireRoleProps } from '@types'
 
-// 영역 접근 가드. 권한 없으면 비로그인은 로그인으로, 로그인 상태는 자기 홈으로 보낸다.
+// 영역 접근 가드. 권한 없으면 비로그인은 로그인으로, 로그인 상태는 자기 영역 홈으로 보낸다.
 export function RequireRole({ area }: RequireRoleProps) {
   const { role, isAuthenticated } = useAuth()
 

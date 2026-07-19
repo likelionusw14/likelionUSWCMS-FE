@@ -16,7 +16,7 @@ export function useLoginForm() {
   const [id, setId] = useState('')
   const [error, setError] = useState('')
 
-  // 이미 로그인 상태면 자기 홈으로 보낼 대상 경로이고 없으면 null로 처리하도록 했음.
+  // 이미 로그인 상태면 자기 영역 홈으로 보낼 대상 경로이고 없으면 null로 처리하도록 했음.
   const redirectTo = isAuthenticated ? roleHome(currentRole) : null
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {

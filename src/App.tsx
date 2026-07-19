@@ -1,12 +1,9 @@
 import { useRoutes } from 'react-router-dom'
 import type { RouteObject } from 'react-router-dom'
-import { AdminShell } from '@templates'
 import { NotFoundPage } from '@routes'
-import { ADMIN_NAV, ADMIN_PAGE_TITLES } from '@routes/admin/nav'
 import { commonRoutes } from '@routes/common/routes'
 import { userRoutes } from '@routes/user/routes'
 import { adminRoutes } from '@routes/admin/routes'
-
 // 개발 전용 로컬 미리보기 라우트 — git 미추적 파일(src/routes/devRoutes.local.tsx)이 있을 때만 로드한다.
 // 컴포넌트 확인용 sandbox 등 "로컬 전용" 라우트는 그 파일에만 두어 절대 커밋/배포되지 않는다.
 const localDevRoutes = import.meta.glob('./routes/devRoutes.local.tsx', { eager: true }) as Record<
@@ -24,10 +21,7 @@ export default function App() {
     ...commonRoutes,
     ...userRoutes,
     ...adminRoutes,
-    // 404 는 디자인상 관리자 헤더/푸터가 붙은 화면이라 같은 셸을 쓴다.
-    {
-      element: <AdminShell navItems={ADMIN_NAV} pageTitles={ADMIN_PAGE_TITLES} />,
-      children: [{ path: '*', element: <NotFoundPage /> }],
-    },
+    // 404 — NotFoundPage 가 현재 role 에 맞는 헤더/푸터를 스스로 고른다(가드 불필요, 항상 렌더).
+    { path: '*', element: <NotFoundPage /> },
   ])
 }
