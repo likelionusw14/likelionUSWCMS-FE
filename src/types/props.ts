@@ -547,6 +547,9 @@ export interface UserNoticeListProps {
   totalPages: number
   isLoading: boolean
   onPageChange: (page: number) => void
+  // 행 클릭 시 이동할 상세 경로의 베이스. 멤버(/app/notices)·게스트(/notices)가 같은 목록을 공유하므로
+  // 현재 라우트를 넘겨받아 상세 링크를 만든다.
+  detailBasePath: string
 }
 
 export interface UserNoticeDetailProps {
