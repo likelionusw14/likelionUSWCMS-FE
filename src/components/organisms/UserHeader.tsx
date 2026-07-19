@@ -34,7 +34,7 @@ export function UserHeader({ navItems, onLogout }: UserHeaderProps) {
             title="로그아웃"
             className="relative mr-24 flex h-40 w-[18px] shrink-0 items-center justify-center rounded-full outline-none after:pointer-events-none after:absolute after:left-1/2 after:top-1/2 after:h-40 after:w-40 after:-translate-x-1/2 after:-translate-y-1/2 after:rounded-full after:content-[''] focus-visible:after:ring-2 focus-visible:after:ring-white"
           >
-            <motion.img layout="position" transition={transition} src={userIcon} alt="" className="h-[18px] w-[18px]" />
+            <img src={userIcon} alt="" className="h-[18px] w-[18px]" />
           </motion.button>
         </GlassNavMenu>
       </div>
