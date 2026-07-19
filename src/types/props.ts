@@ -98,6 +98,13 @@ export interface FormFieldProps {
   className?: string
 }
 
+// 유리 알약 메뉴(molecule) — UserHeader/PublicHeader 가 공유한다. children 은 알약 안쪽
+// 마지막 슬롯(계정 버튼 등)에 렌더된다.
+export interface GlassNavMenuProps {
+  navItems: NavItem[]
+  children?: ReactNode
+}
+
 export interface PublicHeaderProps {
   navItems: NavItem[]
   applyItem: NavItem
