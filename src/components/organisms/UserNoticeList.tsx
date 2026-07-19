@@ -46,6 +46,7 @@ export function UserNoticeList({
   totalPages,
   isLoading,
   onPageChange,
+  detailBasePath,
 }: UserNoticeListProps) {
   return (
     <ListSection
@@ -59,7 +60,7 @@ export function UserNoticeList({
         columns={COLUMNS}
         rows={notices}
         rowKey={(notice) => notice.id}
-        getRowHref={(notice) => `/app/notices/${notice.id}`}
+        getRowHref={(notice) => `${detailBasePath}/${notice.id}`}
         isLoading={isLoading}
         loadingRowCount={20}
         emptyMessage="조건에 맞는 공지가 없습니다."

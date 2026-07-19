@@ -1,8 +1,11 @@
+import { useLocation } from 'react-router-dom'
 import { USER_NOTICE_TAG_OPTIONS } from '@constants'
 import { useUserNoticeListPage } from '@hooks'
 import { UserNoticeFilterBar, UserNoticeList } from '@organisms'
 
+// 멤버(/app/notices)·게스트(/notices)가 같은 목록을 공유한다. 상세 링크 베이스는 현재 라우트에서 딴다.
 export function UserNoticeListPage() {
+  const { pathname } = useLocation()
   const { data, isLoading, tag, page, setTag, setPage, resetPage } = useUserNoticeListPage()
 
   return (
@@ -30,6 +33,7 @@ export function UserNoticeListPage() {
           totalPages={data.totalPages}
           isLoading={isLoading}
           onPageChange={setPage}
+          detailBasePath={pathname}
         />
       </div>
     </div>
