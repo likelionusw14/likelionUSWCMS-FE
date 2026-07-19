@@ -43,16 +43,16 @@ export function PublicHeader({ navItems, applyItem }: PublicHeaderProps) {
                 aria-label="마이페이지"
                 className="mr-24 flex h-40 w-40 shrink-0 items-center justify-center rounded-full outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-white"
               >
-                <motion.img layout="position" transition={transition} src={userIcon} alt="" className="h-full w-full" />
+                <motion.img layout="position" transition={transition} src={userIcon} alt="" className="h-[18px] w-[18px]" />
               </motion.button>
             ) : (
-              <motion.img
+              <motion.div
                 layout="position"
                 transition={transition}
-                src={userIcon}
-                alt="계정"
-                className="mr-24 h-40 w-40 shrink-0"
-              />
+                className="mr-24 flex h-40 w-40 shrink-0 items-center justify-center"
+              >
+                <img src={userIcon} alt="계정" className="h-[18px] w-[18px]" />
+              </motion.div>
             )}
           </GlassNavMenu>
 
