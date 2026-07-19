@@ -41,7 +41,7 @@ export function PublicHeader({ navItems, applyItem }: PublicHeaderProps) {
                 type="button"
                 onClick={() => navigate('/app')}
                 aria-label="마이페이지"
-                className="flex h-40 w-40 shrink-0 items-center justify-center rounded-full outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-white"
+                className="mr-24 flex h-40 w-40 shrink-0 items-center justify-center rounded-full outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-white"
               >
                 <motion.img layout="position" transition={transition} src={userIcon} alt="" className="h-full w-full" />
               </motion.button>
@@ -51,7 +51,7 @@ export function PublicHeader({ navItems, applyItem }: PublicHeaderProps) {
                 transition={transition}
                 src={userIcon}
                 alt="계정"
-                className="h-40 w-40 shrink-0"
+                className="mr-24 h-40 w-40 shrink-0"
               />
             )}
           </GlassNavMenu>
