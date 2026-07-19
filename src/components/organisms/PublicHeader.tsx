@@ -35,15 +35,16 @@ export function PublicHeader({ navItems, applyItem }: PublicHeaderProps) {
         <div className="flex items-center gap-24">
           <GlassNavMenu navItems={navItems}>
             {isAuthenticated ? (
-              <motion.div layout transition={transition}>
-                <NavLink
-                  to="/app"
-                  aria-label="마이페이지"
-                  className="flex h-40 w-40 shrink-0 items-center justify-center rounded-full outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-white"
-                >
-                  <motion.img layout="position" transition={transition} src={userIcon} alt="" className="h-full w-full" />
-                </NavLink>
-              </motion.div>
+              <motion.button
+                layout="position"
+                transition={transition}
+                type="button"
+                onClick={() => navigate('/app')}
+                aria-label="마이페이지"
+                className="flex h-40 w-40 shrink-0 items-center justify-center rounded-full outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-white"
+              >
+                <motion.img layout="position" transition={transition} src={userIcon} alt="" className="h-full w-full" />
+              </motion.button>
             ) : (
               <motion.img
                 layout="position"

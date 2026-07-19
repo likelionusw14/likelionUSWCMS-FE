@@ -1,4 +1,4 @@
-import { motion, useReducedMotion } from 'framer-motion'
+import { LayoutGroup, motion, useReducedMotion } from 'framer-motion'
 import { useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import type { GlassNavMenuProps } from '@types'
@@ -24,50 +24,52 @@ export function GlassNavMenu({ navItems, children }: GlassNavMenuProps) {
   const [focusedTo, setFocusedTo] = useState<string | null>(null)
 
   return (
-    <motion.nav
-      layout
-      transition={transition}
-      className="flex items-center gap-24 rounded-full bg-gradient-user-menu p-4 backdrop-blur-menu"
-    >
-      {navItems.map((item, index) => (
-        <MotionNavLink
-          key={item.to}
-          to={item.to}
-          layout
-          transition={transition}
-          onFocus={(event) => {
-            if (event.target.matches(':focus-visible')) setFocusedTo(item.to)
-          }}
-          onBlur={() => setFocusedTo((prev) => (prev === item.to ? null : prev))}
-          className={({ isActive }) => {
-            const highlighted = focusedTo ? item.to === focusedTo : isActive
-            return cn(
-              'relative flex h-40 items-center whitespace-nowrap rounded-full text-sm-18 text-white outline-none',
-              index === 0 && !highlighted && 'pl-24',
-              highlighted && 'px-16',
-            )
-          }}
-        >
-          {({ isActive }) => {
-            const highlighted = focusedTo ? item.to === focusedTo : isActive
-            return (
-              <>
-                {highlighted && (
-                  <motion.span
-                    layoutId="glass-nav-active-pill"
-                    transition={transition}
-                    className="absolute inset-0 -z-10 rounded-full bg-white/20 effect-glass-shadow"
-                  />
-                )}
-                <motion.span layout="position" transition={transition}>
-                  {item.label}
-                </motion.span>
-              </>
-            )
-          }}
-        </MotionNavLink>
-      ))}
-      {children}
-    </motion.nav>
+    <LayoutGroup>
+      <motion.nav
+        layout
+        transition={transition}
+        className="flex items-center gap-24 rounded-full bg-gradient-user-menu p-4 backdrop-blur-menu"
+      >
+        {navItems.map((item, index) => (
+          <MotionNavLink
+            key={item.to}
+            to={item.to}
+            layout
+            transition={transition}
+            onFocus={(event) => {
+              if (event.target.matches(':focus-visible')) setFocusedTo(item.to)
+            }}
+            onBlur={() => setFocusedTo((prev) => (prev === item.to ? null : prev))}
+            className={({ isActive }) => {
+              const highlighted = focusedTo ? item.to === focusedTo : isActive
+              return cn(
+                'relative flex h-40 items-center whitespace-nowrap rounded-full text-sm-18 text-white outline-none',
+                index === 0 && !highlighted && 'pl-24',
+                highlighted && 'px-16',
+              )
+            }}
+          >
+            {({ isActive }) => {
+              const highlighted = focusedTo ? item.to === focusedTo : isActive
+              return (
+                <>
+                  {highlighted && (
+                    <motion.span
+                      layoutId="glass-nav-active-pill"
+                      transition={transition}
+                      className="absolute inset-0 -z-10 rounded-full bg-white/20 effect-glass-shadow"
+                    />
+                  )}
+                  <motion.span layout="position" transition={transition}>
+                    {item.label}
+                  </motion.span>
+                </>
+              )
+            }}
+          </MotionNavLink>
+        ))}
+        {children}
+      </motion.nav>
+    </LayoutGroup>
   )
 }

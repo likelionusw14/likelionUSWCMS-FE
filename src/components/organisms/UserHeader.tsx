@@ -26,7 +26,7 @@ export function UserHeader({ navItems, onLogout }: UserHeaderProps) {
 
         <GlassNavMenu navItems={navItems}>
           <motion.button
-            layout
+            layout="position"
             transition={transition}
             type="button"
             onClick={onLogout}
