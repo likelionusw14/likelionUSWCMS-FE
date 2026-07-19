@@ -41,9 +41,9 @@ export function PublicHeader({ navItems, applyItem }: PublicHeaderProps) {
                 type="button"
                 onClick={() => navigate('/app')}
                 aria-label="마이페이지"
-                className="mr-24 h-[18px] w-[18px] shrink-0 rounded-full outline-none focus-visible:ring-2 focus-visible:ring-white"
+                className="relative mr-24 flex h-40 w-[18px] shrink-0 items-center justify-center rounded-full outline-none after:pointer-events-none after:absolute after:left-1/2 after:top-1/2 after:h-40 after:w-40 after:-translate-x-1/2 after:-translate-y-1/2 after:rounded-full after:content-[''] focus-visible:after:ring-2 focus-visible:after:ring-white"
               >
-                <motion.img layout="position" transition={transition} src={userIcon} alt="" className="h-full w-full" />
+                <motion.img layout="position" transition={transition} src={userIcon} alt="" className="h-[18px] w-[18px]" />
               </motion.button>
             ) : (
               <motion.img
