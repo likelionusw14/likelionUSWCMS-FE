@@ -1,4 +1,5 @@
 import { motion, useReducedMotion } from 'framer-motion'
+import contextMenu from '@/assets/home/hero/context-menu.svg'
 import emojiBar from '@/assets/home/hero/emoji-bar.svg'
 import floorOverlay from '@/assets/home/hero/floor.png'
 import folderReflection from '@/assets/home/hero/folder-reflection.svg'
@@ -9,12 +10,23 @@ import volumeCard from '@/assets/home/hero/volume.png'
 import { BRAND_NAME } from '@constants'
 import { cn } from '@utils'
 
-// 떠 있는 그래픽 4종 — Figma 1280 프레임 좌표 기준 절대배치한다.
+// 떠 있는 그래픽 5종 — Figma 1280 프레임 좌표 기준 절대배치한다.
 // 각 그래픽은 로드 시 아래·회전된 위치에서 제자리로 1회 낙하·정착한다(Figma 프로토타입 모션).
 // from = 초기 오프셋(Figma 키프레임의 시작 transform, rest 대비), delay = 등장 시차.
 // music-player/volume 은 Figma 에선 프레임 좌/우 경계를 넘어가(블리드) overflow-hidden 에 잘리는데,
 // 전체 그래픽 PNG 로 교체했으므로 좌/우 끝(left-0/right-0)에 붙여 카드 전체가 보이게 한다.
 const GRAPHICS = [
+  {
+    // Cut/Copy/Paste 컨텍스트 메뉴 (Figma 894:2763) — 렌더 상태(7.06° 회전·레이어 블러)는 SVG 에
+    // 구워져 있고, box 는 블러 패딩이 포함된 export 경계(320.98/60, 284x96)에 맞춘다.
+    // from 은 Figma 키프레임(rotate 31.1→7.06, x 83→0, y 898→0)의 rest 대비 오프셋.
+    id: 'context-menu',
+    src: contextMenu,
+    alt: '',
+    box: 'left-[320.98px] top-[60px] h-[96px] w-[284px]',
+    from: { x: 83, y: 898, rotate: 24 },
+    delay: 0.35,
+  },
   {
     id: 'music-player',
     src: musicPlayer,
