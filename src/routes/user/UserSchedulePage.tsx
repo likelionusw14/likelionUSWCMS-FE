@@ -11,8 +11,8 @@ export function UserSchedulePage() {
   const now = new Date()
   const [year, setYear] = useState(now.getFullYear())
   const [month, setMonth] = useState(now.getMonth())
-  const [selectedDate, setSelectedDate] = useState(
-    `${now.getFullYear()}.${pad2(now.getMonth() + 1)}.${pad2(now.getDate())}`,
+  const [selectedMonth, setSelectedMonth] = useState(
+    `${now.getFullYear()}.${pad2(now.getMonth() + 1)}`,
   )
   const [datePickerOpen, setDatePickerOpen] = useState(false)
   const { data: events, isLoading } = useUserSchedules(year, month)
@@ -20,12 +20,12 @@ export function UserSchedulePage() {
   function changeMonth(nextYear: number, nextMonth: number) {
     setYear(nextYear)
     setMonth(nextMonth)
-    setSelectedDate(`${nextYear}.${pad2(nextMonth + 1)}.01`)
+    setSelectedMonth(`${nextYear}.${pad2(nextMonth + 1)}`)
   }
 
-  function selectDate(value: string) {
+  function selectMonth(value: string) {
     const [nextYear, nextMonth] = value.split('.').map(Number)
-    setSelectedDate(value)
+    setSelectedMonth(value)
     setYear(nextYear)
     setMonth(nextMonth - 1)
   }
@@ -60,8 +60,9 @@ export function UserSchedulePage() {
       <DatePickerModal
         open={datePickerOpen}
         onClose={() => setDatePickerOpen(false)}
-        onConfirm={selectDate}
-        value={selectedDate}
+        onConfirm={selectMonth}
+        value={selectedMonth}
+        granularity="month"
       />
     </div>
   )
