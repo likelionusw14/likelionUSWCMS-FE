@@ -14,6 +14,7 @@ import type { Member, PendingMember } from './member'
 import type { AttendanceRecord } from './attendance'
 import type { SignupProfile } from './signup'
 import type { CalendarEvent } from './calendar'
+import type { Lion, UserLionQuery } from './lion'
 
 // 컴포넌트 props 타입 (컴포넌트 파일 인라인 정의 금지 규칙에 따라 여기 정의).
 
@@ -184,6 +185,25 @@ export interface PaginationProps {
 export interface ProjectCardProps {
   project: ProjectSummary
   detailPath: string
+  className?: string
+}
+
+export interface LionProfileCardProps {
+  lion: Lion
+  className?: string
+}
+
+export interface LionPartFilterProps {
+  value: NonNullable<UserLionQuery['part']>
+  onChange: (value: NonNullable<UserLionQuery['part']>) => void
+  className?: string
+}
+
+export interface LionSectionProps {
+  label: string
+  lions: Lion[]
+  isLoading: boolean
+  filter?: ReactNode
   className?: string
 }
 

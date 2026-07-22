@@ -38,6 +38,10 @@ export type ApiCreateProjectRequest = components['schemas']['CreateProjectReques
 export type ApiUpdateProjectRequest = components['schemas']['UpdateProjectRequest']
 export type ApiProjectParticipantRequest = components['schemas']['ProjectParticipantRequest']
 
+// Lions (사자)
+export type ApiLionResponse = components['schemas']['LionResponse']
+export type ApiLionPage = components['schemas']['LionPage']
+
 // Resources (세션자료)
 export type ApiLearningResourceResponse = components['schemas']['LearningResourceResponse']
 export type ApiResourcePage = components['schemas']['ResourcePage']
