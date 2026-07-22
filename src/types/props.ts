@@ -11,7 +11,7 @@ import type { Project, ProjectFormValues, ProjectSummary, UserProject } from './
 import type { Session, SessionFormValues, UserSessionResource } from './session'
 import type { Notice, UserNotice } from './notice'
 import type { Member, PendingMember } from './member'
-import type { AttendanceRecord } from './attendance'
+import type { AttendanceRecord, AttendanceCheckInResult } from './attendance'
 import type { SignupProfile } from './signup'
 import type { CalendarEvent } from './calendar'
 import type { Lion, UserLionQuery } from './lion'
@@ -347,6 +347,16 @@ export interface AttendanceCodeCreateProps {
   onGenerate: () => void
 }
 
+// 출석 코드 입력 — 안내 말풍선 + 6자리 코드 입력 + 유효시간 + 버튼. 성공/실패는 ResultDialog.
+export interface AttendanceCheckInProps {
+  code: string
+  onCodeChange: (value: string) => void
+  remainingSeconds: number
+  result: AttendanceCheckInResult
+  onSubmit: () => void
+  onCloseResult: () => void
+}
+
 // 목록 섹션 셸 — 제목 + 총건수(+선택 페이지정보) + 선택 추가버튼 + 툴바 슬롯 + 콘텐츠(DataTable) + 선택 페이지네이션.
 // 관리자 목록 5종(회원·승인대기·출결·공지·세션)이 공유. 가변부는 선택 prop 유무로 켠다.
 export interface ListSectionProps {
@@ -612,6 +622,15 @@ export interface AttendanceListProps {
   onPageChange: (page: number) => void
   onTogglePresent: (id: string) => void
   onEditRemark: (record: AttendanceRecord) => void
+}
+
+// 본인 출석 내역 — 날짜·이름·학번·파트·출석상태(읽기 전용 체크)·비고(텍스트) + 페이지네이션.
+export interface UserAttendanceListProps {
+  records: AttendanceRecord[]
+  totalCount: number
+  page: number
+  totalPages: number
+  onPageChange: (page: number) => void
 }
 
 // 상세 화면 헤더의 목록/수정 버튼 쌍 (프로젝트·세션·공지 상세 공용).

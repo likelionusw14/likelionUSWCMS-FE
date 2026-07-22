@@ -56,6 +56,11 @@ export const endpoints = {
   adminSchedules: '/api/admin/schedules',
   adminSchedule: (scheduleId: string) => `/api/admin/schedules/${scheduleId}`,
 
+  // Attendances (사용자 — 본인 출결/코드 인증)
+  attendances: '/api/attendances',
+  attendanceCheckIn: (scheduleId: string) =>
+    `/api/schedules/${scheduleId}/attendance-check-ins`,
+
   // Attendances (관리자)
   adminAttendances: '/api/admin/attendances',
   adminAttendance: (attendanceId: string) => `/api/admin/attendances/${attendanceId}`,

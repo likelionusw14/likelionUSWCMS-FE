@@ -10,6 +10,7 @@ import { UserSessionDetailPage } from './UserSessionDetailPage'
 import { UserNoticeListPage } from './UserNoticeListPage'
 import { UserNoticeDetailPage } from './UserNoticeDetailPage'
 import { UserSchedulePage } from './UserSchedulePage'
+import { UserAttendancePage } from './UserAttendancePage'
 import { UserLionListPage } from './UserLionListPage'
 import { UserCertificatePage } from './UserCertificatePage'
 
@@ -30,6 +31,7 @@ export const userRoutes: RouteObject[] = [
           { path: '/app/notices', element: <UserNoticeListPage /> },
           { path: '/app/notices/:noticeId', element: <UserNoticeDetailPage /> },
           { path: '/app/schedule', element: <UserSchedulePage /> },
+          { path: '/app/attendance', element: <UserAttendancePage /> },
           { path: '/app/members', element: <UserLionListPage /> },
           { path: '/app/certificates', element: <UserCertificatePage /> },
         ],
