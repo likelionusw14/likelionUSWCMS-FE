@@ -15,6 +15,7 @@ import type { AttendanceRecord, AttendanceCheckInResult } from './attendance'
 import type { SignupProfile } from './signup'
 import type { CalendarEvent } from './calendar'
 import type { Lion, UserLionQuery } from './lion'
+import type { CertificateInfo, CertificateFlowState } from './certificate'
 
 // 컴포넌트 props 타입 (컴포넌트 파일 인라인 정의 금지 규칙에 따라 여기 정의).
 
@@ -653,4 +654,18 @@ export interface WheelDeckProps {
   // 중앙 선택 밴드 너비 (기본 w-[300px]). 시간 피커는 좁다(w-[230px]).
   bandClassName?: string
   className?: string
+}
+
+// 내 정보 확인 창 — 활동증명서에 반영될 본인 정보(읽기 전용) + PDF 발급하기.
+export interface CertificateInfoPanelProps {
+  info: CertificateInfo | undefined
+  isLoading: boolean
+  onIssue: () => void
+}
+
+// 발급 플로우 팝업 — 상태에 따라 발급 중(로딩) / 발급 완료(다운로드) / 다운로드 완료(홈).
+export interface CertificateFlowModalProps {
+  state: CertificateFlowState
+  onDownload: () => void
+  onGoHome: () => void
 }
