@@ -8,6 +8,12 @@ export const endpoints = {
   // Cohorts (기수 선택지)
   cohorts: '/api/cohorts',
 
+  // Certificates (활동증명서 — 사용자)
+  certificatePreview: '/api/certificates/preview',
+  certificates: '/api/certificates',
+  certificateDownloadUrl: (certificateId: string) =>
+    `/api/certificates/${certificateId}/download-url`,
+
   // Lions (사자 목록 — 사용자 조회)
   lions: '/api/lions',
 

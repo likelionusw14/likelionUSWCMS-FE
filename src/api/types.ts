@@ -51,6 +51,10 @@ export type ApiUpdateLearningResourceRequest =
   components['schemas']['UpdateLearningResourceRequest']
 export type ApiDownloadUrlResponse = components['schemas']['DownloadUrlResponse']
 
+// Certificates (활동증명서)
+export type ApiCertificatePreviewResponse = components['schemas']['CertificatePreviewResponse']
+export type ApiCertificateResponse = components['schemas']['CertificateResponse']
+
 // Notices
 export type ApiNoticeResponse = components['schemas']['NoticeResponse']
 export type ApiNoticePage = components['schemas']['NoticePage']
