@@ -29,6 +29,7 @@ export function ScheduleCalendar({
   onRegister,
   onEventEdit,
   onEventDelete,
+  responsiveVariant,
   className,
 }: ScheduleCalendarProps) {
   const [selected, setSelected] = useState<ScheduleCalendarSelected | null>(null)
@@ -77,6 +78,7 @@ export function ScheduleCalendar({
         onDateSelect={onDateSelect}
         onRegister={onRegister}
         onEventClick={handleEventClick}
+        responsiveVariant={responsiveVariant}
         className={className}
       />
       {createPortal(

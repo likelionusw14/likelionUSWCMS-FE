@@ -15,8 +15,8 @@ export function ProjectFilterBar({
   onSearch,
 }: ProjectFilterBarProps) {
   return (
-    <div className="flex w-full items-center justify-between rounded-16 bg-white px-32 py-12">
-      <div className="flex items-center gap-24">
+    <div className="flex w-full items-center justify-between rounded-16 bg-white px-12 py-12 sm:px-32">
+      <div className="flex min-w-0 flex-row-reverse items-center gap-16 sm:gap-24 lg:flex-row">
         <Dropdown
           value={cohort}
           onChange={onCohortChange}
