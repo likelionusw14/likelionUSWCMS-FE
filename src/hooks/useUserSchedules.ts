@@ -12,6 +12,13 @@ function toYearMonth(year: number, month: number) {
   return `${year}-${pad2(month + 1)}`
 }
 
+function getVisibleMonths(year: number, month: number) {
+  return [-1, 0, 1].map((offset) => {
+    const date = new Date(year, month + offset, 1)
+    return { year: date.getFullYear(), month: date.getMonth() }
+  })
+}
+
 function formatDateTime(schedule: ApiScheduleResponse) {
   const [year, month, day] = schedule.scheduleDate.split('-').map(Number)
   const date = `${year}년 ${month}월 ${day}일`
@@ -64,12 +71,24 @@ export function useUserSchedules(
   month: number,
 ): { data: CalendarEvent[]; isLoading: boolean } {
   const yearMonth = toYearMonth(year, month)
+  const visibleMonths = getVisibleMonths(year, month)
   const request = useQuery({
-    queryKey: ['user-schedules', yearMonth],
-    queryFn: () => fetchUserSchedules(yearMonth),
+    queryKey: ['user-schedules', 'calendar', yearMonth],
+    queryFn: async () => {
+      const responses = await Promise.all(
+        visibleMonths.map(({ year: visibleYear, month: visibleMonth }) =>
+          fetchUserSchedules(toYearMonth(visibleYear, visibleMonth)),
+        ),
+      )
+      return responses.flat()
+    },
     enabled: isBackendConnected,
   })
-  const response = request.data ?? createMockSchedules(year, month)
+  const response =
+    request.data ??
+    visibleMonths.flatMap(({ year: visibleYear, month: visibleMonth }) =>
+      createMockSchedules(visibleYear, visibleMonth),
+    )
 
   return {
     data: response.map(toCalendarEvent),
