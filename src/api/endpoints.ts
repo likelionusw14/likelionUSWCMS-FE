@@ -8,6 +8,9 @@ export const endpoints = {
   // Cohorts (기수 선택지)
   cohorts: '/api/cohorts',
 
+  // Lions (사자 목록 — 사용자 조회)
+  lions: '/api/lions',
+
   // Files (관리자 파일 업로드)
   fileUploadUrls: '/api/admin/file-upload-urls',
   files: '/api/admin/files',
