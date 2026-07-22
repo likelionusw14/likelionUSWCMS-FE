@@ -15,3 +15,12 @@ export interface AttendanceRecord extends Entity {
   // 낙관적 동시성 버전(실 API 응답의 version). mock 은 undefined.
   version?: number
 }
+
+// 본인 출결 목록 조회 쿼리.
+export interface MyAttendanceQuery {
+  page?: number
+  size?: number
+}
+
+// 출석 코드 인증 결과(로컬/실 API 공통 화면 상태).
+export type AttendanceCheckInResult = 'idle' | 'success' | 'fail'
