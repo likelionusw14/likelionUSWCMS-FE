@@ -48,7 +48,7 @@ export function HomeProjects({ moreHref = '/projects' }: HomeProjectsProps) {
   return (
     <section
       aria-labelledby="home-projects-title"
-      className="relative w-full overflow-hidden bg-background-1 pb-[90px] pt-[180px]"
+      className="relative w-full overflow-hidden bg-background-1 pb-[90px] pt-96 lg:pt-[180px]"
     >
       {/* 장식: 좌상단 640x640 방사형 글로우 (디자인의 "그라디언트 효과" 근사) */}
       <div
@@ -56,7 +56,7 @@ export function HomeProjects({ moreHref = '/projects' }: HomeProjectsProps) {
         className="pointer-events-none absolute -left-[190px] -top-[117px] h-[640px] w-[640px] rounded-full bg-primary/20 blur-[120px]"
       />
 
-      <div className="relative mx-auto flex w-full max-w-[1280px] flex-col items-center gap-96 px-64">
+      <div className="relative mx-auto flex w-full max-w-[1280px] flex-col items-center gap-64 px-24 sm:px-32 lg:gap-96 lg:px-64">
         <motion.div
           className="flex flex-col items-center gap-12 text-center"
           initial={reduceMotion ? undefined : { opacity: 0, y: 24 }}
@@ -90,7 +90,7 @@ export function HomeProjects({ moreHref = '/projects' }: HomeProjectsProps) {
                     className="shrink-0 pr-24"
                     aria-hidden={index >= PROJECTS.length}
                   >
-                    <div className="h-[272px] w-[484px] overflow-hidden rounded-16">
+                    <div className="aspect-[121/68] w-[min(484px,calc(100vw-96px))] overflow-hidden rounded-16">
                       <img
                         src={project.thumbnail}
                         alt={index < PROJECTS.length ? `${project.title} 프로젝트 썸네일` : ''}
@@ -103,14 +103,14 @@ export function HomeProjects({ moreHref = '/projects' }: HomeProjectsProps) {
             </div>
           </div>
 
-          <div className="flex h-[108px] items-center justify-between border-t-2 border-secondary-1 bg-white/60 px-24 shadow-emboss-light">
+          <div className="flex min-h-[108px] flex-col items-stretch justify-between gap-16 border-t-2 border-secondary-1 bg-white/60 px-24 py-16 shadow-emboss-light sm:flex-row sm:items-center">
             {/* 디자인은 24px Medium 이지만 타이포 토큰에 24px 이 없어 가장 가까운 text-m-20 으로 근사한다 */}
-            <p className="text-m-20 text-primary/70">
+            <p className="break-keep text-m-16-home text-primary/70 sm:text-m-20">
               지금 멋쟁이사자처럼 수원대학교의 프로젝트를 확인해보세요!
             </p>
             <Link
               to={moreHref}
-              className="flex shrink-0 items-center gap-12 rounded-full bg-secondary-2 px-24 py-12 text-m-20 text-white transition-opacity hover:opacity-90"
+              className="flex shrink-0 items-center justify-center gap-12 self-end rounded-full bg-secondary-2 px-24 py-12 text-m-16 text-white transition-opacity hover:opacity-90 sm:self-auto sm:text-m-20"
             >
               프로젝트 더보기
               <img src={arrowRight} alt="" className="h-[20px] w-[11px]" />

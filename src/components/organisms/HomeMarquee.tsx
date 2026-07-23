@@ -15,14 +15,15 @@ const MARQUEE_DURATION = 40
 
 // 디자인은 88px ExtraBold 지만 타이포 토큰에 88px 이 없어 가장 큰 토큰(text-h0, 56px)으로 근사한다.
 // 자간(h0 는 6%)·굵기(h0 는 Bold)는 디자인(자간 0, ExtraBold)에 맞춰 유틸로 되돌린다.
-const MARQUEE_TEXT = 'text-h0 font-extrabold leading-none tracking-normal whitespace-nowrap'
+const MARQUEE_TEXT =
+  'text-sm-22 sm:text-h1 lg:text-h0 font-extrabold leading-none tracking-normal whitespace-nowrap'
 
 // 파트 섹션 위 다크 마퀴 (Figma 665:3295 — 1280x160, 배경 #04102D).
 export function HomeMarquee() {
   const reduceMotion = useReducedMotion()
 
   return (
-    <section className="relative h-[160px] w-full overflow-hidden bg-background-2">
+    <section className="relative h-[80px] w-full overflow-hidden bg-background-2 sm:h-[120px] lg:h-[160px]">
       {/* 배경 오버레이: 솔리드 #04102D 위에 primary 20% 선형 그라디언트(37% → 89% 구간에서 투명해짐). */}
       <div
         aria-hidden

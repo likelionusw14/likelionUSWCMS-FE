@@ -23,7 +23,7 @@ const GRAPHICS = [
     id: 'context-menu',
     src: contextMenu,
     alt: '',
-    box: 'left-[320.98px] top-[60px] h-[96px] w-[284px]',
+    box: 'left-[25.08%] top-[3.75%] h-[6%] w-[22.19%]',
     from: { x: 83, y: 898, rotate: 24 },
     delay: 0.35,
   },
@@ -31,7 +31,7 @@ const GRAPHICS = [
     id: 'music-player',
     src: musicPlayer,
     alt: '',
-    box: 'left-0 top-[223px] h-[277.153px] w-[361.257px]',
+    box: 'left-0 top-[13.94%] h-[17.32%] w-[28.22%]',
     from: { x: 350, y: 629, rotate: 5 },
     delay: 0.2,
   },
@@ -39,7 +39,7 @@ const GRAPHICS = [
     id: 'emoji-bar',
     src: emojiBar,
     alt: '',
-    box: 'left-[calc(50%+333.45px)] top-[92px] h-[120.105px] w-[426.902px] -translate-x-1/2',
+    box: 'left-[76.04%] top-[5.75%] h-[7.51%] w-[33.35%] -translate-x-1/2',
     from: { x: -232, y: 851, rotate: 8.7 },
     delay: 0.3,
   },
@@ -47,7 +47,7 @@ const GRAPHICS = [
     id: 'volume',
     src: volumeCard,
     alt: '',
-    box: 'right-0 top-[321.23px] h-[260.492px] w-[260.492px]',
+    box: 'right-0 top-[20.08%] h-[16.28%] w-[20.35%]',
     from: { x: -354, y: 585, rotate: 5.7 },
     delay: 0.25,
   },
@@ -55,7 +55,7 @@ const GRAPHICS = [
     id: 'logo-sticker',
     src: logoSticker,
     alt: BRAND_NAME,
-    box: 'left-[119.91px] top-[570px] h-[105.528px] w-[226.528px]',
+    box: 'left-[9.37%] top-[35.63%] h-[6.6%] w-[17.7%]',
     from: { x: 266, y: 487, rotate: 36.7 },
     delay: 0,
   },
@@ -72,42 +72,42 @@ export function HomeHero() {
   return (
     <section className="relative w-full bg-background-2">
       {/* 컨테이너에서 잘라내야 디자인처럼 좌/우 그래픽이 1280 경계에서 잘린다. */}
-      <div className="relative mx-auto h-[1600px] w-full max-w-[1280px] overflow-hidden">
+      <div className="relative mx-auto aspect-[4/5] w-full max-w-[1280px] overflow-hidden">
         {/* 파일 일러스트 — 파트 목록 카드까지 한 장의 벡터로 익스포트했다. (정지) */}
         <img
           src={folderIllustration}
           alt="Planning, Frontend, Design, Backend 파트 목록이 담긴 파일 일러스트레이션"
-          className="absolute left-1/2 top-[601px] h-[607.18px] w-[933.12px] -translate-x-1/2"
+          className="absolute left-1/2 top-[37.56%] h-[37.95%] w-[72.9%] -translate-x-1/2"
         />
 
         {/* 바닥 반사 — 일러스트를 상하 반전한 상 위에, 반투명 어두운 바닥을 덮어 서서히 사라지게 한다. */}
         <img
           src={folderReflection}
           alt=""
-          className="pointer-events-none absolute left-1/2 top-[1208px] h-[392px] w-[933.12px] -translate-x-1/2"
+          className="pointer-events-none absolute left-1/2 top-[75.5%] h-[24.5%] w-[72.9%] -translate-x-1/2"
         />
         <img
           src={floorOverlay}
           alt=""
-          className="pointer-events-none absolute left-0 top-[1208px] h-[452px] w-full object-cover"
+          className="pointer-events-none absolute left-0 top-[75.5%] h-[28.25%] w-full object-cover"
         />
 
         {/* 그라디언트 효과 — 중앙 방사형 글로우(장식). Figma 의 640x640 radial 을 blur 원으로 근사. */}
         <div
           aria-hidden
-          className="pointer-events-none absolute left-1/2 top-[123px] h-[640px] w-[640px] -translate-x-1/2 rounded-full bg-primary/[0.15] blur-[120px]"
+          className="pointer-events-none absolute left-1/2 top-[7.69%] aspect-square w-1/2 -translate-x-1/2 rounded-full bg-primary/[0.15] blur-[clamp(32px,9.4vw,120px)]"
         />
 
         {/* 헤딩 — 1·2행 64px / 3행 80px. 각 행이 92px 씩 내려가도록(Figma y 268/360/452) gap-16 을 준다
             (hero-64 줄높이 76 + gap-16 = 92). 3행은 amber→secondary-2 세로 그라디언트 텍스트. */}
-        <h1 className="absolute left-1/2 top-[268px] flex -translate-x-1/2 flex-col items-center gap-16 whitespace-nowrap text-center">
-          <span className="bg-gradient-typo bg-clip-text text-hero-64 text-transparent">
+        <h1 className="absolute left-1/2 top-[16.75%] flex -translate-x-1/2 flex-col items-center gap-[clamp(4px,1.25vw,16px)] whitespace-nowrap text-center">
+          <span className="bg-gradient-typo bg-clip-text text-[clamp(18px,5vw,64px)] font-bold leading-[1.2] text-transparent">
             내 아이디어를
           </span>
-          <span className="bg-gradient-typo bg-clip-text text-hero-64 text-transparent">
+          <span className="bg-gradient-typo bg-clip-text text-[clamp(18px,5vw,64px)] font-bold leading-[1.2] text-transparent">
             내 손으로,
           </span>
-          <span className="bg-gradient-typo-secondary bg-clip-text text-hero-80 text-transparent">
+          <span className="bg-gradient-typo-secondary bg-clip-text text-[clamp(22px,6.25vw,80px)] font-bold leading-[1.2] text-transparent">
             멋쟁이사자처럼
           </span>
         </h1>

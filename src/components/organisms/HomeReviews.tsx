@@ -111,15 +111,15 @@ export function HomeReviews() {
 
   return (
     // 디자인 상하 여백은 90 / 180 — 둘 다 spacing 토큰에 없는 고정 치수라 임의값으로 정확히 맞춘다.
-    <section className="relative w-full overflow-hidden bg-background-1 pb-[180px] pt-[90px]">
+    <section className="relative w-full overflow-hidden bg-background-1 pb-96 pt-[90px] lg:pb-[180px]">
       {/* 배경 방사형 글로우 — Figma 의 640x640 그라디언트 효과(1280 프레임 기준 left 808 / top -128)를 blur 로 근사 */}
       <div className="pointer-events-none absolute inset-0" aria-hidden>
         <div className="absolute left-[calc(50%+168px)] top-[-128px] h-[640px] w-[640px] rounded-full bg-primary/15 blur-[120px]" />
       </div>
 
-      <div className="relative flex w-full flex-col items-center gap-96">
+      <div className="relative flex w-full flex-col items-center gap-64 lg:gap-96">
         <motion.div
-          className="flex flex-col items-center gap-12 whitespace-nowrap px-64"
+          className="flex flex-col items-center gap-12 whitespace-nowrap px-24 sm:px-32 lg:px-64"
           initial={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
@@ -139,7 +139,7 @@ export function HomeReviews() {
           onScroll={handleScroll}
           aria-label="리뷰 목록"
           tabIndex={0}
-          className="no-scrollbar flex w-full snap-x snap-mandatory items-center gap-48 overflow-x-auto overscroll-x-contain px-[max(24px,calc((100%_-_320px)/2))] py-16"
+          className="no-scrollbar flex w-full snap-x snap-mandatory items-center gap-24 overflow-x-auto overscroll-x-contain px-[max(24px,calc((100%_-_min(320px,calc(100vw_-_64px)))/2))] py-16 sm:gap-48"
         >
           {REVIEWS.map((review, index) => {
             const distance = Math.abs(index - activeIndex)
@@ -148,7 +148,7 @@ export function HomeReviews() {
               <motion.li
                 key={review.id}
                 onClick={() => centerCard(index, reduceMotion ? 'auto' : 'smooth')}
-                className="w-[320px] shrink-0 cursor-pointer snap-center snap-always"
+                className="w-[min(320px,calc(100vw-64px))] shrink-0 cursor-pointer snap-center snap-always"
                 initial={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.3 }}

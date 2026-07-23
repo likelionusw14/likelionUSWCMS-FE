@@ -55,7 +55,7 @@ export function HomeCurriculum() {
   const renderStep = (step: (typeof CURRICULUM_STEPS)[number]) => (
     <motion.div
       key={step.id}
-      className="group relative h-[148px] w-[440px] shrink-0"
+      className="group relative h-[148px] w-full max-w-[440px] shrink-0"
       initial={reduceMotion ? false : { opacity: 0, x: step.side === 'left' ? -32 : 32 }}
       whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true, amount: 0.3 }}
@@ -65,7 +65,7 @@ export function HomeCurriculum() {
           호버 시 흰→primary 로 색이 전환된다(SpeechBubble 내부 group-hover). */}
       <SpeechBubble
         className={cn(
-          'absolute inset-0 h-[148px] w-[440px]',
+          'absolute inset-0 h-[148px] w-full',
           step.side === 'left' && '-scale-x-100',
         )}
       />
@@ -82,7 +82,7 @@ export function HomeCurriculum() {
   )
 
   return (
-    <section className="relative w-full overflow-hidden bg-background-2 pb-[90px] pt-[180px]">
+    <section className="relative w-full overflow-hidden bg-background-2 pb-[90px] pt-96 lg:pt-[180px]">
       {/* 배경 그라디언트 효과 — Figma 의 640x640 방사형 글로우(primary 15%)를 blur 원으로 근사. */}
       <div
         aria-hidden
@@ -91,7 +91,7 @@ export function HomeCurriculum() {
         <div className="absolute left-[-273px] top-[393px] h-[640px] w-[640px] rounded-full bg-primary/15 blur-[120px]" />
       </div>
 
-      <div className="relative mx-auto flex w-full max-w-[1280px] flex-col items-center gap-96 px-64">
+      <div className="relative mx-auto flex w-full max-w-[1280px] flex-col items-center gap-64 px-24 sm:px-32 lg:gap-96 lg:px-64">
         <motion.div
           className="flex flex-col items-center gap-12"
           initial={reduceMotion ? false : { opacity: 0, y: 24 }}
@@ -103,7 +103,19 @@ export function HomeCurriculum() {
           <p className="text-m-18 text-secondary-2">1년동안 이어지는 성장의 여정을 소개합니다</p>
         </motion.div>
 
-        <div className="flex items-center justify-center gap-24">
+        <div className="relative flex w-full max-w-[560px] flex-col gap-48 border-l-2 border-secondary-2 pl-24 lg:hidden">
+          {CURRICULUM_STEPS.map((step) => (
+            <div key={step.id} className="relative">
+              <span
+                aria-hidden
+                className="absolute -left-[31px] top-1/2 h-12 w-12 -translate-y-1/2 rounded-full bg-secondary-2"
+              />
+              {renderStep(step)}
+            </div>
+          ))}
+        </div>
+
+        <div className="hidden items-center justify-center gap-24 lg:flex">
           <div className="flex h-[1252px] shrink-0 flex-col gap-[236px]">
             {leftSteps.map(renderStep)}
           </div>

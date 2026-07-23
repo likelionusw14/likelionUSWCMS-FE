@@ -81,16 +81,16 @@ export function HomeParts() {
     return (
       <motion.div
         key={part.id}
-        className="group"
+        className="group w-full max-w-[510px]"
         initial={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.3 }}
         transition={{ duration: reduceMotion ? 0 : 0.5, delay: reduceMotion ? 0 : index * 0.12 }}
       >
         <WindowPanel
-          className="w-[510px]"
+          className="w-full"
           // 본문 배경: 기본 흰색 60% → 호버 시 흰색. cn 이 tailwind-merge 가 아니라서 `!` 로 덮는다.
-          bodyClassName="relative flex h-[280px] flex-col justify-between !bg-white/60 transition-colors duration-300 group-hover:!bg-white motion-reduce:transition-none"
+          bodyClassName="relative flex min-h-[280px] flex-col justify-between !bg-white/60 transition-colors duration-300 group-hover:!bg-white motion-reduce:transition-none"
         >
           {/* 호버 배경 오버레이 — accent 그라디언트(우하단 방향), 페이드 인 */}
           <div
@@ -114,7 +114,7 @@ export function HomeParts() {
 
           <div className="relative flex w-full flex-col gap-8">
             {/* 제목: 한글 | 영문 (구분자는 Figma 원문의 'l' 글자). 호버 시 accent 색으로 전환. */}
-            <div className="flex items-start gap-[6px] whitespace-nowrap text-sm-22">
+            <div className="flex flex-wrap items-start gap-[6px] text-sm-22">
               <span
                 className={cn(
                   'text-primary/60 transition-colors duration-300 motion-reduce:transition-none',
@@ -155,14 +155,14 @@ export function HomeParts() {
   }
 
   return (
-    <section className="relative w-full overflow-hidden bg-background-1 py-[180px]">
+    <section className="relative w-full overflow-hidden bg-background-1 py-96 lg:py-[180px]">
       {/* 배경 방사형 글로우 2개 — Figma 의 640x640 그라디언트 효과를 blur 로 근사 */}
       <div className="pointer-events-none absolute inset-0" aria-hidden>
         <div className="absolute left-[calc(50%-884px)] top-[73px] h-[640px] w-[640px] rounded-full bg-primary/15 blur-[120px]" />
         <div className="absolute -bottom-[160px] left-[calc(50%+98px)] h-[640px] w-[640px] rounded-full bg-primary/15 blur-[120px]" />
       </div>
 
-      <div className="relative mx-auto flex w-full max-w-[1280px] flex-col items-center gap-96 px-64">
+      <div className="relative mx-auto flex w-full max-w-[1280px] flex-col items-center gap-64 px-24 sm:px-32 lg:gap-96 lg:px-64">
         <motion.div
           className="flex flex-col items-center gap-12 whitespace-nowrap"
           initial={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}
@@ -174,13 +174,13 @@ export function HomeParts() {
           <p className="text-m-18 text-secondary-2">4개의 파트를 소개합니다</p>
         </motion.div>
 
-        <div className="flex w-full items-start justify-center gap-32">
+        <div className="grid w-full grid-cols-1 items-start justify-items-center gap-[56px] lg:grid-cols-2 lg:gap-32">
           {/* 좌열 — 기획·디자인 */}
-          <div className="flex flex-col items-center gap-[56px]">
+          <div className="flex w-full flex-col items-center gap-[56px]">
             {PARTS.slice(0, 2).map((part, index) => renderCard(part, index))}
           </div>
           {/* 우열 — 프론트엔드·백엔드. 디자인상 90px 아래로 어긋나 있다. */}
-          <div className="flex flex-col items-center gap-[56px] pt-[90px]">
+          <div className="flex w-full flex-col items-center gap-[56px] lg:pt-[90px]">
             {PARTS.slice(2).map((part, index) => renderCard(part, index + 2))}
           </div>
         </div>
