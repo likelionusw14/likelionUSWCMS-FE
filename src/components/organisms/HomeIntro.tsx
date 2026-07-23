@@ -14,18 +14,18 @@ export function HomeIntro() {
   }
 
   return (
-    <section className="relative w-full overflow-hidden bg-background-1 py-[180px]">
+    <section className="relative w-full overflow-hidden bg-background-1 py-96 lg:py-[180px]">
       {/* 그라디언트 효과 — 우측 상단 방사형 글로우(장식). Figma 의 640x640 radial 을 blur 원으로 근사. */}
       <div
         aria-hidden
         className="pointer-events-none absolute left-1/2 top-[26px] ml-[439px] h-[640px] w-[640px] -translate-x-1/2 rounded-full bg-primary/[0.15] blur-[120px]"
       />
 
-      <div className="relative mx-auto w-full max-w-[1280px] px-64">
-        <div className="flex items-center justify-center gap-96">
+      <div className="relative mx-auto w-full max-w-[1280px] px-24 sm:px-32 lg:px-64">
+        <div className="flex flex-col items-center justify-center gap-64 lg:flex-row lg:gap-96">
           {/* 좌: 제목 (px-24 는 강조 박스가 텍스트 밖으로 넘치는 만큼 확보한 여백) */}
           <motion.div {...appear} className="shrink-0 px-24">
-            <h2 className="whitespace-nowrap text-h0 text-black">
+            <h2 className="whitespace-nowrap text-h1 text-black lg:text-h0">
               <span className="block">멋쟁이</span>
               <span className="relative inline-block">
                 {/* 드래그 선택 효과 — 반투명 강조 박스 + 양 끝에 주황 점이 달린 세로 핸들 */}
@@ -47,7 +47,7 @@ export function HomeIntro() {
           <motion.div
             {...appear}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="relative w-[542px] shrink-0"
+            className="relative w-full max-w-[542px] shrink"
           >
             <div
               aria-hidden
@@ -62,12 +62,12 @@ export function HomeIntro() {
                 <span className="text-m-14 text-black">now</span>
               </div>
               {/* 본문 — 좌우 여백 56px 은 spacing 토큰에 없는 값이라 임의값으로 둔다 (Figma 실측). */}
-              <div className="flex break-keep flex-col gap-24 px-[56px] pb-48 pt-40 text-m-18-body text-black">
+              <div className="flex break-keep flex-col gap-24 px-24 pb-40 pt-32 text-m-16-home text-black sm:px-40 lg:px-[56px] lg:pb-48 lg:pt-40 lg:text-m-18-body">
                 <p>
                   멋쟁이사자처럼은 2013년 서울대학교에서 시작하여,
-                  <br />
+                  <br className="hidden lg:block" />
                   현재 전국 80여개 대학, 4,000명 이상의 대학생이 참여하는
-                  <br />
+                  <br className="hidden lg:block" />
                   <span className="font-semibold text-secondary-2">
                     국내 최대 규모의 IT 창업 동아리
                   </span>
@@ -75,7 +75,7 @@ export function HomeIntro() {
                 </p>
                 <p>
                   기술을 통한 아이디어 실현을 목표로, 비전공자도 함께하는
-                  <br />
+                  <br className="hidden lg:block" />
                   열린 커뮤니티를 운영하고 있습니다.
                 </p>
               </div>

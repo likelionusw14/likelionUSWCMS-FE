@@ -13,8 +13,8 @@ export function HomeStats() {
   const reduceMotion = useReducedMotion()
 
   return (
-    <section className="w-full bg-background-1 py-[180px]">
-      <div className="mx-auto w-full max-w-[1280px] px-64">
+    <section className="w-full bg-background-1 py-96 lg:py-[180px]">
+      <div className="mx-auto w-full max-w-[1280px] px-24 sm:px-32 lg:px-64">
         <motion.div
           initial={reduceMotion ? false : { opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -24,7 +24,7 @@ export function HomeStats() {
         >
           {/* 타이틀 */}
           <div className="flex flex-col items-center gap-24 text-center">
-            <h2 className="text-h1 text-black">수원대학교 멋쟁이사자처럼</h2>
+            <h2 className="text-center text-sm-22 text-black sm:text-h1">수원대학교 멋쟁이사자처럼</h2>
             {/* 디자인 줄간격 27px → 본문 토큰(text-m-18-body, 26px)으로 근사 */}
             <p className="text-m-18-body text-black">
               상상만 하던 아이디어를 실제 서비스로 구현하는 곳
@@ -46,20 +46,20 @@ export function HomeStats() {
           </div>
 
           {/* 주요성과 말풍선 — 바(140px) + 아래 삼각 꼬리(58px) */}
-          <div className="relative h-[198px] w-full">
-            <ul className="flex h-[140px] w-full items-stretch divide-x-2 divide-white/30 overflow-hidden rounded-16 bg-secondary-2 shadow-emboss-light">
+          <div className="relative w-full pb-[42px] sm:h-[198px] sm:pb-0">
+            <ul className="flex w-full flex-col items-stretch divide-y-2 divide-white/30 overflow-hidden rounded-16 bg-secondary-2 shadow-emboss-light sm:h-[140px] sm:flex-row sm:divide-x-2 sm:divide-y-0">
               {STATS.map((stat) => (
                 <li
                   key={stat.label}
-                  className="flex flex-1 flex-col items-center justify-center gap-8 text-center whitespace-nowrap text-white"
+                  className="flex min-h-[108px] flex-1 flex-col items-center justify-center gap-8 text-center whitespace-nowrap text-white sm:min-h-0"
                 >
-                  <span className="text-sm-22">{stat.label}</span>
-                  <CountUp to={stat.to} suffix={stat.suffix} className="text-h1" />
+                  <span className="text-sm-16 sm:text-sm-22">{stat.label}</span>
+                  <CountUp to={stat.to} suffix={stat.suffix} className="text-sm-22 sm:text-h1" />
                 </li>
               ))}
             </ul>
             {/* 꼬리 — Figma 벡터(588:4513) 대신 clip-path 삼각형. 첫 구분선 오른쪽(가로 38.4% 지점)에 맞춘다 */}
-            <div className="absolute top-[140px] left-[38.4%] h-[58px] w-[61px] -translate-x-1/2 bg-secondary-2 [clip-path:polygon(0_0,100%_0,50%_100%)]" />
+            <div className="absolute bottom-0 left-1/2 h-[42px] w-[48px] -translate-x-1/2 bg-secondary-2 [clip-path:polygon(0_0,100%_0,50%_100%)] sm:bottom-auto sm:left-[38.4%] sm:top-[140px] sm:h-[58px] sm:w-[61px]" />
           </div>
         </motion.div>
       </div>

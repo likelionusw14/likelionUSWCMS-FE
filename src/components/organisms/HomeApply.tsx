@@ -8,8 +8,8 @@ export function HomeApply() {
   const reduceMotion = useReducedMotion()
 
   return (
-    <section className="w-full bg-background-2 py-[180px]">
-      <div className="mx-auto w-full max-w-[1280px] px-64">
+    <section className="w-full bg-background-2 py-96 lg:py-[180px]">
+      <div className="mx-auto w-full max-w-[1280px] px-24 sm:px-32 lg:px-64">
         <motion.div
           initial={reduceMotion ? false : { opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -19,10 +19,10 @@ export function HomeApply() {
           {/* 본문 배경 #EEF3FF — 아톰 기본값(bg-white)을 덮으려면 important 필요 (cn 은 단순 join) */}
           <WindowPanel bodyClassName="!bg-background-1">
             {/* 아톰 본문 패딩(32px) + 58px = 디자인 상하 여백 90px */}
-            <div className="flex w-full flex-col items-center gap-48 py-[58px]">
+            <div className="flex w-full flex-col items-center gap-32 py-40 sm:gap-48 sm:py-[58px]">
               <div className="flex w-full flex-col items-center gap-16 text-center">
                 {/* text-h1(40px Bold) + 디자인 값(줄간격 53px·자간 2px)은 토큰에 없어 임의값으로 보정 */}
-                <h2 className="w-full text-h1 leading-[53px] tracking-[2px] text-black">
+                <h2 className="w-full break-keep text-sm-22 text-black sm:text-h1 sm:leading-[53px] sm:tracking-[2px]">
                   멋쟁이 사자처럼 수원대학교에서
                   <br />
                   <span className="text-primary">{COHORT}기 아기사자를 모집중</span>이에요!
@@ -32,7 +32,7 @@ export function HomeApply() {
               {/* 디자인 24px Semibold → 토큰에 없어 가장 가까운 text-sm-22 사용 */}
               <Link
                 to="/apply"
-                className="flex items-center justify-center overflow-hidden rounded-full bg-secondary-2 px-32 py-16 text-center text-sm-22 whitespace-nowrap text-white transition-opacity hover:opacity-90"
+                className="flex items-center justify-center overflow-hidden rounded-full bg-secondary-2 px-24 py-12 text-center text-sm-16 whitespace-nowrap text-white transition-opacity hover:opacity-90 sm:px-32 sm:py-16 sm:text-sm-22"
               >
                 {COHORT}기 지원하기
               </Link>
