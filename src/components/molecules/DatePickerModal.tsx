@@ -71,10 +71,13 @@ export function DatePickerModal({
 
   return (
     <Modal open={open} onClose={onClose} panelClassName="" ariaLabel={title}>
-      <WindowPanel className="w-[408px]" bodyClassName="flex flex-col items-stretch gap-40 !p-24">
+      <WindowPanel
+        className="w-[408px] max-[800px]:w-[330px]"
+        bodyClassName="flex flex-col items-stretch gap-40 !p-24"
+      >
         <h2 className="text-left text-sm-22 text-black">{title}</h2>
 
-        <WheelDeck className="mx-auto w-[360px]">
+        <WheelDeck className="mx-auto w-[360px] max-[800px]:w-[282px]">
           <WheelPicker
             items={years.map((y) => `${y}`)}
             defaultIndex={initial.year}

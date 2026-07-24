@@ -27,7 +27,7 @@ export function SiteFooter({ variant }: SiteFooterProps) {
     <footer className={cn('w-full border-t', styles.footer)}>
       <div
         className={cn(
-          'mx-auto flex w-full max-w-[1280px] items-start justify-center px-64',
+          'mx-auto flex w-full max-w-[1280px] items-start justify-center px-24 sm:px-32 lg:px-64',
           styles.container,
         )}
       >

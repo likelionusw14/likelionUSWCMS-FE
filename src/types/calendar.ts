@@ -79,4 +79,5 @@ export interface ScheduleCalendarSelected {
   cellRect: DOMRect
   chipRect: DOMRect
   tail: 'left' | 'right'
+  placement: 'side' | 'below'
 }

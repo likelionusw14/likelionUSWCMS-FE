@@ -62,7 +62,7 @@ export function CalendarDay({
         className={cn(
           'no-scrollbar flex min-h-0 w-full flex-1 flex-col gap-8 overflow-y-auto',
           responsiveVariant === 'user' &&
-            'max-[1023px]:gap-[2px] max-[639px]:hidden',
+            'max-[1023px]:gap-[2px] max-[375px]:hidden',
           fadeClass,
         )}
       >
@@ -89,7 +89,7 @@ export function CalendarDay({
         })}
       </div>
       {responsiveVariant === 'user' && events.length > 0 && (
-        <div className="hidden min-h-0 w-full flex-1 flex-col items-start gap-8 max-[639px]:flex">
+        <div className="hidden min-h-0 w-full flex-1 flex-col items-start gap-8 max-[375px]:flex">
           {events.map((event) =>
             onEventClick ? (
               <button

@@ -15,9 +15,9 @@ function formatDateTime(value: string) {
 export function UserNoticeDetail({ notice }: UserNoticeDetailProps) {
   return (
     <WindowPanel bodyClassName="flex flex-col gap-24 p-32">
-      <div className="flex items-start justify-between gap-24">
-        <div className="min-w-0">
-          <h2 className="truncate text-sm-20 text-black">{notice.title}</h2>
+      <div className="flex flex-wrap items-start justify-between gap-x-24 gap-y-8">
+        <div className="w-max max-w-full shrink-0">
+          <h2 className="break-words text-sm-20 text-black">{notice.title}</h2>
           <p className="mt-4 text-r-14 text-gray-500">{formatDateTime(notice.publishedAt)}</p>
         </div>
         <p className="shrink-0 text-sm-16 text-secondary-2"># {notice.tagLabel}</p>
