@@ -7,6 +7,3 @@ export const PUBLIC_NAV: NavItem[] = [
   { to: '/schedule', label: '일정' },
   { to: '/members', label: '사자' },
 ]
-
-// 헤더 우측 강조 버튼.
-export const PUBLIC_APPLY: NavItem = { to: '/apply', label: '지원하기' }
