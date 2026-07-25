@@ -39,7 +39,7 @@ export function AdminTopBar({
           onToggle={onSidebarOpen}
           controls={sidebarControls}
           label="사이드바 열기"
-          className="h-20 w-20 shrink-0 text-secondary-2"
+          className="h-[20px] w-[20px] shrink-0 text-secondary-2"
           barClassName="w-[18px]"
         />
       </motion.div>

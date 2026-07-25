@@ -14,7 +14,7 @@ const VARIANT_CLASS: Record<NonNullable<ButtonProps['variant']>, string> = {
 const SIZE_CLASS: Record<NonNullable<ButtonProps['size']>, string> = {
   md: 'h-48 min-w-[128px] px-32 text-sm-18',
   block: 'h-48 w-full px-32 text-sm-18',
-  sm: 'h-32 w-56 text-m-14',
+  sm: 'h-32 w-[56px] text-m-14',
 }
 
 export function Button({

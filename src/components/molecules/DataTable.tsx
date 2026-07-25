@@ -71,7 +71,7 @@ export function DataTable<T>({
             <div key={i} className={rowBase} aria-hidden>
               {columns.map((col) => (
                 <span key={col.id} style={cellStyle(col)} className="flex min-w-0 items-center">
-                  <span className="h-14 w-full animate-pulse rounded-4 bg-gray-100" />
+                  <span className="h-[14px] w-full animate-pulse rounded-4 bg-gray-100" />
                 </span>
               ))}
             </div>

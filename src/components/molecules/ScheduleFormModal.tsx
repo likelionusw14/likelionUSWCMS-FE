@@ -74,7 +74,8 @@ export function ScheduleFormModal({
       panelClassName="w-full max-w-[640px]"
       ariaLabel="일정 작성"
     >
-      <WindowPanel className="w-full" bodyClassName="flex flex-col items-center gap-40">
+      {/* 본문 패딩 32 — Figma 모바일 팝업(330)도 콘텐츠 266 이라 좌우 32 로, 아톰 기본값(모바일 24)을 덮는다. */}
+      <WindowPanel className="w-full" bodyClassName="flex flex-col items-center gap-40 !p-32">
         <h2 className="w-full text-sm-22 text-black">일정 작성</h2>
 
         <div className="flex w-full flex-col gap-8">
@@ -122,36 +123,40 @@ export function ScheduleFormModal({
           <div className="flex w-full flex-col gap-8 sm:flex-row sm:gap-32">
             <div className="flex flex-1 flex-col gap-8">
               <span className="px-8 text-m-16 text-black">날짜</span>
-              <button
-                type="button"
-                onClick={() => setDateOpen(true)}
-                className="flex h-32 w-full items-center justify-between rounded-8 border border-secondary-1 bg-background-1 px-8"
-              >
-                <span className={cn('text-m-14', values.date ? 'text-black' : 'text-primary/50')}>
-                  {values.date || 'YYYY.MM.DD'}
-                </span>
-                <img src={calendarIcon} alt="" className="h-24 w-24" />
-              </button>
+              <div className="flex h-48 flex-col">
+                <button
+                  type="button"
+                  onClick={() => setDateOpen(true)}
+                  className="flex h-32 w-full items-center justify-between rounded-8 border border-secondary-1 bg-background-1 px-8"
+                >
+                  <span className={cn('text-m-14', values.date ? 'text-black' : 'text-primary/50')}>
+                    {values.date || 'YYYY.MM.DD'}
+                  </span>
+                  <img src={calendarIcon} alt="" className="h-24 w-24" />
+                </button>
+              </div>
             </div>
             <div className="flex flex-1 flex-col gap-8">
               <span className="px-8 text-m-16 text-black">시간</span>
-              <button
-                type="button"
-                onClick={() => setTimeOpen(true)}
-                className="flex h-32 w-full items-center justify-between rounded-8 border border-secondary-1 bg-background-1 px-8"
-              >
-                <span className={cn('text-m-14', values.time ? 'text-black' : 'text-primary/50')}>
-                  {values.time || '00:00'}
-                </span>
-                <img src={clockIcon} alt="" className="h-24 w-24" />
-              </button>
+              <div className="flex h-48 flex-col">
+                <button
+                  type="button"
+                  onClick={() => setTimeOpen(true)}
+                  className="flex h-32 w-full items-center justify-between rounded-8 border border-secondary-1 bg-background-1 px-8"
+                >
+                  <span className={cn('text-m-14', values.time ? 'text-black' : 'text-primary/50')}>
+                    {values.time || '00:00'}
+                  </span>
+                  <img src={clockIcon} alt="" className="h-24 w-24" />
+                </button>
+              </div>
             </div>
           </div>
 
           <div className="flex w-full flex-col gap-4">
             <span className="px-8 text-m-16 text-black">설명</span>
             <textarea
-              className="no-scrollbar h-[67px] w-full resize-none rounded-8 border border-secondary-1 bg-background-1 px-16 py-8 text-m-14 text-black placeholder:text-primary/50"
+              className="no-scrollbar h-[63px] w-full resize-none rounded-8 border border-secondary-1 bg-background-1 px-16 py-8 text-m-14 text-black placeholder:text-primary/50"
               value={values.description}
               onChange={(event) => {
                 set('description', event.target.value)

@@ -37,7 +37,8 @@ export function RemarkModal({ open, onClose, onSubmit, value = '' }: RemarkModal
               />
             </div>
           </div>
-          <div className="flex justify-center gap-[10px]">
+          {/* Figma 저장/취소 컨테이너는 272x48 이고 56x32 버튼이 그 안에 세로 가운데(y=8). */}
+          <div className="flex h-48 items-center justify-center gap-[10px]">
             <Button
               size="sm"
               variant="primary"
