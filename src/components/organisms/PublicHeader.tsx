@@ -7,7 +7,7 @@ import { BRAND_NAME, NAV_SIDEBAR_TABLET_QUERY, NAV_SIDEBAR_TONE } from '@constan
 import { useAuth, useMediaQuery, useMobileMenu } from '@hooks'
 import type { PublicHeaderProps } from '@types'
 import { cn, glassNavTransition } from '@utils'
-
+import { sidebarTransition } from '@templates'
 import { NavSidebarDrawer } from './NavSidebarDrawer'
 
 const MOBILE_MENU_ID = 'public-mobile-menu'
@@ -33,6 +33,9 @@ export function PublicHeader({ navItems, tone = 'light' }: PublicHeaderProps) {
   // 태블릿 드로어는 화면을 덮는 별개 패널이라 헤더는 유리판 그대로 둔다.
   const isTablet = useMediaQuery(NAV_SIDEBAR_TABLET_QUERY)
   const tintHeader = menu.isOpen && !isTablet
+  // 태블릿 드로어가 열리면 헤더 햄버거는 오른쪽 밖으로 빠진다. 그동안 X 로 변형시킬 이유도
+  // 없으므로(닫기는 드로어 안 X 가 맡는다) 3줄 그대로 밀려나간다.
+  const slideOutBurger = menu.isOpen && isTablet
 
   function handleLogout() {
     logout()
@@ -46,7 +49,7 @@ export function PublicHeader({ navItems, tone = 'light' }: PublicHeaderProps) {
       {/* 모바일 카드가 열리면 유리판을 걷고 카드와 같은 배경색으로 붙여 한 덩어리로 보이게 한다. */}
       <header
         className={cn(
-          'relative z-30 w-full transition-colors duration-200 motion-reduce:transition-none',
+          'relative z-30 w-full overflow-hidden transition-colors duration-sidebar ease-sidebar motion-reduce:transition-none',
           tintHeader
             ? NAV_SIDEBAR_TONE[tone].panel
             : 'bg-gradient-user-header backdrop-blur-header',
@@ -96,13 +99,24 @@ export function PublicHeader({ navItems, tone = 'light' }: PublicHeaderProps) {
             )}
           </div>
 
-          <MobileMenuButton
-            open={menu.isOpen}
-            onToggle={menu.toggle}
-            controls={MOBILE_MENU_ID}
-            className="h-32 w-32 text-secondary-2 sm:h-40 sm:w-40 lg:hidden"
-            barClassName="w-16 sm:w-24"
-          />
+          {/* 태블릿 드로어가 열리면 햄버거를 오른쪽 밖으로 밀어낸다 — 그 드로어는 자체 X 를 갖고
+              화면을 덮으므로 헤더 버튼이 남을 이유가 없다. 모바일 카드는 반대로 이 버튼(X)이
+              유일한 닫기라 그대로 둔다. 드로어와 같은 리듬(sidebarTransition)으로 움직인다. */}
+          <motion.div
+            inert={slideOutBurger}
+            initial={false}
+            animate={{ x: slideOutBurger ? '200%' : 0, opacity: slideOutBurger ? 0 : 1 }}
+            transition={sidebarTransition(!!reduce)}
+            className="shrink-0 lg:hidden"
+          >
+            <MobileMenuButton
+              open={menu.isOpen && !isTablet}
+              onToggle={menu.toggle}
+              controls={MOBILE_MENU_ID}
+              className="h-32 w-32 text-secondary-2 sm:h-40 sm:w-40"
+              barClassName="w-16 sm:w-24"
+            />
+          </motion.div>
         </div>
       </header>
 
