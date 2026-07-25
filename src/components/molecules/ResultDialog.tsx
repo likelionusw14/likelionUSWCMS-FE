@@ -12,16 +12,17 @@ export function ResultDialog({
   confirmLabel,
 }: ResultDialogProps) {
   return (
-    // 모바일(375) — 오버레이 px-24 안쪽 327px 을 카드가 전부 쓰도록 w-full, 데스크톱은 기존처럼 내용폭 hug.
+    // 시안(삭제완료 팝업)은 모바일에서도 내용폭 hug(262) — 344 컨테이너 안에 41/41 여백으로 놓인다.
+    // 늘리지 않고 hug 시키되, 긴 라벨로 화면을 넘지 않게 max-w 로만 제한한다.
     <Modal
       open={open}
       onClose={onConfirm}
       dismissable={false}
       ariaLabel={title}
-      panelClassName="w-full max-w-[400px] rounded-8 bg-white sm:w-auto"
+      panelClassName="max-w-full rounded-8 bg-white"
     >
-      {/* 좌우 패딩 모바일 24 / 데스크톱 40 (Figma 1249:21023). */}
-      <div className="flex w-full flex-col items-center gap-16 px-24 py-32 sm:px-40">
+      {/* 좌우 패딩 40 (Figma 1249:21023) — 시안은 모바일 삭제완료도 262 라 데스크탑과 같은 패딩이다. */}
+      <div className="flex w-full flex-col items-center gap-16 px-40 py-32">
         <div className="flex w-full flex-col items-center gap-8">
           <p className="text-center text-sm-20 text-black">{title}</p>
           {description && <p className="text-center text-m-14 text-black">{description}</p>}

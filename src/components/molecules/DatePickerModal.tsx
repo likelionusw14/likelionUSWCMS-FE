@@ -70,7 +70,8 @@ export function DatePickerModal({
   }
 
   return (
-    <Modal open={open} onClose={onClose} panelClassName="w-full max-w-[408px]" ariaLabel={title}>
+    // 시안 폭 — 모바일 330 / 데스크탑 377.5 (내부폭 = 폭 - 좌우 24). 375 화면에서는 오버레이 여백에 맞춰 327.
+    <Modal open={open} onClose={onClose} panelClassName="w-full max-w-[378px]" ariaLabel={title}>
       <WindowPanel className="w-full" bodyClassName="flex flex-col items-stretch gap-40 !p-24">
         <h2 className="text-left text-sm-22 text-black">{title}</h2>
 

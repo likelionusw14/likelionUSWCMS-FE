@@ -3,13 +3,13 @@ import { Button } from '@atoms'
 import { cn } from '@utils'
 import type { SchedulePopupProps } from '@types'
 
-const XR = 20.9668 // 꼬리 폭 = 본문(둥근 사각형) 왼쪽 x offset
+const XR = 20.9668 // 꼬리 깊이 = 본문(둥근 사각형) 왼쪽 x offset (top 꼬리에서는 위쪽 y offset)
 const R = 16 // 모서리 반경
-const TAIL = 31.667 // 꼬리 절반 높이
+const TAIL = 31.667 // 꼬리 밑변 절반
 const BODY_MIN = 326 // 본문 최소 폭 (일정명 짧을 때 기본, 총 폭 347)
 // 제목행 필요 폭 = px-24×2 + 점(12) + 점gap(8) + 제목-날짜 gap(8).
 const HEADER_EXTRA = 24 * 2 + 12 + 8 + 8
-// 모바일에서 말풍선이 화면 밖으로 나가지 않도록 남겨 둘 좌우 여백(24+24).
+// 말풍선이 화면 밖으로 나가지 않도록 남겨 둘 좌우 여백(24+24).
 const VIEWPORT_GUTTER = 48
 
 // 말풍선 외곽선 path 생성 — 직선 변(가로 w·세로 h)만 늘어나고, 모서리(16)·곡선 꼬리는 고정.
@@ -33,13 +33,36 @@ function bubblePath(w: number, h: number): string {
   ].join(' ')
 }
 
+// 상단 꼬리 버전 — 같은 곡선을 x/y 전치해 위로 세운다(Figma 모바일 꼬리 51.2×21).
+// xc = 꼬리 뾰족점의 x. 본문 사각형은 y=XR 부터 시작한다.
+function bubblePathTop(w: number, h: number, xc: number): string {
+  return [
+    `M${R} ${XR}`,
+    `H${xc - TAIL}`,
+    `C${xc - 9.444} ${XR} ${xc - 13.345} 0.00117 ${xc} 0`,
+    `C${xc + 12.234} -0.00059 ${xc + 13.889} 20.9667 ${xc + TAIL} ${XR}`,
+    `H${w - R}`,
+    `A${R} ${R} 0 0 1 ${w} ${XR + R}`,
+    `V${h - R}`,
+    `A${R} ${R} 0 0 1 ${w - R} ${h}`,
+    `H${R}`,
+    `A${R} ${R} 0 0 1 0 ${h - R}`,
+    `V${XR + R}`,
+    `A${R} ${R} 0 0 1 ${R} ${XR}`,
+    'Z',
+  ].join(' ')
+}
+
 // 일정 팝업 — 캘린더 날짜 위 말풍선. Figma 588:1223/1222/1224/1225.
-// 흰 말풍선(primary 1px 테두리, 곡선 꼬리 좌/우) — 하나의 SVG path 라 꼬리 포함 테두리가 균일하다.
+// 흰 말풍선(primary 1px 테두리, 곡선 꼬리) — 하나의 SVG path 라 꼬리 포함 테두리가 균일하다.
+// 꼬리는 데스크탑에서 좌/우(21×51.2), 좌우로 놓을 자리가 없는 좁은 화면에서는 위(51.2×21).
 // 세로: 내용이 길면 늘어나고 현재 높이(버튼O 260 / 버튼X 210)를 최소로 둔다.
 // 가로: 일정명이 길면 제목행을 한 줄로 담을 만큼 본문 폭이 늘어난다(최소 326). 설명·장소는 그 폭 안에서 줄바꿈.
 export function SchedulePopup({
   event,
   tail = 'left',
+  tailOffset,
+  maxWidth,
   onEdit,
   onDelete,
   className,
@@ -47,6 +70,7 @@ export function SchedulePopup({
   const showActions = Boolean(onEdit || onDelete)
   const minH = showActions ? 260 : 210
   const isRight = tail === 'right'
+  const isTop = tail === 'top'
 
   const contentRef = useRef<HTMLDivElement>(null)
   const titleRef = useRef<HTMLSpanElement>(null)
@@ -62,11 +86,15 @@ export function SchedulePopup({
     if (!content || !title || !date) return
     const measure = () => {
       const needed = HEADER_EXTRA + title.scrollWidth + date.scrollWidth
-      // 좁은 화면(375 등)에서는 말풍선 전체 폭(본문 + 꼬리 21)이 뷰포트 - 48 을 넘지 않게 잘라낸다.
-      // SVG 외곽선이 같은 폭으로 그려져야 하므로 CSS max-width 가 아니라 계산값 자체를 clamp 한다.
-      const maxBody = Math.max(0, window.innerWidth - VIEWPORT_GUTTER - XR)
+      // 앵커 위치에 따라 남는 가로 공간이 다르므로 바깥에서 준 maxWidth 를 우선 쓰고,
+      // 없으면 뷰포트 - 48 로 잡는다. SVG 외곽선이 같은 폭으로 그려져야 하므로
+      // CSS max-width 가 아니라 계산값 자체를 clamp 한다.
+      const limit = maxWidth ?? window.innerWidth - VIEWPORT_GUTTER
+      const maxBody = Math.max(0, limit - (isTop ? 0 : XR))
       setBodyW(Math.min(maxBody, Math.max(BODY_MIN, Math.ceil(needed))))
-      setHeight(Math.max(minH, Math.round(content.getBoundingClientRect().height)))
+      // getBoundingClientRect 는 등장 애니메이션(scale 0.95)의 영향을 받아 실제보다 작게 잡힌다.
+      // ResizeObserver 는 레이아웃 크기만 보므로 그 값이 굳어버린다 → 변환 무관한 offsetHeight 를 쓴다.
+      setHeight(Math.max(minH, content.offsetHeight))
     }
     measure()
     const ro = new ResizeObserver(measure)
@@ -77,32 +105,42 @@ export function SchedulePopup({
       ro.disconnect()
       window.removeEventListener('resize', measure)
     }
-  }, [minH, event.title, event.dateTime, event.place, event.description])
+  }, [minH, isTop, maxWidth, event.title, event.dateTime, event.place, event.description])
 
-  const w = bodyW + XR
+  // 꼬리를 뺀 본문 사각형 기준 전체 크기.
+  const w = isTop ? bodyW : bodyW + XR
+  const h = isTop ? height + XR : height
+  // 꼬리 뾰족점은 모서리(16) + 꼬리 밑변(31.667) 안쪽으로만 갈 수 있다.
+  const xc = Math.min(Math.max(tailOffset ?? bodyW / 2, R + TAIL), bodyW - R - TAIL)
 
   return (
+    // flow-root: 위 꼬리일 때 본문의 mt-[21px] 가 바깥으로 새어(마진 상쇄) 말풍선이 21px 밀리는 걸 막는다.
     // max-w 는 clamp 계산이 아직 반영되기 전(첫 페인트)에도 화면을 넘지 않게 하는 보조 장치다.
     <div
-      className={cn('relative max-w-[calc(100vw-48px)]', className)}
-      style={{ width: w, height }}
+      className={cn('relative flow-root max-w-[calc(100vw-48px)]', className)}
+      style={{ width: w, height: h }}
     >
       <svg
         aria-hidden
         width={w}
-        height={height}
-        viewBox={`0 0 ${w} ${height}`}
+        height={h}
+        viewBox={`0 0 ${w} ${h}`}
         className="absolute inset-0 overflow-visible text-primary"
         style={isRight ? { transform: 'scaleX(-1)' } : undefined}
       >
-        <path d={bubblePath(w, height)} fill="white" stroke="currentColor" strokeWidth="1" />
+        <path
+          d={isTop ? bubblePathTop(w, h, xc) : bubblePath(w, h)}
+          fill="white"
+          stroke="currentColor"
+          strokeWidth="1"
+        />
       </svg>
 
       <div
         ref={contentRef}
         className={cn(
           'relative flex max-w-full flex-col gap-[10px] px-24 py-[19px]',
-          isRight ? 'mr-[21px]' : 'ml-[21px]',
+          isTop ? 'mt-[21px]' : isRight ? 'mr-[21px]' : 'ml-[21px]',
         )}
         style={{ width: bodyW, minHeight: minH }}
       >

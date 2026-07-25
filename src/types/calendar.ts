@@ -75,5 +75,5 @@ export interface ScheduleCalendarSelected {
   // 가로 배치·꼬리 방향은 셀 기준, 세로 중심은 클릭한 칩 기준.
   cellRect: DOMRect
   chipRect: DOMRect
-  tail: 'left' | 'right'
+  tail: 'left' | 'right' | 'top'
 }

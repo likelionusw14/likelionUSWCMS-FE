@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { Calendar, SchedulePopup } from '@molecules'
@@ -10,6 +10,9 @@ import type {
 } from '@types'
 
 const GAP = 8
+const EDGE = 24 // 화면 좌우 최소 여백
+const BUBBLE_MIN_W = 326 // 말풍선 본문 최소 폭 (SchedulePopup 과 동일)
+const TAIL_W = 21 // 좌/우 꼬리 폭
 
 // CalendarEvent(칩) → SchedulePopupEvent(상세). 상세 필드가 없으면 날짜/빈값으로 대체.
 function toPopupEvent(event: CalendarEvent): SchedulePopupEvent {
@@ -43,10 +46,51 @@ export function ScheduleCalendar({
     const cell = (target.closest('[data-cell]') as HTMLElement | null) ?? target
     const cellRect = cell.getBoundingClientRect()
     const chipRect = target.getBoundingClientRect()
-    const tail: 'left' | 'right' =
-      cellRect.left + cellRect.width / 2 < window.innerWidth / 2 ? 'left' : 'right'
+    // 셀 옆에 말풍선(본문 326 + 꼬리 21)이 통째로 들어가는 쪽을 고른다.
+    // 화면 절반 기준으로 반대편을 먼저 시도하고, 양쪽 다 부족하면 셀 아래(꼬리 위)로 내린다.
+    const need = BUBBLE_MIN_W + TAIL_W + GAP + EDGE
+    const fitsRight = window.innerWidth - cellRect.right >= need
+    const fitsLeft = cellRect.left >= need
+    const preferRight = cellRect.left + cellRect.width / 2 < window.innerWidth / 2
+    const tail: ScheduleCalendarSelected['tail'] =
+      preferRight && fitsRight
+        ? 'left'
+        : !preferRight && fitsLeft
+          ? 'right'
+          : fitsRight
+            ? 'left'
+            : fitsLeft
+              ? 'right'
+              : 'top'
     setSelected({ event, cellRect, chipRect, tail })
   }
+
+  // 배치 — 좌/우 꼬리는 셀 옆에 붙이고, 상단 꼬리는 셀 아래에서 좌우를 화면 안으로 clamp 한다.
+  const placement = useMemo(() => {
+    if (!selected) return null
+    const { cellRect, chipRect, tail } = selected
+    if (tail !== 'top') {
+      return {
+        style: {
+          left: tail === 'left' ? cellRect.right + GAP : cellRect.left - GAP,
+          top: chipRect.top + chipRect.height / 2,
+          transformOrigin: tail === 'left' ? 'left center' : 'right center',
+        },
+        shift: { x: tail === 'left' ? 0 : '-100%', y: '-50%' },
+        maxWidth: undefined,
+        tailOffset: undefined,
+      }
+    }
+    const width = Math.min(window.innerWidth - EDGE * 2, BUBBLE_MIN_W)
+    const center = cellRect.left + cellRect.width / 2
+    const left = Math.min(Math.max(center - width / 2, EDGE), window.innerWidth - EDGE - width)
+    return {
+      style: { left, top: cellRect.bottom + GAP, transformOrigin: 'top center' },
+      shift: { x: 0, y: 0 },
+      maxWidth: window.innerWidth - EDGE * 2,
+      tailOffset: center - left,
+    }
+  }, [selected])
 
   // 닫기 — 바깥 클릭 / Esc / 스크롤·리사이즈(fixed 위치가 어긋나므로).
   useEffect(() => {
@@ -86,42 +130,22 @@ export function ScheduleCalendar({
       />
       {createPortal(
         <AnimatePresence>
-          {selected && (
+          {selected && placement && (
             <motion.div
               key={selected.event.id}
               data-schedule-popup
               className="fixed z-50"
-              style={{
-                left:
-                  selected.tail === 'left'
-                    ? selected.cellRect.right + GAP
-                    : selected.cellRect.left - GAP,
-                top: selected.chipRect.top + selected.chipRect.height / 2,
-                transformOrigin: selected.tail === 'left' ? 'left center' : 'right center',
-              }}
-              initial={{
-                opacity: 0,
-                scale: reduce ? 1 : 0.95,
-                x: selected.tail === 'left' ? 0 : '-100%',
-                y: '-50%',
-              }}
-              animate={{
-                opacity: 1,
-                scale: 1,
-                x: selected.tail === 'left' ? 0 : '-100%',
-                y: '-50%',
-              }}
-              exit={{
-                opacity: 0,
-                scale: reduce ? 1 : 0.95,
-                x: selected.tail === 'left' ? 0 : '-100%',
-                y: '-50%',
-              }}
+              style={placement.style}
+              initial={{ opacity: 0, scale: reduce ? 1 : 0.95, ...placement.shift }}
+              animate={{ opacity: 1, scale: 1, ...placement.shift }}
+              exit={{ opacity: 0, scale: reduce ? 1 : 0.95, ...placement.shift }}
               transition={{ duration: reduce ? 0 : 0.16, ease: [0.16, 1, 0.3, 1] }}
             >
               <SchedulePopup
                 event={toPopupEvent(selected.event)}
                 tail={selected.tail}
+                tailOffset={placement.tailOffset}
+                maxWidth={placement.maxWidth}
                 onEdit={
                   onEventEdit
                     ? () => {

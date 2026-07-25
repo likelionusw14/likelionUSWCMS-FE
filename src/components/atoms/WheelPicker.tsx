@@ -2,16 +2,16 @@ import { useEffect, useRef } from 'react'
 import { cn } from '@utils'
 import type { WheelPickerProps } from '@types'
 
-// 휠 치수 (Figma 302×220) — 행 40, 위/아래 스페이서 90 = (220-40)/2.
-const ITEM_H = 40
-const CONTAINER_H = 220
-const SPACER = (CONTAINER_H - ITEM_H) / 2
+// 휠 치수 — Figma 날짜/월 선택 팝업(1249:20449, 1205:22241): 보이는 휠 높이 237,
+// 행 피치 36(글자 26 + 여백), 위/아래 스페이서 100.5 = (237-36)/2.
+const ITEM_H = 36
+const CONTAINER_H = 237
+export const WHEEL_SPACER = (CONTAINER_H - ITEM_H) / 2
 const ANGLE = 20 // 항목당 회전각(deg) — 실린더 곡률
 const MAX = 4 // 중앙 기준 표시 범위(그 밖은 숨김; 4×20=80° < 90°)
 const STEP = 40 // 휠 delta 누적 임계 — 노치당 1칸
 const DUR = 120 // 데스크톱 휠/클릭 트윈 시간(ms)
 const SNAP = 'y proximity' // 터치 센터링은 네이티브 스냅에 맡긴다(메인스레드 경합 없음).
-
 
 // iOS 스타일 3D 휠 한 열 — 항목별 perspective+rotateX 로 실린더 곡률.
 // 터치: 네이티브 스크롤 + CSS scroll-snap(proximity)로 센터링 → 컴포지터가 처리하므로 여러 열을
@@ -150,7 +150,7 @@ export function WheelPicker({
       )}
       style={{ height: CONTAINER_H, scrollbarWidth: 'none', scrollSnapType: SNAP }}
     >
-      <div style={{ height: SPACER }} aria-hidden />
+      <div style={{ height: WHEEL_SPACER }} aria-hidden />
       {items.map((it, i) => (
         <button
           key={it}
@@ -167,7 +167,7 @@ export function WheelPicker({
           {it}
         </button>
       ))}
-      <div style={{ height: SPACER }} aria-hidden />
+      <div style={{ height: WHEEL_SPACER }} aria-hidden />
     </div>
   )
 }

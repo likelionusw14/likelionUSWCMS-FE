@@ -75,10 +75,11 @@ export function Calendar({
       headerClassName="h-40"
       bodyClassName="flex flex-col gap-40 !px-32 !py-40"
     >
-      {/* 년월 + 등록 — 시안상 800 이상은 년월이 행 가운데(빈칸 40 이 좌측 균형추),
-          500·375 는 빈칸이 빠져 년월이 좌측 정렬된다(년월 x=0, 등록은 우측 끝 유지). */}
+      {/* 년월 + 등록 — 시안의 좌측 '빈칸' 40 은 년월을 행 가운데로 미는 균형추다.
+          375·500 프레임에서는 hidden="true" 라 년월이 좌측 정렬(x=0)되고,
+          800·1280 에서만 보여 가운데로 간다(년월 x=248.5 / 376.5). 전환점은 500. */}
       <div className="flex items-center justify-between">
-        <span className="hidden h-40 w-40 sm:block" aria-hidden />
+        <span className="h-40 w-40 max-[500px]:hidden" aria-hidden />
         <div className="flex items-center gap-16">
           <button
             type="button"
