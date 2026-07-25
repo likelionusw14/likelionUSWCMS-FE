@@ -29,6 +29,7 @@ export function NavSidebarDrawer({
   side = 'left',
   tone = 'light',
   headerHasBrand = false,
+  headerHeight = 0,
   children,
 }: NavSidebarDrawerProps) {
   const reduce = useReducedMotion()
@@ -63,6 +64,10 @@ export function NavSidebarDrawer({
             animate={{ x: 0, y: 0 }}
             exit={reduce ? undefined : hidden}
             transition={sidebarTransition(!!reduce)}
+            // 모바일 카드는 헤더 높이만큼 위쪽을 비워 두고 화면 최상단(기준 박스의 top-0)에 건다.
+            // 그래야 y:-100% 일 때 카드의 아래 끝이 정확히 브라우저 최상단에 놓여, 헤더 아래가
+            // 아니라 화면 맨 위에서부터 내려오고 올라간다. 비운 자리는 헤더가 덮는다.
+            style={isTablet ? undefined : { paddingTop: headerHeight }}
             className={cn(
               'overflow-y-auto shadow-drop lg:hidden',
               isTablet
@@ -71,9 +76,8 @@ export function NavSidebarDrawer({
                     'fixed inset-y-0 z-40 w-[224px] max-w-[85vw]',
                     side === 'left' ? 'left-0' : 'right-0',
                   )
-                : // 모바일 — 헤더(=위치 기준) 바로 아래로 내려오는 전폭 카드. 헤더 뒤(z-20)에서 밀려나온다.
-                  // max-h 의 100% 는 기준 박스(헤더) 높이라 calc 로 '헤더 아래 남은 화면'이 된다.
-                  'absolute inset-x-0 top-full z-20 max-h-[calc(100vh-100%)] rounded-b-16',
+                : // 모바일 — 헤더 뒤(z-20)에서 밀려나오는 전폭 카드.
+                  'absolute inset-x-0 top-0 z-20 max-h-screen rounded-b-16',
             )}
           >
             <NavSidebar

@@ -1,10 +1,11 @@
+import { useRef } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
 import { NavLink, useNavigate } from 'react-router-dom'
 import userIcon from '@/assets/icons/user-white.svg'
 import { MobileMenuButton } from '@atoms'
 import { GlassNavMenu } from '@molecules'
 import { BRAND_NAME, NAV_SIDEBAR_TABLET_QUERY, NAV_SIDEBAR_TONE } from '@constants'
-import { useAuth, useMediaQuery, useMobileMenu } from '@hooks'
+import { useAuth, useElementHeight, useMediaQuery, useMobileMenu } from '@hooks'
 import type { PublicHeaderProps } from '@types'
 import { cn, glassNavTransition } from '@utils'
 import { sidebarTransition } from '@templates'
@@ -36,6 +37,9 @@ export function PublicHeader({ navItems, tone = 'light' }: PublicHeaderProps) {
   // 태블릿 드로어가 열리면 헤더 햄버거는 오른쪽 밖으로 빠진다. 그동안 X 로 변형시킬 이유도
   // 없으므로(닫기는 드로어 안 X 가 맡는다) 3줄 그대로 밀려나간다.
   const slideOutBurger = menu.isOpen && isTablet
+  // 모바일 카드가 화면 최상단에서부터 내려오도록 헤더 실제 높이를 넘긴다(브레이크포인트마다 다르다).
+  const headerRef = useRef<HTMLElement>(null)
+  const headerHeight = useElementHeight(headerRef)
 
   function handleLogout() {
     logout()
@@ -44,10 +48,11 @@ export function PublicHeader({ navItems, tone = 'light' }: PublicHeaderProps) {
 
   return (
     // 관리자 셸과 같은 구조 — sticky 래퍼가 헤더(z-30) + 오버레이의 위치·z 기준이 된다.
-    // 모바일 카드는 이 헤더 바로 아래(top-full)에 붙고, 스크림(z-10)은 헤더를 덮지 않는다.
+    // 모바일 카드는 이 헤더 뒤(top-0)에서 내려오고, 스크림(z-10)은 헤더를 덮지 않는다.
     <div className="sticky top-0 z-40">
       {/* 모바일 카드가 열리면 유리판을 걷고 카드와 같은 배경색으로 붙여 한 덩어리로 보이게 한다. */}
       <header
+        ref={headerRef}
         className={cn(
           'relative z-30 w-full overflow-hidden transition-colors duration-sidebar ease-sidebar motion-reduce:transition-none',
           tintHeader
@@ -124,6 +129,7 @@ export function PublicHeader({ navItems, tone = 'light' }: PublicHeaderProps) {
         side="right"
         tone={tone}
         headerHasBrand
+        headerHeight={headerHeight}
       >
         {isAuthenticated && (
           <div className="flex flex-col gap-8 px-4">

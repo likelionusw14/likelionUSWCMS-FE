@@ -1,7 +1,8 @@
+import { useRef } from 'react'
 import { useLocation } from 'react-router-dom'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { AdminTopBar, NavSidebar, NavSidebarDrawer, SiteFooter } from '@organisms'
-import { useAdminSidebar } from '@hooks'
+import { useAdminSidebar, useElementHeight } from '@hooks'
 import { getAdminBreadcrumb } from '@routes/admin/nav'
 import type { AdminSidebarShellProps } from '@types'
 import { AnimatedOutlet } from './AnimatedOutlet'
@@ -18,6 +19,9 @@ export function AdminSidebarShell({ homeItem, navItems }: AdminSidebarShellProps
   const reduce = useReducedMotion()
   const sidebar = useAdminSidebar()
   const { title, breadcrumb } = getAdminBreadcrumb(location.pathname)
+  // 모바일 카드가 화면 최상단에서부터 내려오도록 상단바 실제 높이를 넘긴다.
+  const topBarRef = useRef<HTMLDivElement>(null)
+  const topBarHeight = useElementHeight(topBarRef)
 
   return (
     <div className="flex h-screen overflow-hidden bg-background-1">
@@ -30,7 +34,7 @@ export function AdminSidebarShell({ homeItem, navItems }: AdminSidebarShellProps
         {/* 상단바 고정 (스크롤바 밖). 오버레이 사이드바의 위치 기준이자 z 층 컨테이너다 —
             모바일 드롭다운은 이 박스 바로 아래(top-full)에 붙고, 상단바(z-30)는 스크림(z-10) 위에 남는다. */}
         <div className="relative z-40 shrink-0">
-          <div className="relative z-30">
+          <div ref={topBarRef} className="relative z-30">
             <AdminTopBar
               title={title}
               breadcrumb={breadcrumb}
@@ -47,6 +51,7 @@ export function AdminSidebarShell({ homeItem, navItems }: AdminSidebarShellProps
             homeItem={homeItem}
             navItems={navItems}
             side="left"
+            headerHeight={topBarHeight}
           />
         </div>
 
