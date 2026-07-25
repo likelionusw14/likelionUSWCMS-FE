@@ -130,9 +130,13 @@ export interface SignupProfileFormProps {
 }
 
 // ── 관리 페이지(사이드바 레이아웃) ──
+// 사이드바는 접이식이다: 안쪽 X 로 닫고 상단바 햄버거로 다시 연다(Figma 1327:10669 의 24x24 아이콘).
+// lg 이상은 흐름 안 고정 컬럼, lg 미만은 왼쪽에서 밀려나오는 오버레이 드로어로 같은 컴포넌트를 쓴다.
 export interface AdminSidebarProps {
   homeItem: NavItem
   navItems: NavItem[]
+  onClose: () => void
+  className?: string
 }
 
 export interface AdminSidebarShellProps {
@@ -147,17 +151,17 @@ export interface BreadcrumbSegment {
 }
 
 // 상단바 — 셸(AdminSidebarShell)이 getAdminBreadcrumb 로 계산해 내려준다.
-// lg 미만에서는 좌측에 햄버거가 붙어 모바일 메뉴(AdminMobileMenu)를 연다.
+// 사이드바가 닫혀 있을 때만 좌측에 여는 햄버거가 붙는다(Figma 상단바의 '모바일 햄버거메뉴' 레이어).
 export interface AdminTopBarProps {
   breadcrumb: BreadcrumbSegment[]
   title: string
-  menuOpen: boolean
-  onMenuToggle: () => void
-  menuControls: string
+  sidebarOpen: boolean
+  onSidebarOpen: () => void
+  sidebarControls: string
 }
 
-// lg 미만 관리자 메뉴 — 상단바 아래로 펼쳐지는 전체폭 패널(Figma 1356:10691).
-export interface AdminMobileMenuProps {
+// lg 미만 관리자 사이드바 — 왼쪽에서 밀려나오는 오버레이 드로어. 안에 AdminSidebar 를 그대로 담는다.
+export interface AdminSidebarDrawerProps {
   id: string
   open: boolean
   onClose: () => void
@@ -166,10 +170,13 @@ export interface AdminMobileMenuProps {
 }
 
 // 햄버거 버튼 — 3줄 막대가 열리면 X 로 바뀐다. 색은 text-* 로 상속(bg-current).
+// label 을 주면 aria-label/title 이 '<label>'/'<label> 닫기' 대신 그 문구로 고정된다
+// (관리자 상단바처럼 '여는' 용도로만 쓰이는 버튼).
 export interface MobileMenuButtonProps {
   open: boolean
   onToggle: () => void
   controls: string
+  label?: string
   className?: string
   barClassName?: string
 }

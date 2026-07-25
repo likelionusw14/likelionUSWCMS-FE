@@ -8,13 +8,14 @@ import type { AdminTopBarProps } from '@types'
 
 // 셸(AdminSidebarShell)이 상단에 고정하는 UI 컴포넌트.
 // title·breadcrumb 는 셸에서 계산해 prop 으로 내려준다(dumb organism). 경로 변경 시 크로스페이드.
-// lg 미만(사이드바가 숨는 구간)에서는 좌측에 햄버거가 붙는다 — Figma 관리자페이지 상단바 모바일.
+// 사이드바가 닫혀 있을 때만 좌측에 여는 햄버거가 붙는다 — Figma 상단바의 '모바일 햄버거메뉴'
+// 레이어가 데스크톱 인스턴스에서만 숨겨져 있는 것과 같은 규칙(20x20, secondary-2, 3줄).
 export function AdminTopBar({
   title,
   breadcrumb,
-  menuOpen,
-  onMenuToggle,
-  menuControls,
+  sidebarOpen,
+  onSidebarOpen,
+  sidebarControls,
 }: AdminTopBarProps) {
   const location = useLocation()
   const reduce = useReducedMotion()
@@ -22,13 +23,16 @@ export function AdminTopBar({
 
   return (
     <div className="flex w-full shrink-0 items-center justify-between gap-24 overflow-hidden bg-white px-24 py-16">
-      <MobileMenuButton
-        open={menuOpen}
-        onToggle={onMenuToggle}
-        controls={menuControls}
-        className="h-20 w-20 shrink-0 text-black lg:hidden"
-        barClassName="w-20"
-      />
+      {!sidebarOpen && (
+        <MobileMenuButton
+          open={false}
+          onToggle={onSidebarOpen}
+          controls={sidebarControls}
+          label="사이드바 열기"
+          className="h-20 w-20 shrink-0 text-secondary-2"
+          barClassName="w-[18px]"
+        />
+      )}
       <div className="grid flex-1">
         <AnimatePresence mode="sync">
           <motion.div
