@@ -68,10 +68,11 @@ export function ScheduleFormModal({
   return (
     // 폭은 Modal 패널에 건다 — Modal 의 패널 div 는 shrink-to-fit 이라 WindowPanel 쪽 w-full 만으로는 폭이 서지 않는다.
     // 모바일 330 (Figma 1205:22496), 태블릿·데스크탑 640 (Figma 741:3370 / 1205:22980).
+    // 경계는 이 팝업만 500px 다 — 가로 500 이하가 모바일 시안, 501 부터 데스크탑 시안(앱 공통 sm=640 과 별개).
     <Modal
       open={open}
       onClose={onClose}
-      panelClassName="w-full max-w-[330px] sm:max-w-[640px]"
+      panelClassName="w-full max-w-[330px] min-[501px]:max-w-[640px]"
       ariaLabel="일정 작성"
     >
       {/* 본문 패딩 32 — Figma 모바일 팝업(330)도 콘텐츠 266 이라 좌우 32 로, 아톰 기본값(모바일 24)을 덮는다. */}
@@ -121,7 +122,7 @@ export function ScheduleFormModal({
 
           {/* 날짜 + 시간 — 모바일(내부폭 266px)에서는 두 필드가 나란히 못 들어가 전체폭 세로 스택. Figma 1249:20752/20761.
               날짜·시간 블록은 오류 슬롯이 없어 19+8+32=59 다(Figma 806:13546). 일정명·장소(75)와 달리 h-48 래퍼를 두지 않는다. */}
-          <div className="flex w-full flex-col gap-8 sm:flex-row sm:gap-32">
+          <div className="flex w-full flex-col gap-8 min-[501px]:flex-row min-[501px]:gap-32">
             <div className="flex flex-1 flex-col gap-8">
               <span className="px-8 text-m-16 text-black">날짜</span>
               <div className="flex flex-col">
@@ -190,10 +191,10 @@ export function ScheduleFormModal({
 
         {/* 저장/취소 — 모바일에서도 가로 2열 유지. flex-1 로 폭을 나눠 min-w-128 두 개가 들어간다(Figma 1249:20778 = 128+16+128). */}
         <div className="flex w-full justify-center gap-16">
-          <Button variant="primary" onClick={handleSave} className="flex-1 sm:flex-none">
+          <Button variant="primary" onClick={handleSave} className="flex-1 min-[501px]:flex-none">
             저장
           </Button>
-          <Button variant="outline" onClick={onClose} className="flex-1 sm:flex-none">
+          <Button variant="outline" onClick={onClose} className="flex-1 min-[501px]:flex-none">
             취소
           </Button>
         </div>
