@@ -19,7 +19,8 @@ export function PublicContentShell({ navItems, applyItem }: PublicShellProps) {
     <div className="h-screen overflow-hidden bg-background-1">
       <div ref={scrollRef} className="h-full overflow-y-auto">
         <PublicHeader navItems={navItems} applyItem={applyItem} />
-        <main>
+        {/* relative z-0 — UserShell 과 같은 이유(본문 z-index 가 헤더·드로어를 뚫지 않게). */}
+        <main className="relative z-0">
           <Outlet />
         </main>
         <SiteFooter variant="light" />
