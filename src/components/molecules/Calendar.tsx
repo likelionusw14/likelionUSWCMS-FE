@@ -29,6 +29,7 @@ export function Calendar({
   onDateSelect,
   onRegister,
   onEventClick,
+  mobileTitleLeft = false,
   className,
 }: CalendarProps) {
   const grid = buildMonthGrid(year, month)
@@ -75,11 +76,14 @@ export function Calendar({
       headerClassName="h-40"
       bodyClassName="flex flex-col gap-40 !px-32 !py-40"
     >
-      {/* 년월 + 등록 — 시안의 좌측 '빈칸' 40 은 년월을 행 가운데로 미는 균형추다.
-          375·500 프레임에서는 hidden="true" 라 년월이 좌측 정렬(x=0)되고,
-          800·1280 에서만 보여 가운데로 간다(년월 x=248.5 / 376.5). 전환점은 500. */}
+      {/* 년월 + 등록 - 시안의 좌측 '빈칸' 40 은 년월을 행 가운데로 미는 균형추다.
+          관리자 일정(1203:12588·13894)만 375·500 에서 hidden="true" 라 년월이 좌측(x=0)으로 붙고,
+          사용자·게스트(1181:10150·10997)는 모든 폭에서 가운데다(375 에서도 년월 x=52, 행 가운데). */}
       <div className="flex items-center justify-between">
-        <span className="h-40 w-40 max-[500px]:hidden" aria-hidden />
+        <span
+          className={cn('h-40 w-40', mobileTitleLeft && 'max-[500px]:hidden')}
+          aria-hidden
+        />
         <div className="flex items-center gap-16">
           <button
             type="button"

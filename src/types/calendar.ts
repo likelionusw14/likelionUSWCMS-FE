@@ -43,6 +43,9 @@ export interface CalendarProps {
   onRegister?: () => void
   // 일정 칩 클릭 — 클릭된 DOM(위치 계산용)과 함께 전달. ScheduleCalendar 가 이걸로 팝업을 띄운다.
   onEventClick?: (event: CalendarEvent, target: HTMLElement) => void
+  // 500 이하에서 년월을 좌측으로 붙일지. 관리자 일정 시안(1203:12588·13894)만 좌측이고
+  // 사용자·게스트 시안(1181:10150 등)은 모든 폭에서 가운데다. 기본은 가운데.
+  mobileTitleLeft?: boolean
   className?: string
 }
 
@@ -66,6 +69,7 @@ export interface ScheduleCalendarProps {
   // 팝업의 수정/삭제. 없으면 읽기 전용으로 뜬다.
   onEventEdit?: (event: CalendarEvent) => void
   onEventDelete?: (event: CalendarEvent) => void
+  mobileTitleLeft?: boolean
   className?: string
 }
 
