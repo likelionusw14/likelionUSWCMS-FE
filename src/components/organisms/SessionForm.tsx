@@ -37,7 +37,7 @@ export function SessionForm({
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col items-center gap-24 px-24 pb-[120px] pt-32"
+      className="flex flex-col items-center gap-8 px-24 pb-[90px] pt-32 sm:pb-[120px] lg:pb-[180px]"
     >
       <div className="flex w-full flex-col gap-4">
         <div className="w-full rounded-8 bg-white">
@@ -63,8 +63,8 @@ export function SessionForm({
               />
             </FormRow>
           </div>
-          {/* 첨부파일 — 800·375 는 업로드 박스 아래로 찾기/삭제가 접혀 높이가 달라진다. */}
-          <div className="relative z-10 flex w-full items-stretch lg:h-[115px]">
+          {/* 첨부파일 — 시안 행 높이 375=152 / sm 이상=115. 800·375 는 업로드 박스 아래로 찾기·삭제가 접힌다. */}
+          <div className="relative z-10 flex min-h-[152px] w-full items-stretch sm:h-[115px] sm:min-h-0">
             <FormRow label="첨부파일" labelClassName="rounded-bl-8">
               <FileUploadField
                 fileName={fileName}

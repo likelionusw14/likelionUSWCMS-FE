@@ -47,7 +47,7 @@ export function NoticeForm({
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col items-center gap-24 px-24 pb-[120px] pt-32"
+      className="flex flex-col items-center gap-8 px-24 pb-[90px] pt-32 sm:pb-[120px] lg:pb-[180px]"
     >
       <div className="flex w-full flex-col gap-4">
         <div className="w-full rounded-8 bg-white">
@@ -94,13 +94,13 @@ export function NoticeForm({
             </FormRow>
           </div>
 
-          {/* 공지내용 */}
-          <div className="relative z-10 flex w-full items-stretch">
+          {/* 공지내용 — 시안 행 높이 375=79 / sm 이상=62. FormRow 공통 py-8 로는 모자라 행에 최소 높이를 준다. */}
+          <div className="relative z-10 flex min-h-[79px] w-full items-stretch sm:min-h-[62px]">
             <FormRow label="공지내용" labelClassName="rounded-bl-8">
               <textarea
                 ref={contentRef}
-                rows={6}
-                className="no-scrollbar min-h-[148px] w-full min-w-px resize-none rounded-8 border border-secondary-1 bg-background-1 px-16 py-[8.5px] text-m-14 text-black placeholder:text-primary/50 focus:outline-none"
+                rows={1}
+                className="no-scrollbar min-h-[34px] w-full min-w-px resize-none rounded-8 border border-secondary-1 bg-background-1 px-16 py-[8.5px] text-m-14 text-black placeholder:text-primary/50 focus:outline-none"
                 value={values.content}
                 onChange={(event) => change('content', event.target.value)}
                 placeholder="공지내용을 작성해주세요"
