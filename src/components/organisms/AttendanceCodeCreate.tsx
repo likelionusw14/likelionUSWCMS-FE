@@ -38,8 +38,8 @@ export function AttendanceCodeCreate({
 
       <p className="text-sm-18 text-primary/90">유효시간 {formatTime(remainingSeconds)}</p>
 
-      {/* 모바일에서는 생성 버튼을 전폭으로, 태블릿(640) 이상은 기존 내용폭 유지. */}
-      <Button variant="primary" onClick={onGenerate} className="w-full sm:w-auto">
+      {/* 시안(1203:14334)은 버튼이 131x48 로 내용폭 가운데 정렬이다 — 모바일에서도 전폭으로 늘리지 않는다. */}
+      <Button variant="primary" onClick={onGenerate}>
         코드 생성
       </Button>
     </div>

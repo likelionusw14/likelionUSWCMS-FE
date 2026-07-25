@@ -11,7 +11,7 @@ export function ProjectCard({ project, detailPath, className }: ProjectCardProps
           gap-24 로 설명·태그가 붙지 않을 최소 간격을 준다. */}
       <WindowPanel
         className="h-full"
-        headerClassName="h-32 p-8 sm:p-16"
+        headerClassName="h-32"
         bodyClassName="flex h-full flex-col justify-between gap-24 p-12 sm:p-24 lg:p-32"
       >
         {project.thumbnailUrl ? (

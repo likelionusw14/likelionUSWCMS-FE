@@ -15,7 +15,7 @@ export function UserProjectDetail({ project }: UserProjectDetailProps) {
 
   return (
     <article className="flex flex-col gap-40 sm:gap-48">
-      <WindowPanel headerClassName="h-32 p-8 sm:p-16" bodyClassName="flex flex-col gap-8 !p-0">
+      <WindowPanel headerClassName="h-32" bodyClassName="flex flex-col gap-8 !p-0">
         {project.thumbnailUrl ? (
           <img
             src={project.thumbnailUrl}
