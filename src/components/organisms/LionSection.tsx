@@ -8,9 +8,14 @@ export function LionSection({ label, lions, isLoading, filter, className }: Lion
   return (
     <WindowPanel className={className} bodyClassName="flex flex-col gap-32">
       <div className="flex flex-col items-start gap-16 sm:flex-row sm:items-center sm:justify-between">
-        <span className="flex shrink-0 items-center justify-center whitespace-nowrap rounded-full bg-primary px-24 py-8 text-sm-18 text-white">
-          {label}
-        </span>
+        <div className="relative flex shrink-0">
+          <span className="flex h-48 items-center justify-center whitespace-nowrap rounded-full bg-primary px-16 text-sm-22 text-white/90">
+            {label}
+          </span>
+          {/* 말풍선 꼬리 — Figma 의 점 2개(12px, 6px) 재현 */}
+          <span aria-hidden className="absolute left-[17px] top-[42px] h-12 w-12 rounded-full bg-primary" />
+          <span aria-hidden className="absolute left-[11px] top-[53px] h-6 w-6 rounded-full bg-primary" />
+        </div>
         {filter}
       </div>
       {lions.length > 0 ? (

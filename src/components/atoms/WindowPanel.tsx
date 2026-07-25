@@ -19,7 +19,7 @@ export function WindowPanel({ children, className, bodyClassName, headerClassNam
       </div>
       <div
         className={cn(
-          'overflow-hidden rounded-b-16 bg-white p-32 shadow-emboss-light',
+          'overflow-hidden rounded-b-8 bg-white p-32 shadow-emboss-light',
           bodyClassName,
         )}
       >

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { NavLink, useLocation } from 'react-router-dom'
+import closeIcon from '@/assets/icons/close.svg'
 import userIcon from '@/assets/icons/user-white.svg'
 import { GlassNavMenu } from '@molecules'
 import { BRAND_NAME } from '@constants'
@@ -8,13 +9,17 @@ import type { UserHeaderProps } from '@types'
 import { cn, glassNavTransition } from '@utils'
 
 const MOBILE_MENU_LABELS: Record<string, string> = {
-  '/app/projects': '프로젝트 관리',
-  '/app/sessions': '세션자료 관리',
-  '/app/notices': '공지 관리',
-  '/app/schedule': '일정 관리',
-  '/app/attendance': '출결 관리',
-  '/app/members': '회원 관리',
+  '/app/projects': '프로젝트',
+  '/app/sessions': '세션자료',
+  '/app/notices': '공지',
+  '/app/schedule': '일정',
+  '/app/attendance': '출결',
+  '/app/members': '회원',
+  '/app/certificates': '활동증명서 발급',
 }
+
+// Figma 공통 사이드바 — 회원·활동증명서 두 항목만 더 큰 모서리(16px)로 그룹핑되어 있다.
+const ROUNDED_16_PATHS = new Set(['/app/members', '/app/certificates'])
 
 // 사용자 영역 상단 헤더 — 브랜드 + 알약형 메뉴(GlassNavMenu, UserHeader/PublicHeader 공유) + 계정 버튼.
 // Figma 717:1684. 헤더는 backdrop-blur(2.5)위에 Primary 세로 그라디언트(30%->2%)를 얹은
@@ -126,9 +131,9 @@ export function UserHeader({ navItems, onLogout }: UserHeaderProps) {
               animate={{ x: 0 }}
               exit={reduce ? undefined : { x: '100%' }}
               transition={{ duration: reduce ? 0 : 0.25, ease: 'easeInOut' }}
-              className="fixed inset-y-0 right-0 z-40 flex w-[280px] max-w-[85vw] flex-col bg-white px-16 pb-24 pt-24 opacity-100 shadow-drop lg:hidden"
+              className="fixed inset-y-0 right-0 z-40 flex w-[280px] max-w-[85vw] flex-col gap-24 bg-background-1 px-4 pb-8 pt-24 opacity-100 shadow-drop lg:hidden"
             >
-              <div className="mb-16 flex items-center justify-between px-8">
+              <div className="flex items-center justify-between px-24">
                 <NavLink
                   to="/app"
                   onClick={() => setMenuOpen(false)}
@@ -140,9 +145,9 @@ export function UserHeader({ navItems, onLogout }: UserHeaderProps) {
                   type="button"
                   aria-label="메뉴 닫기"
                   onClick={() => setMenuOpen(false)}
-                  className="flex h-32 w-32 items-center justify-center rounded-8 text-sm-22 text-secondary-2 outline-none focus-visible:ring-2 focus-visible:ring-secondary-2"
+                  className="flex h-24 w-24 items-center justify-center rounded-8 outline-none focus-visible:ring-2 focus-visible:ring-secondary-2"
                 >
-                  ×
+                  <img src={closeIcon} alt="" className="h-24 w-24" />
                 </button>
               </div>
 
@@ -156,8 +161,9 @@ export function UserHeader({ navItems, onLogout }: UserHeaderProps) {
                   onClick={() => setMenuOpen(false)}
                   className={({ isActive }) =>
                     cn(
-                      'rounded-8 px-16 py-12 text-sm-16 text-black outline-none hover:bg-background-1 focus-visible:ring-2 focus-visible:ring-primary',
-                      isActive && 'bg-background-1',
+                      'flex h-44 items-center px-24 text-sm-16 text-black outline-none hover:bg-white focus-visible:ring-2 focus-visible:ring-primary',
+                      ROUNDED_16_PATHS.has(item.to) ? 'rounded-16' : 'rounded-8',
+                      isActive && 'bg-primary text-white hover:bg-primary',
                     )
                   }
                 >
