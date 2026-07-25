@@ -21,7 +21,7 @@ export function NavSidebar({
   onClose,
   tone = 'light',
   className,
-  children,
+  onLogout,
 }: NavSidebarProps) {
   const palette = NAV_SIDEBAR_TONE[tone]
 
@@ -82,8 +82,21 @@ export function NavSidebar({
             {item.label}
           </NavLink>
         ))}
+        {/* 로그아웃 — 링크가 아니라 액션이지만 다른 메뉴와 같은 행으로 보여야 해서 같은 클래스를 쓴다.
+            사용자·게스트 드로어에만 붙는다(관리자는 상단바 로그아웃 아이콘이 맡는다). */}
+        {onLogout && (
+          <button
+            type="button"
+            onClick={() => {
+              onClose?.()
+              onLogout()
+            }}
+            className={cn(MENU_ITEM, palette.item, 'text-left')}
+          >
+            로그아웃
+          </button>
+        )}
       </nav>
-      {children}
     </aside>
   )
 }

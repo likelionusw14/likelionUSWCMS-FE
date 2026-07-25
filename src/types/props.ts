@@ -147,8 +147,9 @@ export interface NavSidebarProps {
   onClose?: () => void
   tone?: NavSidebarTone
   className?: string
-  // 메뉴 아래 CTA 자리(게스트·사용자 드로어의 지원하기·마이페이지·로그아웃).
-  children?: ReactNode
+  // 있으면 메뉴 목록 마지막에 다른 항목과 같은 모양의 '로그아웃' 행이 붙는다.
+  // 사용자·게스트 드로어 전용 — 관리자는 상단바 로그아웃 아이콘이 맡는다.
+  onLogout?: () => void
 }
 
 export interface AdminSidebarShellProps {
@@ -191,8 +192,8 @@ export interface NavSidebarDrawerProps {
   // 바로 위 헤더의 실제 높이(px). 모바일 카드가 헤더 아래가 아니라 화면 최상단에서부터
   // 내려오도록 그만큼 위쪽 자리를 비운다. CSS 로는 알 수 없어 측정값을 받는다.
   headerHeight?: number
-  // 메뉴 아래 CTA(마이페이지·로그아웃) — lg 미만에서 헤더가 숨기므로 여기가 유일한 진입점이다.
-  children?: ReactNode
+  // 있으면 메뉴 목록 마지막에 다른 항목과 같은 모양의 '로그아웃' 행이 붙는다(사용자·게스트 전용).
+  onLogout?: () => void
 }
 
 // 햄버거 버튼 — 3줄 막대가 열리면 X 로 바뀐다. 색은 text-* 로 상속(bg-current).

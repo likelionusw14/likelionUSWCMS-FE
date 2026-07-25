@@ -41,16 +41,21 @@ export function UserHeader({ navItems, onLogout }: UserHeaderProps) {
     // 관리자 셸과 같은 구조 — sticky 래퍼가 헤더(z-30) + 오버레이의 위치·z 기준이 된다.
     // 모바일 카드는 이 헤더 뒤(top-0)에서 내려오고, 스크림(z-10)은 헤더를 덮지 않는다.
     <div className="sticky top-0 z-40">
-      {/* 모바일 카드가 열리면 유리판을 걷고 카드와 같은 배경색으로 붙여 한 덩어리로 보이게 한다. */}
+      {/* 유리판(그라디언트 + backdrop-blur)은 항상 유지하고, 카드와 같은 배경색만 오버레이로
+          덧입혀 페이드한다. 클래스째 바꾸면 backdrop-filter·background-image 는 transition 대상이
+          아니라 즉시 꺼지는데 색은 250ms 동안 서서히 차오르므로, 그 사이 블러가 풀려 보였다. */}
       <header
         ref={headerRef}
-        className={cn(
-          'relative z-30 w-full overflow-hidden transition-colors duration-sidebar ease-sidebar motion-reduce:transition-none',
-          tintHeader
-            ? NAV_SIDEBAR_TONE[tone].panel
-            : 'bg-gradient-user-header backdrop-blur-header',
-        )}
+        className="relative z-30 w-full overflow-hidden bg-gradient-user-header backdrop-blur-header"
       >
+        <span
+          aria-hidden
+          className={cn(
+            'pointer-events-none absolute inset-0 transition-opacity duration-sidebar ease-sidebar motion-reduce:transition-none',
+            NAV_SIDEBAR_TONE[tone].panel,
+            tintHeader ? 'opacity-100' : 'opacity-0',
+          )}
+        />
         <div className="relative mx-auto flex w-full max-w-[1280px] items-center justify-between px-16 py-16 sm:px-32 lg:px-64">
           <NavLink
             to="/app"
@@ -108,6 +113,7 @@ export function UserHeader({ navItems, onLogout }: UserHeaderProps) {
         tone={tone}
         headerHasBrand
         headerHeight={headerHeight}
+        onLogout={onLogout}
       />
     </div>
   )

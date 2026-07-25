@@ -30,7 +30,7 @@ export function NavSidebarDrawer({
   tone = 'light',
   headerHasBrand = false,
   headerHeight = 0,
-  children,
+  onLogout,
 }: NavSidebarDrawerProps) {
   const reduce = useReducedMotion()
   const isTablet = useMediaQuery(NAV_SIDEBAR_TABLET_QUERY)
@@ -85,10 +85,9 @@ export function NavSidebarDrawer({
               navItems={navItems}
               onClose={onClose}
               tone={tone}
+              onLogout={onLogout}
               className="min-h-full"
-            >
-              {children}
-            </NavSidebar>
+            />
           </motion.div>
         </>
       )}

@@ -14,16 +14,13 @@ import { NavSidebarDrawer } from './NavSidebarDrawer'
 const MOBILE_MENU_ID = 'public-mobile-menu'
 const HOME_ITEM = { to: '/', label: BRAND_NAME }
 
-// CTA(마이페이지·로그아웃)는 lg 이상 헤더에만 있어, lg 미만에서는 드로어가 유일한 진입점이다.
-const DRAWER_CTA =
-  'flex h-48 items-center justify-center rounded-full bg-gradient-user-menu text-sm-18 text-white outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-white'
-
 // 공통(마케팅) 헤더 — UserHeader 와 같은 앱바(backdrop-blur + Primary 세로 그라디언트 유리판) +
 // 같은 GlassNavMenu(유리 알약 메뉴, 슬라이딩 캡슐·Tab 포커스 애니메이션 공유) 위에
 // 브랜드 + 계정 버튼. sticky 로 콘텐츠 위에 얹어야 블러 대상(아래 다크 배경/히어로)이 성립한다.
-// 게스트: 계정 아이콘(비활성). 로그인: 마이페이지(/app) 링크 + 로그아웃 CTA.
-// lg 미만에서는 알약 메뉴/CTA 를 숨기고 관리자와 같은 NavSidebar 를 우측 드로어로 쓴다
+// 계정 아이콘은 로그인 상태면 마이페이지(/app), 게스트면 로그인(/login)으로 간다.
+// lg 미만에서는 알약 메뉴를 숨기고 관리자와 같은 NavSidebar 를 우측 드로어로 쓴다
 // — 알약 메뉴가 375px 에서 260px 넘쳐 랜딩 페이지 가로 스크롤을 만들던 문제.
+// 드로어에서는 계정 아이콘이 없으므로 마이페이지·로그아웃을 메뉴 행으로 내려 준다.
 export function PublicHeader({ navItems, tone = 'light' }: PublicHeaderProps) {
   const { isAuthenticated, logout } = useAuth()
   const navigate = useNavigate()
@@ -40,6 +37,10 @@ export function PublicHeader({ navItems, tone = 'light' }: PublicHeaderProps) {
   // 모바일 카드가 화면 최상단에서부터 내려오도록 헤더 실제 높이를 넘긴다(브레이크포인트마다 다르다).
   const headerRef = useRef<HTMLElement>(null)
   const headerHeight = useElementHeight(headerRef)
+  // 드로어에는 계정 아이콘이 없다 — 로그인 상태면 마이페이지를 메뉴 항목으로 덧붙인다.
+  const drawerNavItems = isAuthenticated
+    ? [...navItems, { to: '/app', label: '마이페이지' }]
+    : navItems
 
   function handleLogout() {
     logout()
@@ -50,16 +51,21 @@ export function PublicHeader({ navItems, tone = 'light' }: PublicHeaderProps) {
     // 관리자 셸과 같은 구조 — sticky 래퍼가 헤더(z-30) + 오버레이의 위치·z 기준이 된다.
     // 모바일 카드는 이 헤더 뒤(top-0)에서 내려오고, 스크림(z-10)은 헤더를 덮지 않는다.
     <div className="sticky top-0 z-40">
-      {/* 모바일 카드가 열리면 유리판을 걷고 카드와 같은 배경색으로 붙여 한 덩어리로 보이게 한다. */}
+      {/* 유리판(그라디언트 + backdrop-blur)은 항상 유지하고, 카드와 같은 배경색만 오버레이로
+          덧입혀 페이드한다. 클래스째 바꾸면 backdrop-filter·background-image 는 transition 대상이
+          아니라 즉시 꺼지는데 색은 250ms 동안 서서히 차오르므로, 그 사이 블러가 풀려 보였다. */}
       <header
         ref={headerRef}
-        className={cn(
-          'relative z-30 w-full overflow-hidden transition-colors duration-sidebar ease-sidebar motion-reduce:transition-none',
-          tintHeader
-            ? NAV_SIDEBAR_TONE[tone].panel
-            : 'bg-gradient-user-header backdrop-blur-header',
-        )}
+        className="relative z-30 w-full overflow-hidden bg-gradient-user-header backdrop-blur-header"
       >
+        <span
+          aria-hidden
+          className={cn(
+            'pointer-events-none absolute inset-0 transition-opacity duration-sidebar ease-sidebar motion-reduce:transition-none',
+            NAV_SIDEBAR_TONE[tone].panel,
+            tintHeader ? 'opacity-100' : 'opacity-0',
+          )}
+        />
         <div className="relative mx-auto flex w-full max-w-[1280px] items-center justify-between px-24 py-16 sm:px-32 lg:px-64">
           <NavLink
             to="/"
@@ -69,7 +75,7 @@ export function PublicHeader({ navItems, tone = 'light' }: PublicHeaderProps) {
             {BRAND_NAME}
           </NavLink>
 
-          <div className="hidden items-center gap-24 lg:flex">
+          <div className="hidden lg:block">
             <GlassNavMenu navItems={navItems}>
               {/* 계정 아이콘 — 로그인 여부와 무관하게 같은 버튼 구조라 Tab 포커스 시 흰 원(after ring)이
                   똑같이 뜬다. img 로 두면 포커스 자체가 안 잡혀 게스트에서만 링이 없었다.
@@ -86,16 +92,6 @@ export function PublicHeader({ navItems, tone = 'light' }: PublicHeaderProps) {
                 <img src={userIcon} alt="" className="h-[18px] w-[18px]" />
               </motion.button>
             </GlassNavMenu>
-
-            {isAuthenticated && (
-              <button
-                type="button"
-                onClick={handleLogout}
-                className="flex h-48 items-center justify-center rounded-full bg-gradient-user-menu px-16 text-sm-18 text-white outline-none backdrop-blur-menu focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-white"
-              >
-                로그아웃
-              </button>
-            )}
           </div>
 
           {/* 태블릿 드로어가 열리면 햄버거를 오른쪽 밖으로 밀어낸다 — 그 드로어는 자체 X 를 갖고
@@ -125,30 +121,13 @@ export function PublicHeader({ navItems, tone = 'light' }: PublicHeaderProps) {
         open={menu.isOpen}
         onClose={menu.close}
         homeItem={HOME_ITEM}
-        navItems={navItems}
+        navItems={drawerNavItems}
         side="right"
         tone={tone}
         headerHasBrand
         headerHeight={headerHeight}
-      >
-        {isAuthenticated && (
-          <div className="flex flex-col gap-8 px-4">
-            <NavLink to="/app" onClick={menu.close} className={DRAWER_CTA}>
-              마이페이지
-            </NavLink>
-            <button
-              type="button"
-              onClick={() => {
-                menu.close()
-                handleLogout()
-              }}
-              className={DRAWER_CTA}
-            >
-              로그아웃
-            </button>
-          </div>
-        )}
-      </NavSidebarDrawer>
+        onLogout={isAuthenticated ? handleLogout : undefined}
+      />
     </div>
   )
 }
