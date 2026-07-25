@@ -69,11 +69,9 @@ export interface ScheduleCalendarProps {
   className?: string
 }
 
-// ScheduleCalendar 내부 — 선택된 일정 칩의 위치 정보.
+// ScheduleCalendar 내부 - 선택된 일정 칩(앵커)의 화면 위치.
 export interface ScheduleCalendarSelected {
   event: CalendarEvent
-  // 가로 배치·꼬리 방향은 셀 기준, 세로 중심은 클릭한 칩 기준.
-  cellRect: DOMRect
+  // 클릭한 칩의 뷰포트 좌표. 팝업은 이 칩 바로 옆(또는 위/아래)에 붙고 꼬리가 칩을 가리킨다.
   chipRect: DOMRect
-  tail: 'left' | 'right' | 'top'
 }

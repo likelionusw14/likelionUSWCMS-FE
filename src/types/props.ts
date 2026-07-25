@@ -541,13 +541,16 @@ export interface SchedulePopupEvent {
 // 일정 팝업 — 캘린더 날짜 위 말풍선. 제목·날짜시간·장소·설명 + (선택)수정/삭제.
 export interface SchedulePopupProps {
   event: SchedulePopupEvent
-  // 꼬리 방향. left = 팝업이 셀 오른쪽(꼬리 왼쪽), right = 팝업이 셀 왼쪽(꼬리 오른쪽),
-  // top = 팝업이 셀 아래(꼬리 위) — 좌우로 놓을 자리가 없는 좁은 화면(Figma 모바일 시안)용. 기본 left.
-  tail?: 'left' | 'right' | 'top'
-  // top 꼬리일 때 꼬리 뾰족점의 x 좌표(말풍선 왼쪽 기준). 없으면 가운데.
+  // 꼬리 방향(팝업이 앵커의 어느 쪽에 놓이는지의 반대). left = 앵커 오른쪽에 팝업,
+  // right = 앵커 왼쪽, top = 앵커 아래, bottom = 앵커 위. 기본 left.
+  // 네 방향 모두 같은 곡선을 회전만 시킨 것이라 실루엣이 동일하다.
+  tail?: 'left' | 'right' | 'top' | 'bottom'
+  // 꼬리 뾰족점 위치 - 꼬리가 붙는 변 기준 좌표(위/아래 꼬리는 x, 좌/우 꼬리는 y). 없으면 가운데.
   tailOffset?: number
   // 말풍선 전체(꼬리 포함) 최대 폭. 앵커 위치에 따라 남는 가로 공간이 다르므로 바깥에서 준다.
   maxWidth?: number
+  // 렌더된 실제 크기 보고 - 부모가 화면 밖으로 안 나가게 배치·뒤집기를 정하는 데 쓴다.
+  onMeasure?: (size: { width: number; height: number }) => void
   // 있으면 하단 수정/삭제 버튼 표시.
   onEdit?: () => void
   onDelete?: () => void

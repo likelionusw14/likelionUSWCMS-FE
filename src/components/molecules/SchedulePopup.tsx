@@ -3,54 +3,93 @@ import { Button } from '@atoms'
 import { cn } from '@utils'
 import type { SchedulePopupProps } from '@types'
 
-const XR = 20.9668 // 꼬리 깊이 = 본문(둥근 사각형) 왼쪽 x offset (top 꼬리에서는 위쪽 y offset)
+const XR = 20.9668 // 꼬리 깊이 — 본문(둥근 사각형) 변에서 뾰족점까지
 const R = 16 // 모서리 반경
-const TAIL = 31.667 // 꼬리 밑변 절반
+const TAIL = 31.667 // 꼬리 밑변 절반 (곡선이 변에 접해 실제 보이는 폭은 ≈51.15 — Figma 1249:19832)
 const BODY_MIN = 326 // 본문 최소 폭 (일정명 짧을 때 기본, 총 폭 347)
 // 제목행 필요 폭 = px-24×2 + 점(12) + 점gap(8) + 제목-날짜 gap(8).
 const HEADER_EXTRA = 24 * 2 + 12 + 8 + 8
 // 말풍선이 화면 밖으로 나가지 않도록 남겨 둘 좌우 여백(24+24).
 const VIEWPORT_GUTTER = 48
 
-// 말풍선 외곽선 path 생성 — 직선 변(가로 w·세로 h)만 늘어나고, 모서리(16)·곡선 꼬리는 고정.
-// 꼬리는 왼쪽·세로 중앙. (오른쪽 꼬리는 svg 를 scaleX(-1) 로 뒤집는다.)
-function bubblePath(w: number, h: number): string {
-  const yc = h / 2
-  return [
-    `M${XR + R} 0`,
-    `H${w - R}`,
-    `A${R} ${R} 0 0 1 ${w} ${R}`,
-    `V${h - R}`,
-    `A${R} ${R} 0 0 1 ${w - R} ${h}`,
-    `H${XR + R}`,
-    `A${R} ${R} 0 0 1 ${XR} ${h - R}`,
-    `V${yc + TAIL}`,
-    `C${XR} ${yc + 9.444} 0.00117 ${yc + 13.345} 0 ${yc}`,
-    `C-0.00059 ${yc - 12.234} 20.9667 ${yc - 13.889} ${XR} ${yc - TAIL}`,
-    `V${R}`,
-    `A${R} ${R} 0 0 1 ${XR + R} 0`,
-    'Z',
-  ].join(' ')
+// 꼬리는 Figma 좌 꼬리(1249:19832, 20.97×51.15) 곡선 하나만 정의하고 네 방향을 파생시킨다.
+// 좌표계 (d, s) — d: 본문 변에서 뾰족점 쪽으로 파고든 깊이(0=변, XR=끝), s: 변을 따라간 거리(중앙 0).
+// 방향별 매퍼는 전부 좌 꼬리의 '회전'이다(거울 아님 — 행렬식 부호가 같다). 그래서 위/아래/좌/우
+// 꼬리 실루엣이 완전히 동일하다. Figma 모바일 시안의 위 꼬리는 좌 꼬리와 곡률이 달라 쓰지 않는다.
+const TAIL_PTS = [
+  [0, -TAIL],
+  [XR, 0],
+  [0, TAIL],
+] as const
+const TAIL_CTRL = [
+  [
+    [0.0001, -13.889],
+    [20.9674, -12.234],
+  ],
+  [
+    [20.9656, 13.345],
+    [0, 9.444],
+  ],
+] as const
+
+type TailSide = NonNullable<SchedulePopupProps['tail']>
+type TailPoint = (d: number, s: number) => readonly [number, number]
+
+function tailMapper(side: TailSide, w: number, h: number, at: number): TailPoint {
+  switch (side) {
+    case 'left':
+      return (d, s) => [XR - d, at + s]
+    case 'right':
+      return (d, s) => [w - XR + d, at - s]
+    case 'top':
+      return (d, s) => [at - s, XR - d]
+    case 'bottom':
+      return (d, s) => [at + s, h - XR + d]
+  }
 }
 
-// 상단 꼬리 버전 — 같은 곡선을 x/y 전치해 위로 세운다(Figma 모바일 꼬리 51.2×21).
-// xc = 꼬리 뾰족점의 x. 본문 사각형은 y=XR 부터 시작한다.
-function bubblePathTop(w: number, h: number, xc: number): string {
+// 외곽선은 시계방향으로 도는데 네 방향 모두 그 진행이 s 가 줄어드는 쪽이라 역방향으로만 편다.
+function tailCurve(pt: TailPoint): string {
+  const cmds: string[] = []
+  for (let i = TAIL_CTRL.length - 1; i >= 0; i -= 1) {
+    const [c1, c2] = TAIL_CTRL[i]
+    const end = TAIL_PTS[i]
+    const [ax, ay] = pt(c2[0], c2[1])
+    const [bx, by] = pt(c1[0], c1[1])
+    const [ex, ey] = pt(end[0], end[1])
+    cmds.push(`C${ax} ${ay} ${bx} ${by} ${ex} ${ey}`)
+  }
+  return cmds.join(' ')
+}
+
+// 말풍선 외곽선 path — 직선 변(가로 w·세로 h)만 늘어나고 모서리(16)·꼬리는 고정.
+// at = 꼬리가 붙는 변 위에서 뾰족점의 좌표(가로 변이면 x, 세로 변이면 y).
+function bubblePath(w: number, h: number, side: TailSide, at: number): string {
+  const pt = tailMapper(side, w, h, at)
+  const [sx, sy] = pt(0, TAIL)
+  const tail = `${side === 'top' || side === 'bottom' ? `H${sx}` : `V${sy}`} ${tailCurve(pt)}`
+  const l = side === 'left' ? XR : 0
+  const t = side === 'top' ? XR : 0
+  const r = side === 'right' ? w - XR : w
+  const b = side === 'bottom' ? h - XR : h
   return [
-    `M${R} ${XR}`,
-    `H${xc - TAIL}`,
-    `C${xc - 9.444} ${XR} ${xc - 13.345} 0.00117 ${xc} 0`,
-    `C${xc + 12.234} -0.00059 ${xc + 13.889} 20.9667 ${xc + TAIL} ${XR}`,
-    `H${w - R}`,
-    `A${R} ${R} 0 0 1 ${w} ${XR + R}`,
-    `V${h - R}`,
-    `A${R} ${R} 0 0 1 ${w - R} ${h}`,
-    `H${R}`,
-    `A${R} ${R} 0 0 1 0 ${h - R}`,
-    `V${XR + R}`,
-    `A${R} ${R} 0 0 1 ${R} ${XR}`,
+    `M${l + R} ${t}`,
+    side === 'top' ? tail : '',
+    `H${r - R}`,
+    `A${R} ${R} 0 0 1 ${r} ${t + R}`,
+    side === 'right' ? tail : '',
+    `V${b - R}`,
+    `A${R} ${R} 0 0 1 ${r - R} ${b}`,
+    side === 'bottom' ? tail : '',
+    `H${l + R}`,
+    `A${R} ${R} 0 0 1 ${l} ${b - R}`,
+    side === 'left' ? tail : '',
+    `V${t + R}`,
+    `A${R} ${R} 0 0 1 ${l + R} ${t}`,
     'Z',
-  ].join(' ')
+  ]
+    .filter(Boolean)
+    .join(' ')
 }
 
 // 일정 팝업 — 캘린더 날짜 위 말풍선. Figma 588:1223/1222/1224/1225.
@@ -63,14 +102,14 @@ export function SchedulePopup({
   tail = 'left',
   tailOffset,
   maxWidth,
+  onMeasure,
   onEdit,
   onDelete,
   className,
 }: SchedulePopupProps) {
   const showActions = Boolean(onEdit || onDelete)
   const minH = showActions ? 260 : 210
-  const isRight = tail === 'right'
-  const isTop = tail === 'top'
+  const isVertical = tail === 'top' || tail === 'bottom'
 
   const contentRef = useRef<HTMLDivElement>(null)
   const titleRef = useRef<HTMLSpanElement>(null)
@@ -90,7 +129,7 @@ export function SchedulePopup({
       // 없으면 뷰포트 - 48 로 잡는다. SVG 외곽선이 같은 폭으로 그려져야 하므로
       // CSS max-width 가 아니라 계산값 자체를 clamp 한다.
       const limit = maxWidth ?? window.innerWidth - VIEWPORT_GUTTER
-      const maxBody = Math.max(0, limit - (isTop ? 0 : XR))
+      const maxBody = Math.max(0, limit - (isVertical ? 0 : XR))
       setBodyW(Math.min(maxBody, Math.max(BODY_MIN, Math.ceil(needed))))
       // getBoundingClientRect 는 등장 애니메이션(scale 0.95)의 영향을 받아 실제보다 작게 잡힌다.
       // ResizeObserver 는 레이아웃 크기만 보므로 그 값이 굳어버린다 → 변환 무관한 offsetHeight 를 쓴다.
@@ -105,13 +144,19 @@ export function SchedulePopup({
       ro.disconnect()
       window.removeEventListener('resize', measure)
     }
-  }, [minH, isTop, maxWidth, event.title, event.dateTime, event.place, event.description])
+  }, [minH, isVertical, maxWidth, event.title, event.dateTime, event.place, event.description])
 
   // 꼬리를 뺀 본문 사각형 기준 전체 크기.
-  const w = isTop ? bodyW : bodyW + XR
-  const h = isTop ? height + XR : height
-  // 꼬리 뾰족점은 모서리(16) + 꼬리 밑변(31.667) 안쪽으로만 갈 수 있다.
-  const xc = Math.min(Math.max(tailOffset ?? bodyW / 2, R + TAIL), bodyW - R - TAIL)
+  const w = isVertical ? bodyW : bodyW + XR
+  const h = isVertical ? height + XR : height
+  // 꼬리 뾰족점은 꼬리가 붙는 변 위에서 모서리(16) + 꼬리 밑변(31.667) 안쪽으로만 갈 수 있다.
+  const span = isVertical ? w : h
+  const at = Math.min(Math.max(tailOffset ?? span / 2, R + TAIL), span - R - TAIL)
+
+  // 부모(ScheduleCalendar)가 실제 크기를 알아야 화면 밖으로 안 나가게 배치·뒤집기를 정할 수 있다.
+  useLayoutEffect(() => {
+    onMeasure?.({ width: w, height: h })
+  }, [onMeasure, w, h])
 
   return (
     // flow-root: 위 꼬리일 때 본문의 mt-[21px] 가 바깥으로 새어(마진 상쇄) 말풍선이 21px 밀리는 걸 막는다.
@@ -126,10 +171,9 @@ export function SchedulePopup({
         height={h}
         viewBox={`0 0 ${w} ${h}`}
         className="absolute inset-0 overflow-visible text-primary"
-        style={isRight ? { transform: 'scaleX(-1)' } : undefined}
       >
         <path
-          d={isTop ? bubblePathTop(w, h, xc) : bubblePath(w, h)}
+          d={bubblePath(w, h, tail, at)}
           fill="white"
           stroke="currentColor"
           strokeWidth="1"
@@ -140,7 +184,13 @@ export function SchedulePopup({
         ref={contentRef}
         className={cn(
           'relative flex max-w-full flex-col gap-[10px] px-24 py-[19px]',
-          isTop ? 'mt-[21px]' : isRight ? 'mr-[21px]' : 'ml-[21px]',
+          tail === 'top'
+            ? 'mt-[21px]'
+            : tail === 'bottom'
+              ? 'mb-[21px]'
+              : tail === 'right'
+                ? 'mr-[21px]'
+                : 'ml-[21px]',
         )}
         style={{ width: bodyW, minHeight: minH }}
       >
