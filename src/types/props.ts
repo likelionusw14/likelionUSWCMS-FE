@@ -130,12 +130,13 @@ export interface SignupProfileFormProps {
 }
 
 // ── 관리 페이지(사이드바 레이아웃) ──
-// 사이드바는 접이식이다: 안쪽 X 로 닫고 상단바 햄버거로 다시 연다(Figma 사이드바 브랜드 옆 24x24 아이콘).
 // 폭·위치는 셸이 className 으로 정한다 — lg 이상은 흐름 안 224px 고정 컬럼, lg 미만은 드로어가 담는다.
+// onClose 는 오버레이(드로어/드롭다운)일 때만 준다 — 그때만 브랜드 옆 24x24 닫기(X)가 붙는다.
+// 고정 컬럼(lg 이상)은 Figma 페이지 시안(1205:11709)대로 닫기가 없어 브랜드가 한 줄로 들어간다.
 export interface AdminSidebarProps {
   homeItem: NavItem
   navItems: NavItem[]
-  onClose: () => void
+  onClose?: () => void
   className?: string
 }
 

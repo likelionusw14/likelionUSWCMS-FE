@@ -8,7 +8,7 @@ import type { AdminTopBarProps } from '@types'
 
 // 셸(AdminSidebarShell)이 상단에 고정하는 UI 컴포넌트.
 // title·breadcrumb 는 셸에서 계산해 prop 으로 내려준다(dumb organism). 경로 변경 시 크로스페이드.
-// 사이드바가 닫혀 있을 때만 좌측에 여는 햄버거가 붙는다 — Figma 상단바의 '모바일 햄버거메뉴'
+// 좌측 햄버거는 lg 미만에서 오버레이 사이드바가 닫혀 있을 때만 붙는다 — Figma 상단바의 '모바일 햄버거메뉴'
 // 레이어가 데스크톱 인스턴스에서만 숨겨져 있는 것과 같은 규칙(20x20, secondary-2, 3줄).
 export function AdminTopBar({
   title,
@@ -29,7 +29,7 @@ export function AdminTopBar({
           onToggle={onSidebarOpen}
           controls={sidebarControls}
           label="사이드바 열기"
-          className="h-20 w-20 shrink-0 text-secondary-2"
+          className="h-20 w-20 shrink-0 text-secondary-2 lg:hidden"
           barClassName="w-[18px]"
         />
       )}
