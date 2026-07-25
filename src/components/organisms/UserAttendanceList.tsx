@@ -12,21 +12,24 @@ export function UserAttendanceList({
   totalPages,
   onPageChange,
 }: UserAttendanceListProps) {
+  // Figma 6열 등폭 가변 — 1280 컨테이너 1088 / 800 672(무스크롤) / 375 720(스크롤).
+  // 고정 width 를 쓰면 합(660+32)이 800 컨테이너 672 를 넘겨 시안에 없는 가로 스크롤이 생긴다.
+  // minWidth 로 두면 넓은 폭에서는 늘어나 채우고, 375 에서만 스크롤된다(합 606 + 여백 64 = 670 ≤ 672).
+  const COL = { minWidth: 101, align: 'center' } as const
   const columns: Column<AttendanceRecord>[] = [
-    { id: 'date', header: '날짜', accessor: (r) => r.date, width: 120, align: 'center' },
-    { id: 'name', header: '이름', accessor: (r) => r.name, width: 100, align: 'center' },
-    { id: 'studentId', header: '학번', accessor: (r) => r.studentId, width: 120, align: 'center' },
-    { id: 'part', header: '파트', accessor: (r) => r.part, width: 100, align: 'center' },
+    { id: 'date', header: '날짜', accessor: (r) => r.date, ...COL },
+    { id: 'name', header: '이름', accessor: (r) => r.name, ...COL },
+    { id: 'studentId', header: '학번', accessor: (r) => r.studentId, ...COL },
+    { id: 'part', header: '파트', accessor: (r) => r.part, ...COL },
     {
       id: 'present',
       header: '출석상태',
-      width: 100,
-      align: 'center',
+      ...COL,
       cell: (r) => (
         <Checkbox checked={r.present} onChange={() => {}} variant="square" ariaLabel="출석 여부" />
       ),
     },
-    { id: 'remark', header: '비고', accessor: (r) => r.remark, minWidth: 120, align: 'center' },
+    { id: 'remark', header: '비고', accessor: (r) => r.remark, ...COL },
   ]
 
   return (

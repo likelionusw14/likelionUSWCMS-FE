@@ -8,7 +8,7 @@ export function KakaoLoginButton({ className, ...props }: KakaoLoginButtonProps)
     <button
       type="button"
       className={cn(
-        'flex h-48 w-[400px] items-center justify-between overflow-hidden rounded-[12px] bg-kakao px-24',
+        'flex h-48 w-full max-w-[400px] items-center justify-between overflow-hidden rounded-[12px] bg-kakao px-24',
         className,
       )}
       {...props}

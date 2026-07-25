@@ -5,10 +5,13 @@ import type { PaginationProps } from '@types'
 
 const ELLIPSIS = 'ellipsis'
 
-// 디자인은 페이지가 많을 때 `1 2 3 ... 17 18 19` 로 접는다.
-// 앞 3개·뒤 3개·현재 페이지 주변만 남기고 끊긴 구간에 말줄임을 넣는다.
+// 시안은 앞 3개 · 말줄임 · 뒤 3개로 고정된 `< 1 2 3 ... 17 18 19 >` 형태다
+// (375·1280 동일, 칸 24px 플러시). 현재 페이지가 가운데면 그 숫자 하나만 사이에 끼워
+// `1 2 3 ... 10 ... 18 19 20` 이 되므로 칸 수는 항상 9 이하다.
+// 화살표까지 11칸 x 24 = 264 로 375 의 목록 내부폭 279 에 한 줄로 들어간다.
+// 현재 페이지 +-1 은 좌우 화살표가 이미 하는 일이라 붙이지 않는다 (붙이면 13칸 -> 375 에서 2줄).
 function buildPages(page: number, totalPages: number): (number | typeof ELLIPSIS)[] {
-  const shown = [1, 2, 3, page - 1, page, page + 1, totalPages - 2, totalPages - 1, totalPages]
+  const shown = [1, 2, 3, page, totalPages - 2, totalPages - 1, totalPages]
     .filter((current) => current >= 1 && current <= totalPages)
     .sort((a, b) => a - b)
 
@@ -26,7 +29,7 @@ export function Pagination({ page, totalPages, onPageChange }: PaginationProps) 
   const pages = buildPages(page, totalPages)
 
   return (
-    <div className="flex w-full items-center justify-center">
+    <div className="flex w-full flex-wrap items-center justify-center gap-y-8">
       <button
         type="button"
         aria-label="이전 페이지"

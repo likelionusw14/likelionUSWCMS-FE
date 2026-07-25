@@ -70,14 +70,18 @@ export function DatePickerModal({
   }
 
   return (
-    <Modal open={open} onClose={onClose} panelClassName="" ariaLabel={title}>
-      <WindowPanel
-        className="w-[408px] max-[800px]:w-[330px]"
-        bodyClassName="flex flex-col items-stretch gap-40 !p-24"
-      >
+    // Figma 408 (754:4024 날짜선택 · 741:3236 월선택). 내부 휠 뷰포트 360 = 408 - 좌우 24.
+    // 800 이하(사용자 일정 화면) 시안은 패널 330 · 휠 282 로 줄어든다.
+    <Modal
+      open={open}
+      onClose={onClose}
+      panelClassName="w-full max-w-[408px] max-[800px]:max-w-[330px]"
+      ariaLabel={title}
+    >
+      <WindowPanel className="w-full" bodyClassName="flex flex-col items-stretch gap-40 !p-24">
         <h2 className="text-left text-sm-22 text-black">{title}</h2>
 
-        <WheelDeck className="mx-auto w-[360px] max-[800px]:w-[282px]">
+        <WheelDeck className="mx-auto w-full max-w-[360px] max-[800px]:max-w-[282px]">
           <WheelPicker
             items={years.map((y) => `${y}`)}
             defaultIndex={initial.year}

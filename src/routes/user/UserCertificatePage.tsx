@@ -7,7 +7,7 @@ export function UserCertificatePage() {
   const flow = useCertificateIssue()
 
   return (
-    <div className="mx-auto flex w-full max-w-[1280px] flex-col gap-64 px-64 pb-96 pt-48">
+    <div className="mx-auto flex w-full max-w-[1280px] flex-col gap-48 px-24 pb-96 pt-40 sm:gap-64 sm:px-32 sm:pt-48 lg:px-64">
       <header className="flex flex-col items-center gap-8">
         <div className="relative border-x border-secondary-2 bg-secondary-2/10 px-24 py-4">
           <span className="absolute -left-8 -top-8 h-16 w-16 rounded-full bg-secondary-2" />
@@ -17,7 +17,11 @@ export function UserCertificatePage() {
         <p className="text-sm-18 text-black">활동증명서 발급</p>
       </header>
 
-      <CertificateInfoPanel info={preview.data} isLoading={preview.isLoading} onIssue={flow.issue} />
+      <CertificateInfoPanel
+        info={preview.data}
+        isLoading={preview.isLoading}
+        onIssue={flow.issue}
+      />
 
       <CertificateFlowModal state={flow.state} onDownload={flow.download} onGoHome={flow.goHome} />
     </div>

@@ -19,7 +19,7 @@ const COLUMNS: Column<UserNotice>[] = [
           ✓
         </span>
       ) : null,
-    width: 64,
+    width: 37,
     align: 'center',
   },
   { id: 'title', header: '제목', accessor: (notice) => notice.title, minWidth: 280 },
@@ -27,14 +27,14 @@ const COLUMNS: Column<UserNotice>[] = [
     id: 'tag',
     header: '태그',
     accessor: (notice) => notice.tagLabel,
-    width: 160,
+    width: 96,
     align: 'center',
   },
   {
     id: 'date',
     header: '작성일',
     accessor: (notice) => formatDate(notice.publishedAt),
-    width: 160,
+    width: 96,
     align: 'center',
   },
 ]
@@ -65,6 +65,7 @@ export function UserNoticeList({
         loadingRowCount={20}
         emptyMessage="조건에 맞는 공지가 없습니다."
         ariaLabel="공지 목록"
+        tightMobileEdge
       />
     </ListSection>
   )
