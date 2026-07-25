@@ -97,28 +97,34 @@ export function Modal({
     <AnimatePresence>
       {open && (
         <motion.div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-24"
+          className="fixed inset-0 z-50 overflow-y-auto bg-black/40"
           onClick={dismissable ? onClose : undefined}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: reduce ? 0 : 0.15 }}
         >
-          <motion.div
-            ref={panelRef}
-            role="dialog"
-            aria-modal="true"
-            aria-label={ariaLabel}
-            tabIndex={-1}
-            className={cn('outline-none', panelClassName)}
-            onClick={(event) => event.stopPropagation()}
-            initial={reduce ? { opacity: 0 } : { opacity: 0, scale: 0.96, y: 8 }}
-            animate={reduce ? { opacity: 1 } : { opacity: 1, scale: 1, y: 0 }}
-            exit={reduce ? { opacity: 0 } : { opacity: 0, scale: 0.96, y: 8 }}
-            transition={{ duration: reduce ? 0 : 0.18, ease: [0.16, 1, 0.3, 1] }}
-          >
-            {children}
-          </motion.div>
+          {/* 오버레이가 스크롤을 갖고, 가운데 정렬은 안쪽 래퍼가 맡는다.
+              오버레이에 직접 items-center 를 걸면 내용이 화면보다 길 때 위쪽이 잘려 나가고
+              body 스크롤도 잠겨 있어 접근 자체가 불가능해진다(375x600 일정 작성에서 위아래 12px 손실).
+              min-h-full + py-24 라 짧은 모달은 그대로 가운데, 긴 모달은 여백을 두고 스크롤된다. */}
+          <div className="flex min-h-full items-center justify-center px-24 py-24">
+            <motion.div
+              ref={panelRef}
+              role="dialog"
+              aria-modal="true"
+              aria-label={ariaLabel}
+              tabIndex={-1}
+              className={cn('outline-none', panelClassName)}
+              onClick={(event) => event.stopPropagation()}
+              initial={reduce ? { opacity: 0 } : { opacity: 0, scale: 0.96, y: 8 }}
+              animate={reduce ? { opacity: 1 } : { opacity: 1, scale: 1, y: 0 }}
+              exit={reduce ? { opacity: 0 } : { opacity: 0, scale: 0.96, y: 8 }}
+              transition={{ duration: reduce ? 0 : 0.18, ease: [0.16, 1, 0.3, 1] }}
+            >
+              {children}
+            </motion.div>
+          </div>
         </motion.div>
       )}
     </AnimatePresence>,
