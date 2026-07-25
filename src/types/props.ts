@@ -512,6 +512,7 @@ export interface SchedulePopupProps {
   event: SchedulePopupEvent
   // 꼬리 방향. left = 팝업이 셀 오른쪽(꼬리 왼쪽), right = 팝업이 셀 왼쪽(꼬리 오른쪽). 기본 left.
   tail?: 'left' | 'right'
+  placement?: 'side' | 'below'
   // 있으면 하단 수정/삭제 버튼 표시.
   onEdit?: () => void
   onDelete?: () => void

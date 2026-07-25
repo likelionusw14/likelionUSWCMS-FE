@@ -9,6 +9,8 @@ const TAIL = 31.667 // 꼬리 절반 높이
 const BODY_MIN = 326 // 본문 최소 폭 (일정명 짧을 때 기본, 총 폭 347)
 // 제목행 필요 폭 = px-24×2 + 점(12) + 점gap(8) + 제목-날짜 gap(8).
 const HEADER_EXTRA = 24 * 2 + 12 + 8 + 8
+const COMPACT_WIDTH = 347
+const TOP_TAIL_HEIGHT = 12
 
 // 말풍선 외곽선 path 생성 — 직선 변(가로 w·세로 h)만 늘어나고, 모서리(16)·곡선 꼬리는 고정.
 // 꼬리는 왼쪽·세로 중앙. (오른쪽 꼬리는 svg 를 scaleX(-1) 로 뒤집는다.)
@@ -31,14 +33,41 @@ function bubblePath(w: number, h: number): string {
   ].join(' ')
 }
 
+function bottomBubblePath(w: number, h: number, tail: 'left' | 'right'): string {
+  const tailX = tail === 'left' ? 36 : w - 36
+  return [
+    `M${R} ${TOP_TAIL_HEIGHT}`,
+    `H${tailX - 10}`,
+    `L${tailX} 0`,
+    `L${tailX + 10} ${TOP_TAIL_HEIGHT}`,
+    `H${w - R}`,
+    `A${R} ${R} 0 0 1 ${w} ${TOP_TAIL_HEIGHT + R}`,
+    `V${h - R}`,
+    `A${R} ${R} 0 0 1 ${w - R} ${h}`,
+    `H${R}`,
+    `A${R} ${R} 0 0 1 0 ${h - R}`,
+    `V${TOP_TAIL_HEIGHT + R}`,
+    `A${R} ${R} 0 0 1 ${R} ${TOP_TAIL_HEIGHT}`,
+    'Z',
+  ].join(' ')
+}
+
 // 일정 팝업 — 캘린더 날짜 위 말풍선. Figma 588:1223/1222/1224/1225.
 // 흰 말풍선(primary 1px 테두리, 곡선 꼬리 좌/우) — 하나의 SVG path 라 꼬리 포함 테두리가 균일하다.
 // 세로: 내용이 길면 늘어나고 현재 높이(버튼O 260 / 버튼X 210)를 최소로 둔다.
 // 가로: 일정명이 길면 제목행을 한 줄로 담을 만큼 본문 폭이 늘어난다(최소 326). 설명·장소는 그 폭 안에서 줄바꿈.
-export function SchedulePopup({ event, tail = 'left', onEdit, onDelete, className }: SchedulePopupProps) {
+export function SchedulePopup({
+  event,
+  tail = 'left',
+  placement = 'side',
+  onEdit,
+  onDelete,
+  className,
+}: SchedulePopupProps) {
   const showActions = Boolean(onEdit || onDelete)
   const minH = showActions ? 260 : 210
   const isRight = tail === 'right'
+  const isBelow = placement === 'below'
 
   const contentRef = useRef<HTMLDivElement>(null)
   const titleRef = useRef<HTMLSpanElement>(null)
@@ -54,37 +83,43 @@ export function SchedulePopup({ event, tail = 'left', onEdit, onDelete, classNam
     if (!content || !title || !date) return
     const measure = () => {
       const needed = HEADER_EXTRA + title.scrollWidth + date.scrollWidth
-      setBodyW(Math.max(BODY_MIN, Math.ceil(needed)))
+      setBodyW(isBelow ? COMPACT_WIDTH : Math.max(BODY_MIN, Math.ceil(needed)))
       setHeight(Math.max(minH, Math.round(content.getBoundingClientRect().height)))
     }
     measure()
     const ro = new ResizeObserver(measure)
     ro.observe(content)
     return () => ro.disconnect()
-  }, [minH, event.title, event.dateTime, event.place, event.description])
+  }, [isBelow, minH, event.title, event.dateTime, event.place, event.description])
 
-  const w = bodyW + XR
+  const w = isBelow ? COMPACT_WIDTH : bodyW + XR
+  const totalHeight = isBelow ? height + TOP_TAIL_HEIGHT : height
 
   return (
-    <div className={cn('relative', className)} style={{ width: w, height }}>
+    <div className={cn('relative', className)} style={{ width: w, height: totalHeight }}>
       <svg
         aria-hidden
         width={w}
-        height={height}
-        viewBox={`0 0 ${w} ${height}`}
+        height={totalHeight}
+        viewBox={`0 0 ${w} ${totalHeight}`}
         className="absolute inset-0 overflow-visible text-primary"
-        style={isRight ? { transform: 'scaleX(-1)' } : undefined}
+        style={!isBelow && isRight ? { transform: 'scaleX(-1)' } : undefined}
       >
-        <path d={bubblePath(w, height)} fill="white" stroke="currentColor" strokeWidth="1" />
+        <path
+          d={isBelow ? bottomBubblePath(w, totalHeight, tail) : bubblePath(w, height)}
+          fill="white"
+          stroke="currentColor"
+          strokeWidth="1"
+        />
       </svg>
 
       <div
         ref={contentRef}
         className={cn(
           'relative flex flex-col gap-[10px] px-24 py-[19px]',
-          isRight ? 'mr-[21px]' : 'ml-[21px]',
+          isBelow ? 'top-12' : isRight ? 'mr-[21px]' : 'ml-[21px]',
         )}
-        style={{ width: bodyW, minHeight: minH }}
+        style={{ width: isBelow ? COMPACT_WIDTH : bodyW, minHeight: minH }}
       >
         {/* 제목 + 날짜시간 */}
         <div className="flex min-h-[21px] items-center justify-between gap-8">

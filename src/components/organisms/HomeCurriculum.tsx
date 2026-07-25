@@ -66,13 +66,15 @@ export function HomeCurriculum() {
       <SpeechBubble
         className={cn(
           'absolute inset-0 h-[148px] w-full',
-          step.side === 'left' && '-scale-x-100',
+          step.side === 'left' && 'min-[641px]:-scale-x-100',
         )}
       />
       <div
         className={cn(
           'absolute inset-y-0 flex flex-col justify-center gap-8 text-black transition-colors duration-300 group-hover:text-white motion-reduce:transition-none',
-          step.side === 'left' ? 'left-40 right-40' : 'left-[44px] right-[36px]',
+          step.side === 'left'
+            ? 'left-[44px] right-[36px] min-[641px]:left-40 min-[641px]:right-40'
+            : 'left-[44px] right-[36px]',
         )}
       >
         <p className="text-sm-20">{step.title}</p>
@@ -115,13 +117,13 @@ export function HomeCurriculum() {
           ))}
         </div>
 
-        <div className="hidden items-center justify-center gap-24 lg:flex">
-          <div className="flex h-[1252px] shrink-0 flex-col gap-[236px]">
+        <div className="hidden w-full items-center justify-center gap-24 lg:flex">
+          <div className="flex h-[1252px] w-[440px] shrink-0 flex-col gap-[236px]">
             {leftSteps.map(renderStep)}
           </div>
           {/* 타임라인 — 주황 그라디언트 선 + 단계별 원 6개 (Figma 벡터 익스포트) */}
           <img src={timelineLine} alt="" className="h-[1252px] w-[54px] shrink-0" />
-          <div className="flex h-[1252px] shrink-0 flex-col justify-end gap-[236px] pb-[144px]">
+          <div className="flex h-[1252px] w-[440px] shrink-0 flex-col justify-end gap-[236px] pb-[144px]">
             {rightSteps.map(renderStep)}
           </div>
         </div>

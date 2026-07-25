@@ -39,9 +39,10 @@ export function ScheduleCalendar({
     const cell = (target.closest('[data-cell]') as HTMLElement | null) ?? target
     const cellRect = cell.getBoundingClientRect()
     const chipRect = target.getBoundingClientRect()
+    const placement = responsiveVariant === 'user' && window.innerWidth <= 800 ? 'below' : 'side'
     const tail: 'left' | 'right' =
       cellRect.left + cellRect.width / 2 < window.innerWidth / 2 ? 'left' : 'right'
-    setSelected({ event, cellRect, chipRect, tail })
+    setSelected({ event, cellRect, chipRect, tail, placement })
   }
 
   // 닫기 — 바깥 클릭 / Esc / 스크롤·리사이즈(fixed 위치가 어긋나므로).
@@ -90,20 +91,51 @@ export function ScheduleCalendar({
               className="fixed z-50"
               style={{
                 left:
-                  selected.tail === 'left'
-                    ? selected.cellRect.right + GAP
-                    : selected.cellRect.left - GAP,
-                top: selected.chipRect.top + selected.chipRect.height / 2,
-                transformOrigin: selected.tail === 'left' ? 'left center' : 'right center',
+                  selected.placement === 'below'
+                    ? Math.min(
+                        Math.max(GAP, selected.chipRect.left + selected.chipRect.width / 2 - 347 / 2),
+                        window.innerWidth - 347 - GAP,
+                      )
+                    : selected.tail === 'left'
+                      ? selected.cellRect.right + GAP
+                      : selected.cellRect.left - GAP,
+                top:
+                  selected.placement === 'below'
+                    ? selected.chipRect.bottom + GAP
+                    : selected.chipRect.top + selected.chipRect.height / 2,
+                transformOrigin:
+                  selected.placement === 'below'
+                    ? selected.tail === 'left'
+                      ? '36px top'
+                      : 'calc(100% - 36px) top'
+                    : selected.tail === 'left'
+                      ? 'left center'
+                      : 'right center',
               }}
-              initial={{ opacity: 0, scale: reduce ? 1 : 0.95, x: selected.tail === 'left' ? 0 : '-100%', y: '-50%' }}
-              animate={{ opacity: 1, scale: 1, x: selected.tail === 'left' ? 0 : '-100%', y: '-50%' }}
-              exit={{ opacity: 0, scale: reduce ? 1 : 0.95, x: selected.tail === 'left' ? 0 : '-100%', y: '-50%' }}
+              initial={{
+                opacity: 0,
+                scale: reduce ? 1 : 0.95,
+                x: selected.placement === 'below' || selected.tail === 'left' ? 0 : '-100%',
+                y: selected.placement === 'below' ? 0 : '-50%',
+              }}
+              animate={{
+                opacity: 1,
+                scale: 1,
+                x: selected.placement === 'below' || selected.tail === 'left' ? 0 : '-100%',
+                y: selected.placement === 'below' ? 0 : '-50%',
+              }}
+              exit={{
+                opacity: 0,
+                scale: reduce ? 1 : 0.95,
+                x: selected.placement === 'below' || selected.tail === 'left' ? 0 : '-100%',
+                y: selected.placement === 'below' ? 0 : '-50%',
+              }}
               transition={{ duration: reduce ? 0 : 0.16, ease: [0.16, 1, 0.3, 1] }}
             >
               <SchedulePopup
                 event={toPopupEvent(selected.event)}
                 tail={selected.tail}
+                placement={selected.placement}
                 onEdit={
                   onEventEdit
                     ? () => {
