@@ -1,6 +1,6 @@
 import { useLocation } from 'react-router-dom'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
-import { AdminSidebar, AdminSidebarDrawer, AdminTopBar, SiteFooter } from '@organisms'
+import { AdminTopBar, NavSidebar, NavSidebarDrawer, SiteFooter } from '@organisms'
 import { useAdminSidebar } from '@hooks'
 import { getAdminBreadcrumb } from '@routes/admin/nav'
 import type { AdminSidebarShellProps } from '@types'
@@ -21,7 +21,7 @@ export function AdminSidebarShell({ homeItem, navItems }: AdminSidebarShellProps
 
   return (
     <div className="flex h-screen overflow-hidden bg-background-1">
-      <AdminSidebar
+      <NavSidebar
         homeItem={homeItem}
         navItems={navItems}
         className="hidden w-[224px] shrink-0 lg:flex"
@@ -39,12 +39,14 @@ export function AdminSidebarShell({ homeItem, navItems }: AdminSidebarShellProps
               sidebarControls={SIDEBAR_ID}
             />
           </div>
-          <AdminSidebarDrawer
+          <NavSidebarDrawer
             id={SIDEBAR_ID}
+            label="관리 메뉴"
             open={sidebar.isOpen}
             onClose={sidebar.close}
             homeItem={homeItem}
             navItems={navItems}
+            side="left"
           />
         </div>
 

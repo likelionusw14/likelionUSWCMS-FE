@@ -1,27 +1,38 @@
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 import { NavLink, useNavigate } from 'react-router-dom'
 import userIcon from '@/assets/icons/user-white.svg'
 import { MobileMenuButton } from '@atoms'
 import { GlassNavMenu } from '@molecules'
-import { BRAND_NAME } from '@constants'
-import { useAuth, useMobileMenu } from '@hooks'
+import { BRAND_NAME, NAV_SIDEBAR_TABLET_QUERY, NAV_SIDEBAR_TONE } from '@constants'
+import { useAuth, useMediaQuery, useMobileMenu } from '@hooks'
 import type { PublicHeaderProps } from '@types'
 import { cn, glassNavTransition } from '@utils'
 
+import { NavSidebarDrawer } from './NavSidebarDrawer'
+
 const MOBILE_MENU_ID = 'public-mobile-menu'
+const HOME_ITEM = { to: '/', label: BRAND_NAME }
+
+// CTA(마이페이지·로그아웃)는 lg 이상 헤더에만 있어, lg 미만에서는 드로어가 유일한 진입점이다.
+const DRAWER_CTA =
+  'flex h-48 items-center justify-center rounded-full bg-gradient-user-menu text-sm-18 text-white outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-white'
 
 // 공통(마케팅) 헤더 — UserHeader 와 같은 앱바(backdrop-blur + Primary 세로 그라디언트 유리판) +
 // 같은 GlassNavMenu(유리 알약 메뉴, 슬라이딩 캡슐·Tab 포커스 애니메이션 공유) 위에
 // 브랜드 + 계정 버튼. sticky 로 콘텐츠 위에 얹어야 블러 대상(아래 다크 배경/히어로)이 성립한다.
-// 게스트: 계정 아이콘(비활성) + 지원하기 CTA. 로그인: 마이페이지(/app) 링크 + 로그아웃 CTA.
-// lg 미만에서는 알약 메뉴/CTA 를 숨기고 UserHeader 와 같은 우측 드로어(useMobileMenu 공유)를 쓴다
+// 게스트: 계정 아이콘(비활성). 로그인: 마이페이지(/app) 링크 + 로그아웃 CTA.
+// lg 미만에서는 알약 메뉴/CTA 를 숨기고 관리자와 같은 NavSidebar 를 우측 드로어로 쓴다
 // — 알약 메뉴가 375px 에서 260px 넘쳐 랜딩 페이지 가로 스크롤을 만들던 문제.
-export function PublicHeader({ navItems, applyItem }: PublicHeaderProps) {
+export function PublicHeader({ navItems, tone = 'light' }: PublicHeaderProps) {
   const { isAuthenticated, logout } = useAuth()
   const navigate = useNavigate()
   const reduce = useReducedMotion()
   const transition = glassNavTransition(!!reduce)
   const menu = useMobileMenu()
+  // 모바일 카드만 헤더 바로 아래에 붙으므로 그때만 헤더도 같은 색으로 물들인다.
+  // 태블릿 드로어는 화면을 덮는 별개 패널이라 헤더는 유리판 그대로 둔다.
+  const isTablet = useMediaQuery(NAV_SIDEBAR_TABLET_QUERY)
+  const tintHeader = menu.isOpen && !isTablet
 
   function handleLogout() {
     logout()
@@ -29,8 +40,18 @@ export function PublicHeader({ navItems, applyItem }: PublicHeaderProps) {
   }
 
   return (
-    <>
-      <header className="sticky top-0 z-20 w-full bg-gradient-user-header backdrop-blur-header">
+    // 관리자 셸과 같은 구조 — sticky 래퍼가 헤더(z-30) + 오버레이의 위치·z 기준이 된다.
+    // 모바일 카드는 이 헤더 바로 아래(top-full)에 붙고, 스크림(z-10)은 헤더를 덮지 않는다.
+    <div className="sticky top-0 z-40">
+      {/* 모바일 카드가 열리면 유리판을 걷고 카드와 같은 배경색으로 붙여 한 덩어리로 보이게 한다. */}
+      <header
+        className={cn(
+          'relative z-30 w-full transition-colors duration-200 motion-reduce:transition-none',
+          tintHeader
+            ? NAV_SIDEBAR_TONE[tone].panel
+            : 'bg-gradient-user-header backdrop-blur-header',
+        )}
+      >
         <div className="relative mx-auto flex w-full max-w-[1280px] items-center justify-between px-24 py-16 sm:px-32 lg:px-64">
           <NavLink
             to="/"
@@ -64,7 +85,7 @@ export function PublicHeader({ navItems, applyItem }: PublicHeaderProps) {
               )}
             </GlassNavMenu>
 
-            {isAuthenticated ? (
+            {isAuthenticated && (
               <button
                 type="button"
                 onClick={handleLogout}
@@ -72,13 +93,6 @@ export function PublicHeader({ navItems, applyItem }: PublicHeaderProps) {
               >
                 로그아웃
               </button>
-            ) : (
-              <NavLink
-                to={applyItem.to}
-                className="flex h-48 items-center justify-center rounded-full bg-gradient-user-menu px-16 text-sm-18 text-white outline-none backdrop-blur-menu focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-white"
-              >
-                {applyItem.label}
-              </NavLink>
             )}
           </div>
 
@@ -92,100 +106,35 @@ export function PublicHeader({ navItems, applyItem }: PublicHeaderProps) {
         </div>
       </header>
 
-      <AnimatePresence initial={false}>
-        {menu.isOpen && (
-          <>
-            <motion.button
+      <NavSidebarDrawer
+        id={MOBILE_MENU_ID}
+        label="공통 모바일 메뉴"
+        open={menu.isOpen}
+        onClose={menu.close}
+        homeItem={HOME_ITEM}
+        navItems={navItems}
+        side="right"
+        tone={tone}
+        headerHasBrand
+      >
+        {isAuthenticated && (
+          <div className="flex flex-col gap-8 px-4">
+            <NavLink to="/app" onClick={menu.close} className={DRAWER_CTA}>
+              마이페이지
+            </NavLink>
+            <button
               type="button"
-              aria-label="메뉴 닫기"
-              onClick={menu.close}
-              initial={reduce ? false : { opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={reduce ? undefined : { opacity: 0 }}
-              transition={{ duration: reduce ? 0 : 0.2 }}
-              className="fixed inset-0 z-30 cursor-default bg-black/30 lg:hidden"
-            />
-
-            <motion.nav
-              id={MOBILE_MENU_ID}
-              aria-label="공통 모바일 메뉴"
-              initial={reduce ? false : { x: '100%' }}
-              animate={{ x: 0 }}
-              exit={reduce ? undefined : { x: '100%' }}
-              transition={{ duration: reduce ? 0 : 0.25, ease: 'easeInOut' }}
-              className="fixed inset-y-0 right-0 z-40 flex w-[280px] max-w-[85vw] flex-col bg-white px-16 pb-24 pt-24 shadow-drop lg:hidden"
+              onClick={() => {
+                menu.close()
+                handleLogout()
+              }}
+              className={DRAWER_CTA}
             >
-              <div className="mb-16 flex items-center justify-between px-8">
-                <NavLink
-                  to="/"
-                  onClick={menu.close}
-                  className="rounded-8 text-sm-22 text-secondary-2 outline-none focus-visible:ring-2 focus-visible:ring-secondary-2"
-                >
-                  {BRAND_NAME}
-                </NavLink>
-                <button
-                  type="button"
-                  aria-label="메뉴 닫기"
-                  onClick={menu.close}
-                  className="flex h-32 w-32 items-center justify-center rounded-8 text-sm-22 text-secondary-2 outline-none focus-visible:ring-2 focus-visible:ring-secondary-2"
-                >
-                  ×
-                </button>
-              </div>
-
-              <div className="flex flex-col">
-                {navItems.map((item) => (
-                  <NavLink
-                    key={item.to}
-                    to={item.to}
-                    onClick={menu.close}
-                    className={({ isActive }) =>
-                      cn(
-                        'rounded-8 px-16 py-12 text-sm-16 text-black outline-none hover:bg-background-1 focus-visible:ring-2 focus-visible:ring-primary',
-                        isActive && 'bg-background-1',
-                      )
-                    }
-                  >
-                    {item.label}
-                  </NavLink>
-                ))}
-              </div>
-
-              <div className="mt-24 flex flex-col gap-8">
-                {isAuthenticated ? (
-                  <>
-                    <NavLink
-                      to="/app"
-                      onClick={menu.close}
-                      className="flex h-48 items-center justify-center rounded-full bg-gradient-user-menu text-sm-18 text-white outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-white"
-                    >
-                      마이페이지
-                    </NavLink>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        menu.close()
-                        handleLogout()
-                      }}
-                      className="flex h-48 items-center justify-center rounded-full bg-gradient-user-menu text-sm-18 text-white outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-white"
-                    >
-                      로그아웃
-                    </button>
-                  </>
-                ) : (
-                  <NavLink
-                    to={applyItem.to}
-                    onClick={menu.close}
-                    className="flex h-48 items-center justify-center rounded-full bg-gradient-user-menu text-sm-18 text-white outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-white"
-                  >
-                    {applyItem.label}
-                  </NavLink>
-                )}
-              </div>
-            </motion.nav>
-          </>
+              로그아웃
+            </button>
+          </div>
         )}
-      </AnimatePresence>
-    </>
+      </NavSidebarDrawer>
+    </div>
   )
 }

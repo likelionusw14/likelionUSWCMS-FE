@@ -8,7 +8,7 @@ import { UserNoticeListPage } from '@routes/user/UserNoticeListPage'
 import { UserProjectDetailPage } from '@routes/user/UserProjectDetailPage'
 import { UserProjectListPage } from '@routes/user/UserProjectListPage'
 import { UserSchedulePage } from '@routes/user/UserSchedulePage'
-import { PUBLIC_APPLY, PUBLIC_NAV } from './nav'
+import { PUBLIC_NAV } from './nav'
 import { CommonHomePage } from './CommonHomePage'
 import { DemoLoginPage } from './DemoLoginPage'
 import { LoginPage } from './LoginPage'
@@ -22,7 +22,7 @@ export const commonRoutes: RouteObject[] = [
   // 개발용 역할 선택 로그인 — 디자인 셸 밖의 임시 화면.
   { path: '/login/demo', element: <DemoLoginPage /> },
   {
-    element: <PublicShell navItems={PUBLIC_NAV} applyItem={PUBLIC_APPLY} />,
+    element: <PublicShell navItems={PUBLIC_NAV} />,
     children: [
       { path: '/login', element: <LoginPage /> },
       { path: '/signup/profile', element: <SignupProfilePage /> },
@@ -31,7 +31,7 @@ export const commonRoutes: RouteObject[] = [
   },
   // 게스트 콘텐츠(프로젝트·공지·일정) — 멤버 페이지를 밝은 게스트 셸에서 재사용. 헤더 메뉴 경로와 일치한다.
   {
-    element: <PublicContentShell navItems={PUBLIC_NAV} applyItem={PUBLIC_APPLY} />,
+    element: <PublicContentShell navItems={PUBLIC_NAV} />,
     children: [
       { path: '/projects', element: <UserProjectListPage /> },
       { path: '/projects/:projectId', element: <UserProjectDetailPage /> },

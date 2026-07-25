@@ -11,7 +11,7 @@ function AnimatedOutlet() {
   return <>{outlet}</>
 }
 
-export function PublicShell({ navItems, applyItem }: PublicShellProps) {
+export function PublicShell({ navItems }: PublicShellProps) {
   const location = useLocation()
   const variants = {
     initial: { opacity: 0 },
@@ -20,7 +20,7 @@ export function PublicShell({ navItems, applyItem }: PublicShellProps) {
   }
   return (
     <div className="flex min-h-screen flex-col bg-background-2">
-      <PublicHeader navItems={navItems} applyItem={applyItem} />
+      <PublicHeader navItems={navItems} tone="dark" />
       <main className="flex flex-1 items-center justify-center px-24 py-64 sm:px-32 sm:py-[120px] lg:px-64">
         <AnimatePresence mode="wait">
           <motion.div

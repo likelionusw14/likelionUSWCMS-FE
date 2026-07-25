@@ -1,19 +1,21 @@
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 import { NavLink, useLocation } from 'react-router-dom'
 import userIcon from '@/assets/icons/user-white.svg'
 import { MobileMenuButton } from '@atoms'
 import { GlassNavMenu } from '@molecules'
-import { BRAND_NAME } from '@constants'
-import { useMobileMenu } from '@hooks'
+import { BRAND_NAME, NAV_SIDEBAR_TABLET_QUERY, NAV_SIDEBAR_TONE } from '@constants'
+import { useMediaQuery, useMobileMenu } from '@hooks'
 import type { UserHeaderProps } from '@types'
 import { cn, glassNavTransition } from '@utils'
+import { NavSidebarDrawer } from './NavSidebarDrawer'
 
 const MOBILE_MENU_ID = 'user-mobile-menu'
+const HOME_ITEM = { to: '/app', label: BRAND_NAME }
 
 // 사용자 영역 상단 헤더 — 브랜드 + 알약형 메뉴(GlassNavMenu, UserHeader/PublicHeader 공유) + 계정 버튼.
 // Figma 717:1684. 헤더는 backdrop-blur(2.5)위에 Primary 세로 그라디언트(30%->2%)를 얹은
 // 유리판이라, 아래 본문이 옅게 비쳐 흐리게 보인다 — sticky 로 스크롤 컨테이너 위에 얹어야
-// 이 효과가 성립한다. lg 미만에서는 알약 메뉴 대신 햄버거 → 우측 드로어를 쓴다.
+// 이 효과가 성립한다. lg 미만에서는 알약 메뉴 대신 햄버거 → 관리자와 같은 NavSidebar 우측 드로어.
 export function UserHeader({ navItems, onLogout }: UserHeaderProps) {
   const reduce = useReducedMotion()
   const transition = glassNavTransition(!!reduce)
@@ -21,10 +23,25 @@ export function UserHeader({ navItems, onLogout }: UserHeaderProps) {
   const { pathname } = useLocation()
   // 홈(/app)은 어두운 히어로 위에 얹히므로 드로어도 어두운 테마로 뒤집는다.
   const isHome = pathname === '/app'
+  const tone = isHome ? 'dark' : 'light'
+  // 모바일 카드만 헤더 바로 아래에 붙으므로 그때만 헤더도 같은 색으로 물들인다.
+  // 태블릿 드로어는 화면을 덮는 별개 패널이라 헤더는 유리판 그대로 둔다.
+  const isTablet = useMediaQuery(NAV_SIDEBAR_TABLET_QUERY)
+  const tintHeader = menu.isOpen && !isTablet
 
   return (
-    <>
-      <header className="sticky top-0 z-20 w-full bg-gradient-user-header backdrop-blur-header">
+    // 관리자 셸과 같은 구조 — sticky 래퍼가 헤더(z-30) + 오버레이의 위치·z 기준이 된다.
+    // 모바일 카드는 이 헤더 바로 아래(top-full)에 붙고, 스크림(z-10)은 헤더를 덮지 않는다.
+    <div className="sticky top-0 z-40">
+      {/* 모바일 카드가 열리면 유리판을 걷고 카드와 같은 배경색으로 붙여 한 덩어리로 보이게 한다. */}
+      <header
+        className={cn(
+          'relative z-30 w-full transition-colors duration-200 motion-reduce:transition-none',
+          tintHeader
+            ? NAV_SIDEBAR_TONE[tone].panel
+            : 'bg-gradient-user-header backdrop-blur-header',
+        )}
+      >
         <div className="relative mx-auto flex w-full max-w-[1280px] items-center justify-between px-16 py-16 sm:px-32 lg:px-64">
           <NavLink
             to="/app"
@@ -60,75 +77,17 @@ export function UserHeader({ navItems, onLogout }: UserHeaderProps) {
         </div>
       </header>
 
-      <AnimatePresence initial={false}>
-        {menu.isOpen && (
-          <>
-            <motion.button
-              type="button"
-              aria-label="메뉴 닫기"
-              onClick={menu.close}
-              initial={reduce ? false : { opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={reduce ? undefined : { opacity: 0 }}
-              transition={{ duration: reduce ? 0 : 0.2 }}
-              className="fixed inset-0 z-30 cursor-default bg-black/30 lg:hidden"
-            />
-
-            <motion.nav
-              id={MOBILE_MENU_ID}
-              aria-label="사용자 모바일 메뉴"
-              initial={reduce ? false : { x: '100%' }}
-              animate={{ x: 0 }}
-              exit={reduce ? undefined : { x: '100%' }}
-              transition={{ duration: reduce ? 0 : 0.25, ease: 'easeInOut' }}
-              className={cn(
-                'fixed right-0 top-0 z-40 flex h-[350px] w-[375px] max-w-full flex-col px-16 pb-24 pt-24 opacity-100 shadow-drop min-[376px]:h-full lg:hidden',
-                isHome ? 'bg-background-2' : 'bg-white',
-              )}
-            >
-              <div className="mb-16 flex items-center justify-between px-8">
-                <NavLink
-                  to="/app"
-                  onClick={menu.close}
-                  className="rounded-8 text-sm-22 text-secondary-2 outline-none focus-visible:ring-2 focus-visible:ring-secondary-2"
-                >
-                  {BRAND_NAME}
-                </NavLink>
-                <button
-                  type="button"
-                  aria-label="메뉴 닫기"
-                  onClick={menu.close}
-                  className={cn(
-                    'flex h-32 w-32 items-center justify-center rounded-8 text-sm-22 outline-none focus-visible:ring-2 focus-visible:ring-secondary-2',
-                    isHome ? 'text-white' : 'text-secondary-2',
-                  )}
-                >
-                  ×
-                </button>
-              </div>
-
-              <div className="flex flex-col">
-                {navItems.map((item) => (
-                  <NavLink
-                    key={item.to}
-                    to={item.to}
-                    onClick={menu.close}
-                    className={({ isActive }) =>
-                      cn(
-                        'rounded-8 px-16 py-12 text-sm-16 outline-none focus-visible:ring-2 focus-visible:ring-primary',
-                        isHome ? 'text-white hover:bg-primary' : 'text-black hover:bg-background-1',
-                        isActive && (isHome ? 'bg-primary' : 'bg-background-1'),
-                      )
-                    }
-                  >
-                    {item.label}
-                  </NavLink>
-                ))}
-              </div>
-            </motion.nav>
-          </>
-        )}
-      </AnimatePresence>
-    </>
+      <NavSidebarDrawer
+        id={MOBILE_MENU_ID}
+        label="사용자 모바일 메뉴"
+        open={menu.isOpen}
+        onClose={menu.close}
+        homeItem={HOME_ITEM}
+        navItems={navItems}
+        side="right"
+        tone={tone}
+        headerHasBrand
+      />
+    </div>
   )
 }

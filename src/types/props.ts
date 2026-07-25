@@ -108,14 +108,15 @@ export interface GlassNavMenuProps {
   children?: ReactNode
 }
 
+// tone 은 셸이 준다 — 배경이 어두운 게스트 홈(CommonHomePage)·로그인/가입(PublicShell)은 dark,
+// 밝은 게스트 콘텐츠(PublicContentShell)는 light. 모바일 드로어 색이 이걸 따른다.
 export interface PublicHeaderProps {
   navItems: NavItem[]
-  applyItem: NavItem
+  tone?: NavSidebarTone
 }
 
 export interface PublicShellProps {
   navItems: NavItem[]
-  applyItem: NavItem
 }
 
 export interface SocialLoginPanelProps {
@@ -130,15 +131,24 @@ export interface SignupProfileFormProps {
   partOptions: SelectOption[]
 }
 
-// ── 관리 페이지(사이드바 레이아웃) ──
-// 폭·위치는 셸이 className 으로 정한다 — lg 이상은 흐름 안 224px 고정 컬럼, lg 미만은 드로어가 담는다.
-// onClose 는 오버레이(드로어/드롭다운)일 때만 준다 — 그때만 브랜드 옆 24x24 닫기(X)가 붙는다.
-// 고정 컬럼(lg 이상)은 Figma 페이지 시안(1205:11709)대로 닫기가 없어 브랜드가 한 줄로 들어간다.
-export interface AdminSidebarProps {
-  homeItem: NavItem
+// ── 공통 사이드바 ──
+// 관리자·사용자·게스트가 같은 NavSidebar 를 쓴다(Figma 1205:11709 / 1360:11150 — 사양 동일, 색만 다르다).
+// 폭·위치는 담는 쪽이 className 으로 정한다 — 관리자 lg 이상은 흐름 안 224px 고정 컬럼,
+// lg 미만은 NavSidebarDrawer(관리자 좌측 / 사용자·게스트 우측).
+// onClose 는 오버레이일 때만 준다 — 그때만 브랜드 옆 24x24 닫기(X)가 붙는다.
+// tone: light = 관리자 및 밝은 배경 라우트, dark = 어두운 배경인 게스트 홈(/)·사용자 홈(/app).
+export type NavSidebarTone = 'light' | 'dark'
+
+export interface NavSidebarProps {
+  // 있으면 브랜드 행이 붙는다(관리자 오버레이·고정 컬럼). 사용자·게스트는 헤더가 브랜드와
+  // 햄버거를 계속 띄우므로 넘기지 않는다 — 같은 행이 두 번 보이지 않게.
+  homeItem?: NavItem
   navItems: NavItem[]
   onClose?: () => void
+  tone?: NavSidebarTone
   className?: string
+  // 메뉴 아래 CTA 자리(게스트·사용자 드로어의 지원하기·마이페이지·로그아웃).
+  children?: ReactNode
 }
 
 export interface AdminSidebarShellProps {
@@ -162,13 +172,24 @@ export interface AdminTopBarProps {
   sidebarControls: string
 }
 
-// lg 미만 관리자 사이드바 오버레이 — 태블릿은 왼쪽 224px 드로어, 모바일은 상단바 아래 전폭 드롭다운.
-export interface AdminSidebarDrawerProps {
+// lg 미만 사이드바 오버레이 — 관리자·사용자·게스트 공용.
+// 모바일(<640)은 헤더 바로 아래로 내려오는 전폭 카드, 태블릿(640~1023)은 224px 측면 드로어.
+// side 는 태블릿 드로어가 붙는 쪽 — 햄버거 위치를 따른다(관리자 좌측 / 사용자·게스트 우측).
+export interface NavSidebarDrawerProps {
   id: string
+  // 오버레이의 aria-label(예: '사용자 모바일 메뉴').
+  label: string
   open: boolean
   onClose: () => void
   homeItem: NavItem
   navItems: NavItem[]
+  side?: 'left' | 'right'
+  tone?: NavSidebarTone
+  // 바로 위 헤더가 이미 브랜드 + 햄버거를 띄우면 true — 그 헤더에 딱 붙는 모바일 카드에서만
+  // 브랜드 행을 생략한다(같은 줄이 두 번 보이므로). 태블릿 드로어는 헤더를 덮으므로 항상 붙는다.
+  headerHasBrand?: boolean
+  // 메뉴 아래 CTA(지원하기·마이페이지·로그아웃) — lg 미만에서 헤더가 숨기므로 여기가 유일한 진입점이다.
+  children?: ReactNode
 }
 
 // 햄버거 버튼 — 3줄 막대가 열리면 X 로 바뀐다. 색은 text-* 로 상속(bg-current).
