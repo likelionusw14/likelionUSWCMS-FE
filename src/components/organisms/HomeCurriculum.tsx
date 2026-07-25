@@ -66,14 +66,14 @@ export function HomeCurriculum() {
       <SpeechBubble
         className={cn(
           'absolute inset-0 h-[148px] w-full',
-          step.side === 'left' && 'min-[641px]:-scale-x-100',
+          step.side === 'left' && 'lg:-scale-x-100',
         )}
       />
       <div
         className={cn(
           'absolute inset-y-0 flex flex-col justify-center gap-8 text-black transition-colors duration-300 group-hover:text-white motion-reduce:transition-none',
           step.side === 'left'
-            ? 'left-[44px] right-[36px] min-[641px]:left-40 min-[641px]:right-40'
+            ? 'left-[44px] right-[36px] lg:left-40 lg:right-40'
             : 'left-[44px] right-[36px]',
         )}
       >
