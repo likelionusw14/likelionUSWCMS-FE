@@ -4,21 +4,20 @@ import { BRAND_NAME } from '@constants'
 import { cn } from '@utils'
 import type { AdminSidebarProps } from '@types'
 
-// Figma 1327:10669 실측: 항목은 컨테이너(px-4) 폭을 꽉 채우고 px-24 rounded-8,
-// 활성은 bg-primary + 흰 글자다(사이드바 배경이 background-1 이라 이전의 bg-background-1 로는 안 보인다).
+// Figma 실측(데스크톱 1205:11709 / 태블릿 1356:10648 / 모바일 1356:10670 — 셋 다 같은 사양):
+// 사이드바 배경은 white, 항목은 컨테이너(px-4) 폭을 꽉 채우고 px-24 rounded-8,
+// 활성 항목만 bg-background-1 이며 글자색은 항상 black 이다(쓰이는 변수: white/secondary-2/black/background-1).
 const MENU_ITEM = 'flex h-40 items-center rounded-8 px-24 text-sm-16 text-black'
-const MENU_ITEM_ACTIVE = 'bg-primary text-white'
+const MENU_ITEM_ACTIVE = 'bg-background-1'
 
-// 관리 페이지 좌측 사이드바 — 브랜드(홈 링크) + 닫기(X) + 관리 메뉴.
-// Figma 1327:10669 의 브랜드 옆 24x24 아이콘이 이 X 다. 닫으면 상단바 햄버거로 다시 연다.
-// 노출/배치는 셸이 정한다: lg 이상은 흐름 안 고정 컬럼(hidden lg:flex),
-// lg 미만은 AdminSidebarDrawer 가 이 컴포넌트를 오버레이 드로어에 담아 왼쪽에서 밀어 넣는다.
+// 관리 페이지 사이드바 — 브랜드(홈 링크) + 닫기(X) + 관리 메뉴.
+// Figma 브랜드 옆 24x24 아이콘이 이 X 다. 닫으면 상단바 햄버거로 다시 연다.
+// 폭·위치는 셸이 정한다(여기서는 잡지 않는다): lg 이상은 흐름 안 224px 고정 컬럼,
+// lg 미만은 AdminSidebarDrawer 가 이 컴포넌트를 오버레이(태블릿=좌측 드로어 / 모바일=상단바 아래 드롭다운)에 담는다.
 export function AdminSidebar({ homeItem, navItems, onClose, className }: AdminSidebarProps) {
   return (
-    <aside
-      className={cn('flex w-[224px] shrink-0 flex-col gap-24 bg-background-1 py-24', className)}
-    >
-      <div className="flex items-start gap-8 px-24">
+    <aside className={cn('flex flex-col gap-24 bg-white py-24', className)}>
+      <div className="flex items-center gap-8 px-24">
         <NavLink
           to={homeItem.to}
           end

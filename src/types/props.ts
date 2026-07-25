@@ -130,8 +130,8 @@ export interface SignupProfileFormProps {
 }
 
 // ── 관리 페이지(사이드바 레이아웃) ──
-// 사이드바는 접이식이다: 안쪽 X 로 닫고 상단바 햄버거로 다시 연다(Figma 1327:10669 의 24x24 아이콘).
-// lg 이상은 흐름 안 고정 컬럼, lg 미만은 왼쪽에서 밀려나오는 오버레이 드로어로 같은 컴포넌트를 쓴다.
+// 사이드바는 접이식이다: 안쪽 X 로 닫고 상단바 햄버거로 다시 연다(Figma 사이드바 브랜드 옆 24x24 아이콘).
+// 폭·위치는 셸이 className 으로 정한다 — lg 이상은 흐름 안 224px 고정 컬럼, lg 미만은 드로어가 담는다.
 export interface AdminSidebarProps {
   homeItem: NavItem
   navItems: NavItem[]
@@ -160,7 +160,7 @@ export interface AdminTopBarProps {
   sidebarControls: string
 }
 
-// lg 미만 관리자 사이드바 — 왼쪽에서 밀려나오는 오버레이 드로어. 안에 AdminSidebar 를 그대로 담는다.
+// lg 미만 관리자 사이드바 오버레이 — 태블릿은 왼쪽 224px 드로어, 모바일은 상단바 아래 전폭 드롭다운.
 export interface AdminSidebarDrawerProps {
   id: string
   open: boolean
