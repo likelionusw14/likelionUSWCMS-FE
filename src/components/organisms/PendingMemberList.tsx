@@ -18,7 +18,6 @@ export function PendingMemberList({
       accessor: (m) => m.name,
       width: 106,
       align: 'center',
-      truncate: true,
     },
     { id: 'cohort', header: '기수', accessor: (m) => m.cohort, width: 106, align: 'center' },
     { id: 'part', header: '파트', accessor: (m) => m.part, width: 106, align: 'center' },

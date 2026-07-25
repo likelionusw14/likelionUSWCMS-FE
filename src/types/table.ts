@@ -20,7 +20,7 @@ export interface Column<T> {
   minWidth?: number
   // 셀·헤더 정렬. 기본 left (메타 열은 center 로 지정).
   align?: ColumnAlign
-  // 넘칠 때 말줄임. 기본값: fill 열이면 true.
+  // 넘칠 때 말줄임. 기본값 true - 행 높이(40px) 고정이라 줄바꿈은 행을 깨뜨린다.
   truncate?: boolean
   // 셀 공통 class (조건부 색 등은 cell 에서 처리).
   className?: string

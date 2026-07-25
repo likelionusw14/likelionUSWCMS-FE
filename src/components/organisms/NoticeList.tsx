@@ -20,7 +20,9 @@ const COLUMNS: Column<Notice>[] = [
       ) : null,
   },
   { id: 'title', header: '제목', accessor: (n) => n.title, minWidth: 280, align: 'center' },
-  { id: 'tag', header: '태그', accessor: (n) => n.tag, width: 48, align: 'center' },
+  // 태그 열은 Figma 가 48px(더미 '000' 기준)이지만 실제 라벨은 '홍보·이벤트' 73px 라 96px 로 넓힌다
+  // (주차·파트·작성일과 같은 스케일). 48 이면 두 줄로 접혀 40px 행을 넘친다.
+  { id: 'tag', header: '태그', accessor: (n) => n.tag, width: 96, align: 'center' },
   { id: 'createdAt', header: '작성일', accessor: (n) => n.createdAt, width: 96, align: 'center' },
 ]
 

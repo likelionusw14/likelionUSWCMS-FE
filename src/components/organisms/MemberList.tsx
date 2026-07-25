@@ -20,7 +20,6 @@ export function MemberList({
       accessor: (m) => m.name,
       width: 64,
       align: 'center',
-      truncate: true,
     },
     {
       id: 'role',

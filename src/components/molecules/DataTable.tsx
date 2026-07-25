@@ -12,6 +12,8 @@ const ALIGN = {
 
 // 열 폭 — 고정폭(px)이면 w=width·shrink-0, 없으면 남는 폭 차지(fill, minWidth~280 사이).
 // Figma 목록은 flex justify-between + 셀 고정폭 구조라 grid 대신 flex 로 재현한다.
+// 셀은 기본적으로 말줄임(truncate)이다 - 행 높이가 40px 고정이라 줄바꿈되면 행을 넘쳐 겹친다.
+// 줄바꿈이 필요한 열만 truncate: false 로 연다.
 function cellStyle<T>(col: Column<T>): CSSProperties {
   return col.width !== undefined
     ? { width: col.width, flexShrink: 0 }
@@ -52,7 +54,11 @@ export function DataTable<T>({
             <span
               key={col.id}
               role="columnheader"
-              className={cn('flex min-w-0 items-center', ALIGN[col.align ?? 'left'], col.headerClassName)}
+              className={cn(
+                'flex min-w-0 items-center',
+                ALIGN[col.align ?? 'left'],
+                col.headerClassName,
+              )}
               style={cellStyle(col)}
             >
               <span className="truncate">{col.header}</span>
@@ -81,17 +87,25 @@ export function DataTable<T>({
               <span
                 key={col.id}
                 role="cell"
-                className={cn('flex min-w-0 items-center', ALIGN[col.align ?? 'left'], col.className)}
+                className={cn(
+                  'flex min-w-0 items-center',
+                  ALIGN[col.align ?? 'left'],
+                  col.className,
+                )}
                 style={cellStyle(col)}
               >
-                <span className={cn('min-w-0', (col.truncate ?? col.width === undefined) && 'truncate')}>
+                <span className={cn('min-w-0', (col.truncate ?? true) && 'truncate')}>
                   {col.cell ? col.cell(row, rowIndex) : col.accessor?.(row)}
                 </span>
               </span>
             ))
             const href = getRowHref?.(row)
             if (href) {
-              const cls = cn(rowBase, 'transition-colors hover:bg-background-1', rowClassName?.(row))
+              const cls = cn(
+                rowBase,
+                'transition-colors hover:bg-background-1',
+                rowClassName?.(row),
+              )
               return (
                 <Link key={id} to={href} role="row" className={cls}>
                   {cells}

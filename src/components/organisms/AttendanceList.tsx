@@ -24,7 +24,6 @@ export function AttendanceList({
       accessor: (r) => r.name,
       width: 74,
       align: 'center',
-      truncate: true,
     },
     {
       id: 'studentId',
@@ -32,7 +31,6 @@ export function AttendanceList({
       accessor: (r) => r.studentId,
       width: 74,
       align: 'center',
-      truncate: true,
     },
     {
       id: 'part',
@@ -40,7 +38,6 @@ export function AttendanceList({
       accessor: (r) => r.part,
       width: 74,
       align: 'center',
-      truncate: true,
     },
     {
       id: 'present',
