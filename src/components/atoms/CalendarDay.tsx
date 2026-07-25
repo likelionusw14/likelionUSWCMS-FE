@@ -43,32 +43,26 @@ export function CalendarDay({ day, inMonth = true, events, onEventClick }: Calen
     <div
       data-cell
       className={cn(
+        // 셀 패딩 8 · 날짜와 일정 사이 8 — 시안은 375/800/1280 모두 같다.
         'flex h-[78px] w-full flex-col gap-8 overflow-hidden bg-white p-8 min-[500px]:h-[132px]',
-        'max-[1023px]:gap-[2px]',
         !inMonth && 'opacity-60',
       )}
     >
-      <span
-        className={cn(
-          'shrink-0 text-m-14 text-black',
-          'max-[1023px]:text-r-12 max-[1023px]:leading-none',
-        )}
-      >
-        {day}
-      </span>
+      {/* 날짜 숫자 — 시안 17px 높이(14px 글자)로 폭에 상관없이 동일하다. */}
+      <span className="shrink-0 text-m-14 text-black">{day}</span>
       <div
         ref={scrollRef}
         className={cn(
           'no-scrollbar flex min-h-0 w-full flex-1 flex-col gap-8 overflow-y-auto',
-          'max-[1023px]:gap-[2px] max-[639px]:gap-8',
           fadeClass,
         )}
       >
         {events.map((event) => {
           const chipClass = cn(
+            // 칩은 시안상 800·1280 이 동일하다 — 높이 25(px-8 py-4 + 17px 글자), 칩 간격 8.
+            // 종전 max-[1023px] clamp 가 태블릿에서 py 를 1~2px 로 눌러 칩이 납작해져 있었다.
             'w-full shrink-0 truncate rounded-8 bg-primary px-8 py-4 text-left text-r-14 text-white',
-            'max-[1023px]:px-[clamp(2px,0.8vw,8px)] max-[1023px]:py-[clamp(1px,0.2vw,2px)] max-[1023px]:text-[clamp(8px,1.4vw,14px)] max-[1023px]:leading-none',
-            // 375 시안: 일정이 8x8 점으로 줄고 간격 8 (점 y=33·49·65·81 → pitch 16).
+            // 375·500 시안: 일정이 8x8 점으로 줄고 간격 8 (점 y=33·49·65·81 → pitch 16).
             'max-[639px]:h-8 max-[639px]:w-8 max-[639px]:rounded-full max-[639px]:p-0 max-[639px]:text-[0px]',
           )
           return onEventClick ? (

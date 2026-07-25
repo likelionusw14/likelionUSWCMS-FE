@@ -75,10 +75,11 @@ export function Calendar({
       headerClassName="h-40"
       bodyClassName="flex flex-col gap-40 !px-32 !py-40"
     >
-      {/* 년월 + 등록 */}
+      {/* 년월 + 등록 — 시안상 800 이상은 년월이 행 가운데(빈칸 40 이 좌측 균형추),
+          500·375 는 빈칸이 빠져 년월이 좌측 정렬된다(년월 x=0, 등록은 우측 끝 유지). */}
       <div className="flex items-center justify-between">
-        <span className="h-40 w-40" aria-hidden />
-        <div className="flex items-center gap-8 sm:gap-16">
+        <span className="hidden h-40 w-40 sm:block" aria-hidden />
+        <div className="flex items-center gap-16">
           <button
             type="button"
             onClick={() => shift(-1)}
@@ -91,13 +92,13 @@ export function Calendar({
             <button
               type="button"
               onClick={onDateSelect}
-              className="whitespace-nowrap text-sm-18 text-black underline decoration-gray-500 underline-offset-4 sm:text-sm-22"
+              className="whitespace-nowrap text-sm-22 text-black underline decoration-gray-500 underline-offset-4"
               aria-label="날짜 선택"
             >
               {year}년 {month + 1}월
             </button>
           ) : (
-            <span className="whitespace-nowrap text-sm-18 text-black underline decoration-gray-500 underline-offset-4 sm:text-sm-22">
+            <span className="whitespace-nowrap text-sm-22 text-black underline decoration-gray-500 underline-offset-4">
               {year}년 {month + 1}월
             </span>
           )}
@@ -124,8 +125,9 @@ export function Calendar({
         )}
       </div>
 
-      {/* 요일 + 날짜 그리드 */}
-      <div className="flex flex-col gap-16">
+      {/* 요일 + 날짜 그리드 — 시안은 둘을 한 박스(테두리 + 내부 패딩 8)에 담는다.
+          달력 박스: 375 263x464 / 800 688x748 (요일 x=8 y=8, 그리드 x=8 y=43 → 패딩 8 · 사이 16). */}
+      <div className="flex flex-col gap-16 rounded-16 border border-secondary-1 p-8">
         <div className="grid grid-cols-7">
           {WEEKDAYS.map((weekday) => (
             <span key={weekday.label} className={cn('text-center text-sm-16', weekday.color)}>
@@ -157,7 +159,7 @@ export function Calendar({
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: reduce ? 0 : 0.35, ease: 'easeInOut' }}
-              className="absolute inset-x-0 top-0 grid grid-cols-7 gap-px overflow-hidden rounded-16 border border-secondary-1 bg-secondary-1"
+              className="absolute inset-x-0 top-0 grid grid-cols-7 gap-px overflow-hidden rounded-8 bg-secondary-1"
             >
               {grid.map(({ date, inMonth }) => {
                 const key = toDateKey(date)
