@@ -7,8 +7,8 @@ import type { SessionDetailProps } from '@types'
 export function SessionDetail({ session }: SessionDetailProps) {
   return (
     <div className="flex flex-col">
-      {/* 카드 패딩은 모바일 24 → sm 이상 32 (Figma 375: 1205:17642). */}
-      <section className="flex flex-col gap-16 overflow-hidden rounded-8 bg-white p-24 sm:px-32">
+      {/* 카드 패딩 — 모바일 16 / sm 이상 좌우 32·상하 24 (Figma 1205:17642 · 1205:17457). */}
+      <section className="flex flex-col gap-16 overflow-hidden rounded-8 bg-white p-16 sm:px-32 sm:py-24">
         <div className="flex w-full items-center justify-between gap-8">
           <div className="flex min-w-px flex-1 items-center gap-8">
             <Link

@@ -12,8 +12,8 @@ const VALUE = 'flex min-h-40 min-w-px flex-1 items-center break-all px-24 py-8 t
 export function NoticeDetail({ notice }: NoticeDetailProps) {
   return (
     <div className="flex w-full flex-col gap-16">
-      {/* 타이틀 카드 — 패딩은 모바일 24 → sm 이상 32 (Figma 375: 1205:20322). */}
-      <div className="flex w-full flex-col items-end gap-16 rounded-8 bg-white p-24 sm:px-32">
+      {/* 타이틀 카드 — 패딩 375 는 좌우 16·상하 24, sm 이상은 좌우 32·상하 24 (Figma 1205:20322 · 19752). */}
+      <div className="flex w-full flex-col items-end gap-16 rounded-8 bg-white px-16 py-24 sm:px-32">
         <div className="flex w-full items-center justify-between gap-8">
           {/* 제목이 길어도 목록/수정 버튼을 밀어내지 않도록 남는 폭만 차지하고 말줄임 처리한다. */}
           <h2 className="min-w-px flex-1 truncate text-sm-20 text-black">{notice.title}</h2>
@@ -40,8 +40,8 @@ export function NoticeDetail({ notice }: NoticeDetailProps) {
         </div>
       </div>
 
-      {/* 공지내용 카드 — 패딩은 모바일 24 → sm 이상 32. */}
-      <div className="flex w-full flex-col gap-16 rounded-8 bg-white p-24 sm:px-32">
+      {/* 공지내용 카드 — 패딩 375 좌우 16·상하 24, sm 이상 좌우 32·상하 24. */}
+      <div className="flex w-full flex-col gap-16 rounded-8 bg-white px-16 py-24 sm:px-32">
         <h3 className="text-sm-18 text-black">공지내용</h3>
         <div className="min-h-[333px] w-full whitespace-pre-line break-words rounded-8 bg-background-1 p-24 text-m-14 text-black">
           {notice.content}
