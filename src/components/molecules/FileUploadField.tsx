@@ -30,7 +30,10 @@ export function FileUploadField({
         onClick={() => fileInputRef.current?.click()}
         className="flex w-full min-w-px max-w-[188px] flex-col items-center justify-center gap-8 rounded-8 border border-secondary-1 bg-background-1 p-16"
       >
-        <img src={uploadIcon} alt="" className="h-[20px] w-[29px]" />
+        {/* 아이콘 프레임 42x30 안에 29x20 글리프 — 프레임을 빼면 박스가 87 이 아니라 77 로 줄어 행 높이가 어긋난다. */}
+        <span className="flex h-[30px] w-[42px] items-center justify-center">
+          <img src={uploadIcon} alt="" className="h-[20px] w-[29px]" />
+        </span>
         <span className="w-full truncate text-center text-m-14 text-primary/50">
           {fileName || '파일을 선택해주세요'}
         </span>

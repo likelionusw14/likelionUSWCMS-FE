@@ -50,13 +50,13 @@ export function ProjectForm({
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col items-center gap-24 px-24 pb-[120px] pt-32"
+      className="flex flex-col items-center gap-8 px-24 pb-[90px] pt-32 sm:pb-[120px] lg:pb-[180px]"
     >
       <div className="flex w-full flex-col gap-4">
         <div className="w-full rounded-8 bg-white">
           {/* 프로젝트명 — input/textarea 는 FormRow 입력 셀(flex)의 자식이라 min-w-px 가 없으면
               기본 폭(size=20, 약 188px) 아래로 줄지 않아 375에서 셀을 밀고 나간다. */}
-          <div className="relative z-50 flex h-[56px] w-full items-stretch">
+          <div className="relative z-50 flex h-48 w-full items-stretch sm:h-[56px]">
             <FormRow label="프로젝트명" labelClassName="rounded-tl-8">
               <Input
                 variant="form"
@@ -70,7 +70,7 @@ export function ProjectForm({
 
           {/* 기수 / 태그 — 모바일은 한 행에 두 칸을 넣을 폭이 없어 전폭 단일 행 2개로 쪼갠다 (Figma 1181:20599 / 20606) */}
           <div className="relative z-40 flex w-full flex-col items-stretch border-y border-secondary-1 sm:h-[56px] sm:flex-row">
-            <FormRow label="기수" className="min-h-[56px] sm:min-h-0">
+            <FormRow label="기수" className="min-h-48 sm:min-h-0">
               <Dropdown
                 value={values.cohort}
                 onChange={(value) => change('cohort', value)}
@@ -79,7 +79,7 @@ export function ProjectForm({
                 className="w-[172px] min-w-px"
               />
             </FormRow>
-            <FormRow label="태그" className="min-h-[56px] sm:min-h-0">
+            <FormRow label="태그" className="min-h-48 sm:min-h-0">
               <Dropdown
                 value={values.category}
                 onChange={(value) => change('category', value)}
@@ -125,7 +125,7 @@ export function ProjectForm({
 
           {/* 깃허브 URL / 프로젝트 URL — 모바일은 한 행에 두 칸을 넣을 폭이 없어 전폭 단일 행 2개로 쪼갠다 (Figma 1181:20627 / 20633) */}
           <div className="relative z-20 flex w-full flex-col items-stretch border-y border-secondary-1 sm:h-[56px] sm:flex-row">
-            <FormRow label="깃허브 URL" className="min-h-[56px] sm:min-h-0">
+            <FormRow label="깃허브 URL" className="min-h-48 sm:min-h-0">
               <Input
                 variant="form"
                 className="min-w-px"
@@ -134,7 +134,7 @@ export function ProjectForm({
                 placeholder="링크URL을 입력해주세요"
               />
             </FormRow>
-            <FormRow label="프로젝트 URL" className="min-h-[56px] sm:min-h-0">
+            <FormRow label="프로젝트 URL" className="min-h-48 sm:min-h-0">
               <Input
                 variant="form"
                 className="min-w-px"
@@ -146,7 +146,7 @@ export function ProjectForm({
           </div>
 
           {/* 프로젝트 참여자 */}
-          <div className="relative z-10 flex w-full items-stretch">
+          <div className="relative z-10 flex min-h-48 w-full items-stretch sm:min-h-[56px]">
             <FormRow label="프로젝트 참여자">
               <Input
                 variant="form"
@@ -170,16 +170,17 @@ export function ProjectForm({
             </FormRow>
           </div>
 
-          {/* 프로젝트 설명 */}
-          <div className="flex w-full items-stretch">
+          {/* 프로젝트 설명 — 시안 행 높이는 375=73 / sm 이상=56 이다(값 셀 상하 여백이 이 행만 11).
+              FormRow 공통 py-8 로는 8px 모자라므로 행에 최소 높이를 준다. 입력이 길어지면 auto-grow 로 늘어난다. */}
+          <div className="flex min-h-[73px] w-full items-stretch sm:min-h-[56px]">
             <FormRow label="프로젝트 설명" labelClassName="rounded-bl-8">
               <textarea
                 ref={descriptionRef}
-                rows={6}
+                rows={1}
                 value={values.description}
                 onChange={(event) => change('description', event.target.value)}
                 placeholder="프로젝트를 설명해주세요"
-                className="no-scrollbar min-h-[148px] w-full min-w-px resize-none rounded-8 border border-secondary-1 bg-background-1 px-16 py-[8.5px] text-m-14 text-black placeholder:text-primary/50 focus:outline-none"
+                className="no-scrollbar min-h-[34px] w-full min-w-px resize-none rounded-8 border border-secondary-1 bg-background-1 px-16 py-[8.5px] text-m-14 text-black placeholder:text-primary/50 focus:outline-none"
               />
             </FormRow>
           </div>
