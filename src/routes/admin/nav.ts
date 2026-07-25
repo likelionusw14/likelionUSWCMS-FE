@@ -52,7 +52,8 @@ export const ADMIN_SECTIONS: AdminSection[] = [
   },
 ]
 
-// 관리자 영역 헤더 메뉴 (대시보드 홈·404 의 상단 네비).
+// 404 의 STAFF 용 상단 네비. 대시보드 홈 헤더에는 쓰지 않는다 —
+// Figma 1205:8630/8755/10206 의 헤더는 타이틀과 로그아웃뿐이다.
 export const ADMIN_NAV: NavItem[] = ADMIN_SECTIONS.map((section) => ({
   to: section.to,
   label: section.navLabel,

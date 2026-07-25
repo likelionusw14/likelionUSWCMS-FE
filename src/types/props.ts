@@ -24,14 +24,15 @@ export interface RequireRoleProps {
 }
 
 export interface AdminShellProps {
-  navItems: NavItem[]
   // 경로 → 헤더에 띄울 페이지 제목.
   pageTitles: Record<string, string>
 }
 
 export interface AdminHeaderProps {
   title: string
-  navItems: NavItem[]
+  // 상단 메뉴는 404 처럼 네비가 필요한 화면에서만 넘긴다.
+  // 대시보드 홈 시안(Figma 1205:8630)의 헤더에는 타이틀·로그아웃뿐이라 넘기지 않는다.
+  navItems?: NavItem[]
   onLogout: () => void
 }
 

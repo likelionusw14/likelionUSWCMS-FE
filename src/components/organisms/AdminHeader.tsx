@@ -17,13 +17,15 @@ export function AdminHeader({ title, navItems, onLogout }: AdminHeaderProps) {
           <span className="text-sm-22 text-secondary-2 sm:text-h1">{BRAND_NAME}</span>
           <h1 className="hidden text-sm-22 text-black sm:block">{title}</h1>
         </NavLink>
-        <nav className="no-scrollbar flex min-w-0 items-center gap-16 overflow-x-auto sm:gap-24">
-          {navItems.map((item) => (
-            <NavLink key={item.to} to={item.to} className="shrink-0 text-sm-18 text-black">
-              {item.label}
-            </NavLink>
-          ))}
-        </nav>
+        {navItems && navItems.length > 0 && (
+          <nav className="no-scrollbar flex min-w-0 items-center gap-16 overflow-x-auto sm:gap-24">
+            {navItems.map((item) => (
+              <NavLink key={item.to} to={item.to} className="shrink-0 text-sm-18 text-black">
+                {item.label}
+              </NavLink>
+            ))}
+          </nav>
+        )}
         <button
           type="button"
           onClick={onLogout}
