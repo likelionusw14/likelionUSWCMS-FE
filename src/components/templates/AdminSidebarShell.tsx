@@ -53,8 +53,12 @@ export function AdminSidebarShell({ homeItem, navItems }: AdminSidebarShellProps
           {/* 크로스페이드 — 이전 페이지가 흐려지는 동시에 새 페이지가 진해진다.
               grid 한 칸에 겹쳐 렌더해 스크롤 영역 높이를 유지한다.
               min-w-0: grid item 기본값(min-width:auto = min-content)이면 DataTable 의 minWidth 가
-              트랙 폭으로 전파돼 좁은 화면에서 페이지 전체가 표 폭만큼 늘어난다(표는 자체 가로스크롤을 갖는다). */}
-          <div className="grid min-h-full">
+                트랙 폭으로 전파돼 좁은 화면에서 페이지 전체가 표 폭만큼 늘어난다(표는 자체 가로스크롤을 갖는다).
+              max-w-[1056px]: Figma 데스크톱 시안이 1280(사이드바 224 + 본문 1056)까지만 정의돼 있다.
+              본문이 그 위로 계속 늘어나면 표는 폭이 고정된 열 사이 여백(justify-between 잔여폭)만 벌어져
+              해상도마다 간격이 달라진다. 1056 에서 멈추고 가운데 정렬해 1280 이상은 시안과 동일하게 고정한다.
+              (사용자 페이지도 같은 규칙으로 max-w-[1280px] 을 쓴다.) */}
+          <div className="mx-auto grid min-h-full w-full max-w-[1056px]">
             <AnimatePresence mode="sync">
               <motion.div
                 key={location.pathname}
