@@ -34,9 +34,9 @@ export function DataTable<T>({
   minWidth,
   tightMobileEdge = false,
 }: DataTableProps<T>) {
-  // 표 좌우 끝단 여백 — Figma 기준 sm 이상은 전부 32.
-  // 375 는 세션·회원·출결 표가 32, 공지 표만 8 이라 기본 32 + 공지에서만 tightMobileEdge.
-  const edgeX = tightMobileEdge ? 'px-8 sm:px-32' : 'px-32'
+  // 표 좌우 끝단 여백 — 376 이상은 전부 32. 375 시안만 공지 표가 8 이고 세션·회원·출결 표는 32라
+  // 기본 32 + 공지에서만 tightMobileEdge. 모바일 프레임이 375 뿐이라 경계는 sm(640) 이 아닌 376.
+  const edgeX = tightMobileEdge ? 'px-8 min-[376px]:px-32' : 'px-32'
   const rowBase = cn(
     'flex h-40 items-center justify-between border-b border-secondary-1 text-m-14 text-black',
     edgeX,

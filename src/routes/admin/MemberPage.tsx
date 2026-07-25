@@ -31,7 +31,8 @@ export function MemberPage() {
 
   return (
     <>
-      <div className="flex flex-col gap-24 px-24 pb-[90px] pt-32 sm:pb-[120px] lg:pb-[180px]">
+      {/* 아래 여백 90(모바일)/120/180 — 회원 관리 모바일 시안 경계는 376 이다(Figma 1203:16917). */}
+      <div className="flex flex-col gap-24 px-24 pb-[90px] pt-32 min-[376px]:pb-[120px] lg:pb-[180px]">
         <PendingMemberList
           members={pending}
           totalCount={pending.length}

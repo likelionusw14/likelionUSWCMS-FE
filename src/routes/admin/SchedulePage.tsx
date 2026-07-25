@@ -56,7 +56,8 @@ export function SchedulePage() {
 
   return (
     <>
-      <div className="flex flex-col gap-24 px-24 pb-[90px] pt-32 sm:pb-[120px] lg:pb-[180px]">
+      {/* 일정 관리는 500 프레임(1203:13884)까지 아래 여백이 90 이라 경계가 501 이다 (다른 관리자 화면은 376). */}
+      <div className="flex flex-col gap-24 px-24 pb-[90px] pt-32 min-[501px]:pb-[120px] lg:pb-[180px]">
         <ScheduleCalendar
           year={year}
           month={month}

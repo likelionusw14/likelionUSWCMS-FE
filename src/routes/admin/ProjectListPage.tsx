@@ -20,7 +20,7 @@ export function ProjectListPage() {
 
   return (
     <>
-      <div className="flex flex-col gap-24 px-24 pb-[90px] pt-32 sm:pb-[120px] lg:pb-[180px]">
+      <div className="flex flex-col gap-24 px-24 pb-[90px] pt-32 min-[376px]:pb-[120px] lg:pb-[180px]">
         <SearchBar onSearch={() => setPage(1)}>
           <Dropdown
             value={cohort}

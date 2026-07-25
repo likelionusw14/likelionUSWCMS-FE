@@ -19,10 +19,12 @@ export function ListSection({
       ? `총 ${totalCount}건 (${page}/${totalPages} page)`
       : `총 ${totalCount}건`
 
+  // 카드 좌우 패딩 — 모바일(375 시안) 24 / 그 위 32. 이 목록 카드를 쓰는 화면은 모바일 프레임이
+  // 375 하나뿐이라(500 프레임은 일정 화면에만 있다) 경계가 sm(640) 이 아니라 376 이다.
   return (
     <section
       className={cn(
-        'flex w-full flex-col gap-24 rounded-16 bg-white px-24 py-24 sm:px-32',
+        'flex w-full flex-col gap-24 rounded-16 bg-white px-24 py-24 min-[376px]:px-32',
         className,
       )}
     >
