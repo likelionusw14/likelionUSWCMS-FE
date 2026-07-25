@@ -1,5 +1,6 @@
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { useMediaQuery } from '@hooks'
+import { sidebarTransition } from '@templates'
 import { cn } from '@utils'
 import type { AdminSidebarDrawerProps } from '@types'
 import { AdminSidebar } from './AdminSidebar'
@@ -34,8 +35,12 @@ export function AdminSidebarDrawer({
             initial={reduce ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={reduce ? undefined : { opacity: 0 }}
-            transition={{ duration: reduce ? 0 : 0.2 }}
-            className="fixed inset-0 z-10 cursor-default bg-black/30 lg:hidden"
+            transition={sidebarTransition(!!reduce)}
+            // 태블릿(sm~lg): 드로어가 화면 높이를 다 쓰므로 상단바까지 함께 어두워져야 한 덩어리로 보인다.
+            // 상단바 래퍼와 같은 z-30 이지만 DOM 뒤라 위에 깔린다(패널은 z-40 이라 계속 그 위).
+            // 모바일(<sm): 드롭다운이 상단바 '아래'에 붙고 그 뒤(z-20)에서 밀려나오므로,
+            // 상단바는 스크림 위(z-30)에 남겨 햄버거·제목이 계속 보이게 둔다.
+            className="fixed inset-0 z-10 cursor-default bg-black/30 sm:z-30 lg:hidden"
           />
 
           <motion.div
@@ -43,7 +48,7 @@ export function AdminSidebarDrawer({
             initial={reduce ? false : hidden}
             animate={{ x: 0, y: 0 }}
             exit={reduce ? undefined : hidden}
-            transition={{ duration: reduce ? 0 : 0.25, ease: 'easeInOut' }}
+            transition={sidebarTransition(!!reduce)}
             className={cn(
               'overflow-y-auto shadow-drop lg:hidden',
               isTablet
