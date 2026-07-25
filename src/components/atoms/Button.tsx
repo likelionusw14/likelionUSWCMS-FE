@@ -3,11 +3,13 @@ import { cn } from '@utils'
 import type { ButtonProps } from '@types'
 
 // 공용 버튼 아톰 — Figma 저장/취소/삭제 버튼 규격을 담는다.
-// variant: primary(채움) · outline(흰 배경 + primary 테두리) · danger(흰 배경 + error 테두리).
+// variant: primary(채움) · outline(흰 배경 + primary 테두리) · neutral(흰 배경 + gray 테두리) · danger(흰 배경 + error 테두리).
 // size: md(모달 기본 h-48 min-w-128) · block(폼 전체폭 h-48) · sm(소형 h-32 w-56).
 const VARIANT_CLASS: Record<NonNullable<ButtonProps['variant']>, string> = {
   primary: 'bg-primary text-white',
   outline: 'border border-primary bg-white text-primary',
+  // 삭제 확인 팝업의 취소 버튼 — Figma 254:2758 은 gray/500 테두리 + gray/500 글자다(primary 아웃라인과 구분).
+  neutral: 'border border-gray-500 bg-white text-gray-500',
   danger: 'border border-error bg-white text-error',
 }
 

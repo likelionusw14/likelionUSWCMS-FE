@@ -4,9 +4,9 @@ import type { WheelPickerProps } from '@types'
 
 // 휠 치수 — Figma 날짜/월 선택 팝업(1249:20449, 1205:22241): 보이는 휠 높이 237,
 // 행 피치 36(글자 26 + 여백), 위/아래 스페이서 100.5 = (237-36)/2.
-const ITEM_H = 36
+export const WHEEL_ITEM_H = 36
 const CONTAINER_H = 237
-export const WHEEL_SPACER = (CONTAINER_H - ITEM_H) / 2
+const WHEEL_SPACER = (CONTAINER_H - WHEEL_ITEM_H) / 2
 const ANGLE = 20 // 항목당 회전각(deg) — 실린더 곡률
 const MAX = 4 // 중앙 기준 표시 범위(그 밖은 숨김; 4×20=80° < 90°)
 const STEP = 40 // 휠 delta 누적 임계 — 노치당 1칸
@@ -41,7 +41,7 @@ export function WheelPicker({
   function paint() {
     const el = ref.current
     if (!el) return
-    const center = el.scrollTop / ITEM_H
+    const center = el.scrollTop / WHEEL_ITEM_H
     const sel = Math.round(center)
     nodes.current.forEach((node, i) => {
       const dist = i - center
@@ -97,7 +97,7 @@ export function WheelPicker({
     settleTimer.current = window.setTimeout(() => {
       const el = ref.current
       if (!el) return
-      notify(clampIdx(Math.round(el.scrollTop / ITEM_H)))
+      notify(clampIdx(Math.round(el.scrollTop / WHEEL_ITEM_H)))
     }, 90)
   }
 
@@ -105,7 +105,7 @@ export function WheelPicker({
     const el = ref.current
     if (!el) return
     nodes.current = Array.from(el.querySelectorAll<HTMLElement>('[data-wheel-item]'))
-    el.scrollTop = defaultIndex * ITEM_H
+    el.scrollTop = defaultIndex * WHEEL_ITEM_H
     last.current = defaultIndex
     target.current = defaultIndex
     onChange(defaultIndex)
@@ -119,7 +119,7 @@ export function WheelPicker({
       if (Math.abs(acc.current) < STEP) return
       acc.current = 0
       target.current = clampIdx(target.current + (event.deltaY > 0 ? 1 : -1))
-      animateTo(target.current * ITEM_H)
+      animateTo(target.current * WHEEL_ITEM_H)
     }
     // 진행 중 트윈이 있으면 새 포인터 입력 시 즉시 멈춘다(입력 경합 방지).
     function cancelAnim() {
@@ -159,10 +159,10 @@ export function WheelPicker({
           role="option"
           onClick={() => {
             target.current = i
-            animateTo(i * ITEM_H)
+            animateTo(i * WHEEL_ITEM_H)
           }}
-          className="flex w-full items-center justify-center whitespace-nowrap text-[22px] leading-none text-black [backface-visibility:hidden]"
-          style={{ height: ITEM_H, scrollSnapAlign: 'center' }}
+          className="flex w-full items-center justify-center whitespace-nowrap text-sm-22 text-black [backface-visibility:hidden]"
+          style={{ height: WHEEL_ITEM_H, scrollSnapAlign: 'center' }}
         >
           {it}
         </button>

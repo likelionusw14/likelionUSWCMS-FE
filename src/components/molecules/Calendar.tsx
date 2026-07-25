@@ -126,9 +126,11 @@ export function Calendar({
         )}
       </div>
 
-      {/* 요일 + 날짜 그리드 — 시안은 둘을 한 박스(테두리 + 내부 패딩 8)에 담는다.
-          달력 박스: 375 263x464 / 800 688x748 (요일 x=8 y=8, 그리드 x=8 y=43 → 패딩 8 · 사이 16). */}
-      <div className="flex flex-col gap-16 rounded-16 border border-secondary-1 p-8">
+      {/* 요일 + 날짜 그리드 — 시안(563:8586)의 달력 박스에는 테두리가 없다.
+          선은 그리드(563:8602: bg·border 모두 secondary-1, radius 16)에만 걸려 있어
+          바깥 선과 셀 사이 1px 선이 이어지고 격자가 박스에 딱 맞는다.
+          시안 박스의 패딩 8 은 제거해 그리드가 년월 행과 같은 폭을 쓴다. */}
+      <div className="flex flex-col gap-16">
         <div className="grid grid-cols-7">
           {WEEKDAYS.map((weekday) => (
             <span key={weekday.label} className={cn('text-center text-sm-16', weekday.color)}>
@@ -160,7 +162,7 @@ export function Calendar({
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: reduce ? 0 : 0.35, ease: 'easeInOut' }}
-              className="absolute inset-x-0 top-0 grid grid-cols-7 gap-px overflow-hidden rounded-8 bg-secondary-1"
+              className="absolute inset-x-0 top-0 grid grid-cols-7 gap-px overflow-hidden rounded-16 border border-secondary-1 bg-secondary-1"
             >
               {grid.map(({ date, inMonth }) => {
                 const key = toDateKey(date)

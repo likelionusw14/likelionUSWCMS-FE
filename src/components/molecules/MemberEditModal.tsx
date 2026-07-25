@@ -9,8 +9,9 @@ const FIELD =
   'h-32 w-full rounded-8 border border-secondary-1 bg-background-1 px-16 text-m-14 text-black placeholder:text-primary/50 focus:outline-none'
 
 // 회원정보 수정 팝업 — 창(WindowPanel) 안에 제목 + 삭제 링크 + 이름/기수/파트 폼 + 저장/취소.
-// Figma 754:5683: 본문 p-32·gap-40, 내부 gap-24(제목행+폼), 라벨 M/16(px-8), 이름 w-280,
-// 기수/파트 Dropdown(w-120, bg-background-1), 버튼 h-48·min-w-128·SM/18.
+// Figma 754:5683(마스터) — 본문 p-32·gap-40, 내부 gap-24(제목행+폼), 제목 SM/22, 삭제 링크 M/14 밑줄,
+// 라벨 M/16(px-8), 이름 입력 w-280(h-32 + 오류 슬롯 = 48), 기수/파트 Dropdown w-120·gap-32,
+// 버튼 저장(채움)·취소(outline) h-48·min-w-128·gap-16.
 export function MemberEditModal({
   open,
   onClose,
@@ -46,15 +47,17 @@ export function MemberEditModal({
 
   return (
     <>
-      {/* 폭은 Modal 패널에 건다 — Modal 의 패널 div 는 shrink-to-fit 이라 WindowPanel 쪽 w-full 만으로는 640px 이 서지 않는다.
-          오버레이 px-24 덕분에 모바일에서는 자동으로 화면폭-48 로 줄어든다. */}
+      {/* 폭은 Modal 패널에 건다 — Modal 의 패널 div 는 shrink-to-fit 이라 WindowPanel 쪽 w-full 만으로는 폭이 서지 않는다.
+          모바일 336 (Figma 1249:20786), 데스크탑 640 (Figma 1249:20913). */}
       <Modal
         open={open}
         onClose={onClose}
-        panelClassName="w-full max-w-[640px]"
+        panelClassName="w-full max-w-[336px] sm:max-w-[640px]"
         ariaLabel="회원정보 수정"
       >
-        <WindowPanel className="w-full" bodyClassName="flex flex-col items-center gap-40">
+        {/* 본문 패딩은 모바일도 32 다 — 336 팝업의 콘텐츠가 272(=336-64)여야 기수+파트(120+32+120)와
+            버튼(128+16+128)이 정확히 한 줄에 들어간다. 아톰 기본값(p-24 sm:p-32)을 !p-32 로 덮는다. */}
+        <WindowPanel className="w-full" bodyClassName="flex flex-col items-center gap-40 !p-32">
           <div className="flex w-full flex-col items-center gap-24">
             {/* 제목 + 삭제 링크 — 모바일에서도 한 줄(Figma 1249:20794, 272px 안에 수납). 좁아지면 줄바꿈되도록 gap 부여. */}
             <div className="flex w-full flex-wrap items-center justify-between gap-8">

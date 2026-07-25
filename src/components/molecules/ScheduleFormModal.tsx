@@ -66,12 +66,12 @@ export function ScheduleFormModal({
   }
 
   return (
-    // 폭은 Modal 패널에 건다 — Modal 의 패널 div 는 shrink-to-fit 이라 WindowPanel 쪽 w-full 만으로는 640px 이 서지 않는다.
-    // 오버레이 px-24 덕분에 모바일에서는 자동으로 화면폭-48 로 줄어든다.
+    // 폭은 Modal 패널에 건다 — Modal 의 패널 div 는 shrink-to-fit 이라 WindowPanel 쪽 w-full 만으로는 폭이 서지 않는다.
+    // 모바일 330 (Figma 1205:22496), 태블릿·데스크탑 640 (Figma 741:3370 / 1205:22980).
     <Modal
       open={open}
       onClose={onClose}
-      panelClassName="w-full max-w-[640px]"
+      panelClassName="w-full max-w-[330px] sm:max-w-[640px]"
       ariaLabel="일정 작성"
     >
       {/* 본문 패딩 32 — Figma 모바일 팝업(330)도 콘텐츠 266 이라 좌우 32 로, 아톰 기본값(모바일 24)을 덮는다. */}
@@ -119,11 +119,12 @@ export function ScheduleFormModal({
             </div>
           </div>
 
-          {/* 날짜 + 시간 — 모바일(내부폭 279px)에서는 두 필드가 나란히 못 들어가 전체폭 세로 스택. Figma 1249:20752/20761. */}
+          {/* 날짜 + 시간 — 모바일(내부폭 266px)에서는 두 필드가 나란히 못 들어가 전체폭 세로 스택. Figma 1249:20752/20761.
+              날짜·시간 블록은 오류 슬롯이 없어 19+8+32=59 다(Figma 806:13546). 일정명·장소(75)와 달리 h-48 래퍼를 두지 않는다. */}
           <div className="flex w-full flex-col gap-8 sm:flex-row sm:gap-32">
             <div className="flex flex-1 flex-col gap-8">
               <span className="px-8 text-m-16 text-black">날짜</span>
-              <div className="flex h-48 flex-col">
+              <div className="flex flex-col">
                 <button
                   type="button"
                   onClick={() => setDateOpen(true)}
@@ -138,7 +139,7 @@ export function ScheduleFormModal({
             </div>
             <div className="flex flex-1 flex-col gap-8">
               <span className="px-8 text-m-16 text-black">시간</span>
-              <div className="flex h-48 flex-col">
+              <div className="flex flex-col">
                 <button
                   type="button"
                   onClick={() => setTimeOpen(true)}
@@ -154,9 +155,9 @@ export function ScheduleFormModal({
           </div>
 
           <div className="flex w-full flex-col gap-4">
-            <span className="px-8 text-m-16 text-black">설명</span>
+            <span className="px-8 text-m-16 text-black">일정 설명</span>
             <textarea
-              className="no-scrollbar h-[63px] w-full resize-none rounded-8 border border-secondary-1 bg-background-1 px-16 py-8 text-m-14 text-black placeholder:text-primary/50"
+              className="no-scrollbar h-[67px] w-full resize-none rounded-8 border border-secondary-1 bg-background-1 px-16 py-8 text-m-14 text-black placeholder:text-primary/50"
               value={values.description}
               onChange={(event) => {
                 set('description', event.target.value)
@@ -165,22 +166,25 @@ export function ScheduleFormModal({
               maxLength={150}
               placeholder="일정에 대한 설명을 적어주세요 (최대 150자)"
             />
-            {descError ? (
-              <p className="text-r-12 font-normal leading-normal text-error">
-                일정 설명을 다시 확인해주세요
-              </p>
-            ) : (
-              values.description.length > 0 && (
-                <p
-                  className={cn(
-                    'text-right text-r-12 font-normal leading-normal',
-                    values.description.length >= 150 ? 'text-error' : 'text-primary',
-                  )}
-                >
-                  {values.description.length} / 150
+            {/* 카운터·오류 한 줄은 항상 자리를 차지한다 — Figma 일정 설명 블록 106 = 라벨 19 + 4 + (입력 67 + 4 + 12). */}
+            <div className="flex h-12 w-full items-start">
+              {descError ? (
+                <p className="text-r-12 font-normal leading-none text-error">
+                  일정 설명을 다시 확인해주세요
                 </p>
-              )
-            )}
+              ) : (
+                values.description.length > 0 && (
+                  <p
+                    className={cn(
+                      'w-full text-right text-r-12 font-normal leading-none',
+                      values.description.length >= 150 ? 'text-error' : 'text-primary',
+                    )}
+                  >
+                    {values.description.length} / 150
+                  </p>
+                )
+              )}
+            </div>
           </div>
         </div>
 

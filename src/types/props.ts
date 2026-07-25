@@ -68,7 +68,7 @@ export type InputProps = InputHTMLAttributes<HTMLInputElement> & {
 
 // 공용 버튼 아톰 — variant(색)와 size(치수) 프리셋. 네이티브 button 속성 확장은 컴포넌트에서 병합한다.
 export interface ButtonProps {
-  variant?: 'primary' | 'outline' | 'danger'
+  variant?: 'primary' | 'outline' | 'neutral' | 'danger'
   size?: 'md' | 'block' | 'sm'
   className?: string
 }
