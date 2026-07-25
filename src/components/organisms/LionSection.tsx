@@ -7,14 +7,14 @@ import type { LionSectionProps } from '@types'
 export function LionSection({ label, lions, isLoading, filter, className }: LionSectionProps) {
   return (
     <WindowPanel className={className} bodyClassName="flex flex-col gap-32">
-      <div className="flex items-center justify-between">
-        <span className="flex items-center justify-center rounded-full bg-primary px-24 py-8 text-sm-18 text-white">
+      <div className="flex flex-col items-start gap-16 sm:flex-row sm:items-center sm:justify-between">
+        <span className="flex shrink-0 items-center justify-center whitespace-nowrap rounded-full bg-primary px-24 py-8 text-sm-18 text-white">
           {label}
         </span>
         {filter}
       </div>
       {lions.length > 0 ? (
-        <div className="grid grid-cols-1 gap-x-[29px] gap-y-40 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-x-[29px] gap-y-40 md:grid-cols-3">
           {lions.map((lion) => (
             <LionProfileCard key={lion.id} lion={lion} />
           ))}
