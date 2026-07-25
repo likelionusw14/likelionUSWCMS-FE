@@ -14,8 +14,9 @@ function formatDateTime(value: string) {
 
 export function UserNoticeDetail({ notice }: UserNoticeDetailProps) {
   return (
-    <WindowPanel bodyClassName="flex flex-col gap-24 p-32">
-      <div className="flex items-start justify-between gap-24">
+    <WindowPanel bodyClassName="flex flex-col gap-24">
+      {/* 모바일(375): 제목이 태그와 한 줄을 다투면 63px 까지 눌려 읽을 수 없다 — 세로로 쌓고 sm 이상에서만 양끝 정렬. */}
+      <div className="flex flex-col gap-8 sm:flex-row sm:items-start sm:justify-between sm:gap-24">
         <div className="min-w-0">
           <h2 className="truncate text-sm-20 text-black">{notice.title}</h2>
           <p className="mt-4 text-r-14 text-gray-500">{formatDateTime(notice.publishedAt)}</p>

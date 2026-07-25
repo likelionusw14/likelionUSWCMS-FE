@@ -28,7 +28,7 @@ export function AttendancePage() {
 
   return (
     <>
-      <div className="flex flex-col gap-24 px-24 pb-[120px] pt-32">
+      <div className="flex flex-col gap-24 px-24 pb-[90px] pt-32 sm:px-32 sm:pb-[120px] lg:px-24 lg:pb-[180px]">
         <AttendanceCodeCreate
           code={code}
           remainingSeconds={remainingSeconds}

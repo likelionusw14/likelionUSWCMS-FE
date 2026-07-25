@@ -15,7 +15,6 @@ import { MemberEditModal, ResultDialog, RoleEditModal } from '@molecules'
 import { MemberList, PendingMemberList } from '@organisms'
 import type { Member } from '@types'
 
-
 // 회원 관리 — 승인대기 목록(승인/취소) + 회원 목록(권한 수정·회원정보 수정). Figma 15:11837.
 export function MemberPage() {
   const navigate = useNavigate()
@@ -32,7 +31,7 @@ export function MemberPage() {
 
   return (
     <>
-      <div className="flex flex-col gap-24 px-24 pb-[120px] pt-32">
+      <div className="flex flex-col gap-24 px-24 pb-[90px] pt-32 sm:px-32 sm:pb-[120px] lg:px-24 lg:pb-[180px]">
         <PendingMemberList
           members={pending}
           totalCount={pending.length}

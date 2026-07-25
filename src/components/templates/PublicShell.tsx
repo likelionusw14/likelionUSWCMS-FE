@@ -21,7 +21,7 @@ export function PublicShell({ navItems, applyItem }: PublicShellProps) {
   return (
     <div className="flex min-h-screen flex-col bg-background-2">
       <PublicHeader navItems={navItems} applyItem={applyItem} />
-      <main className="flex flex-1 items-center justify-center px-64 py-[120px]">
+      <main className="flex flex-1 items-center justify-center px-24 py-64 sm:px-32 sm:py-[120px] lg:px-64">
         <AnimatePresence mode="wait">
           <motion.div
             key={location.pathname}

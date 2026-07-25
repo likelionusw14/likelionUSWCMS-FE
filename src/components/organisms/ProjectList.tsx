@@ -15,7 +15,7 @@ export function ProjectList({
   createPath,
 }: ProjectListProps) {
   return (
-    <div className="flex w-full flex-col justify-center gap-32 rounded-16 bg-white p-12 sm:gap-40 sm:p-32 lg:gap-64">
+    <div className="flex w-full flex-col justify-center gap-24 rounded-16 bg-white p-12 sm:px-32 sm:py-24">
       <div className="flex w-full items-center justify-between">
         <p className="text-m-14 text-black">총 {totalCount}건</p>
         {createPath && (
@@ -30,7 +30,7 @@ export function ProjectList({
       </div>
       {projects.length > 0 ? (
         <>
-          <div className="grid w-full grid-cols-1 gap-32 sm:grid-cols-2 sm:gap-x-40 sm:gap-y-40 lg:gap-x-[29px] lg:gap-y-[59px]">
+          <div className="grid w-full grid-cols-1 gap-24 sm:grid-cols-2 sm:gap-x-40 sm:gap-y-40 lg:gap-x-[29px] lg:gap-y-[59px]">
             {projects.map((project) => (
               <ProjectCard
                 key={project.id}

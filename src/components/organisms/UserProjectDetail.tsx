@@ -15,10 +15,7 @@ export function UserProjectDetail({ project }: UserProjectDetailProps) {
 
   return (
     <article className="flex flex-col gap-40 sm:gap-48">
-      <WindowPanel
-        headerClassName="h-32 p-8 sm:p-16"
-        bodyClassName="flex flex-col gap-8 p-0"
-      >
+      <WindowPanel headerClassName="h-32 p-8 sm:p-16" bodyClassName="flex flex-col gap-8 !p-0">
         {project.thumbnailUrl ? (
           <img
             src={project.thumbnailUrl}
@@ -66,7 +63,9 @@ export function UserProjectDetail({ project }: UserProjectDetailProps) {
       <dl>
         <div className="flex min-h-64 flex-col items-start gap-8 border-b border-secondary-1 py-16 sm:flex-row sm:items-center sm:gap-0">
           <dt className={INFO_LABEL}>Lions</dt>
-          <dd className={`${INFO_VALUE} w-full text-left sm:w-auto sm:text-right`}>{participants}</dd>
+          <dd className={`${INFO_VALUE} w-full text-left sm:w-auto sm:text-right`}>
+            {participants}
+          </dd>
         </div>
         <div className={INFO_ROW}>
           <dt className={INFO_LABEL}>Duration</dt>
