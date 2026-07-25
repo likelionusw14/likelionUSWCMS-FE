@@ -41,6 +41,7 @@ export function ScheduleCalendar({
   onRegister,
   onEventEdit,
   onEventDelete,
+  mobileTitleLeft = false,
   className,
 }: ScheduleCalendarProps) {
   const [selected, setSelected] = useState<ScheduleCalendarSelected | null>(null)
@@ -155,6 +156,7 @@ export function ScheduleCalendar({
         onDateSelect={onDateSelect}
         onRegister={onRegister}
         onEventClick={handleEventClick}
+        mobileTitleLeft={mobileTitleLeft}
         className={className}
       />
       {createPortal(

@@ -79,6 +79,7 @@ export function SchedulePage() {
             setDeleteTarget(event)
             setDeleteOpen(true)
           }}
+          mobileTitleLeft
           className="w-full"
         />
       </div>
