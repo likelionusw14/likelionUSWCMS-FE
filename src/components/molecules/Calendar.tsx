@@ -73,7 +73,7 @@ export function Calendar({
     <WindowPanel
       className={className}
       headerClassName="h-40"
-      bodyClassName="flex flex-col gap-40 px-24 !py-40 sm:px-32"
+      bodyClassName="flex flex-col gap-40 !px-32 !py-40"
     >
       {/* 년월 + 등록 */}
       <div className="flex items-center justify-between">

@@ -2,10 +2,13 @@ import { useLayoutEffect, useRef, useState } from 'react'
 import { cn } from '@utils'
 import type { CalendarDayProps } from '@types'
 
-// 캘린더 한 칸 — 날짜 숫자 + 일정 칩(세로 스택).
-// Figma 실측(캘린더 일 131.7×119.6 ≈ 11:10): 폭은 그리드 열이 채우고 높이는 aspect-ratio 로
-// 비율을 유지한 채 가변한다. 일정이 넘치면 이벤트 영역이 셀 안에서 스크롤(스크롤바 미표시)되고,
-// 넘치는 방향(위/아래)만 페이드된다. 이웃 달 칸은 60% 흐리게.
+// 캘린더 한 칸 — 날짜 숫자 + 일정(세로 스택).
+// Figma 실측 셀 높이는 375=78 / 500 이상=132. 높이를 고정해야 일정이 넘칠 때 셀 안에서
+// 스크롤되고 scroll-fade-*(mask-image 그래디언트)가 걸린다 — min-height 로 두면 칸이 계속 늘어나
+// 넘침 자체가 없어져 그래디언트가 사라진다. aspect-ratio 는 폭에 끌려가 800=88 / 1280=122 로 어긋난다.
+// 일정은 640 이상에서 칩, 미만에서 8x8 점으로 보이지만 같은 스크롤 목록 하나를 쓴다 —
+// 목록을 브레이크포인트별로 나누면 모바일 쪽에 mask-image 페이드(scroll-fade-*)가 걸리지 않는다.
+// 넘치면 넘치는 방향(위/아래)만 페이드된다. 이웃 달 칸은 60% 흐리게.
 export function CalendarDay({ day, inMonth = true, events, onEventClick }: CalendarDayProps) {
   const scrollRef = useRef<HTMLDivElement>(null)
   const [fade, setFade] = useState({ top: false, bottom: false })
@@ -40,8 +43,8 @@ export function CalendarDay({ day, inMonth = true, events, onEventClick }: Calen
     <div
       data-cell
       className={cn(
-        'flex aspect-[11/10] w-full flex-col gap-8 overflow-hidden bg-white p-8',
-        'max-[1023px]:gap-[2px] max-[1023px]:p-4 max-[639px]:min-h-[80px] max-[639px]:aspect-auto max-[639px]:p-8',
+        'flex h-[78px] w-full flex-col gap-8 overflow-hidden bg-white p-8 min-[500px]:h-[132px]',
+        'max-[1023px]:gap-[2px]',
         !inMonth && 'opacity-60',
       )}
     >
@@ -57,7 +60,7 @@ export function CalendarDay({ day, inMonth = true, events, onEventClick }: Calen
         ref={scrollRef}
         className={cn(
           'no-scrollbar flex min-h-0 w-full flex-1 flex-col gap-8 overflow-y-auto',
-          'max-[1023px]:gap-[2px] max-[639px]:hidden',
+          'max-[1023px]:gap-[2px] max-[639px]:gap-8',
           fadeClass,
         )}
       >
@@ -65,6 +68,8 @@ export function CalendarDay({ day, inMonth = true, events, onEventClick }: Calen
           const chipClass = cn(
             'w-full shrink-0 truncate rounded-8 bg-primary px-8 py-4 text-left text-r-14 text-white',
             'max-[1023px]:px-[clamp(2px,0.8vw,8px)] max-[1023px]:py-[clamp(1px,0.2vw,2px)] max-[1023px]:text-[clamp(8px,1.4vw,14px)] max-[1023px]:leading-none',
+            // 375 시안: 일정이 8x8 점으로 줄고 간격 8 (점 y=33·49·65·81 → pitch 16).
+            'max-[639px]:h-8 max-[639px]:w-8 max-[639px]:rounded-full max-[639px]:p-0 max-[639px]:text-[0px]',
           )
           return onEventClick ? (
             <button
@@ -85,27 +90,6 @@ export function CalendarDay({ day, inMonth = true, events, onEventClick }: Calen
           )
         })}
       </div>
-      {events.length > 0 && (
-        <div className="hidden min-h-0 w-full flex-1 flex-col items-start gap-8 max-[639px]:flex">
-          {events.map((event) =>
-            onEventClick ? (
-              <button
-                key={event.id}
-                type="button"
-                aria-label={event.title}
-                onClick={(domEvent) => onEventClick(event, domEvent.currentTarget)}
-                className="h-8 w-8 shrink-0 rounded-full bg-primary"
-              />
-            ) : (
-              <span
-                key={event.id}
-                aria-label={event.title}
-                className="h-8 w-8 shrink-0 rounded-full bg-primary"
-              />
-            ),
-          )}
-        </div>
-      )}
     </div>
   )
 }
