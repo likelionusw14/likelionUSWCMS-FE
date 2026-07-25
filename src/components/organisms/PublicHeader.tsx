@@ -66,26 +66,20 @@ export function PublicHeader({ navItems, tone = 'light' }: PublicHeaderProps) {
 
           <div className="hidden items-center gap-24 lg:flex">
             <GlassNavMenu navItems={navItems}>
-              {isAuthenticated ? (
-                <motion.button
-                  layout="position"
-                  transition={transition}
-                  type="button"
-                  onClick={() => navigate('/app')}
-                  aria-label="마이페이지"
-                  className="relative mr-24 flex h-40 w-[18px] shrink-0 items-center justify-center rounded-full outline-none after:pointer-events-none after:absolute after:left-1/2 after:top-1/2 after:h-40 after:w-40 after:-translate-x-1/2 after:-translate-y-1/2 after:rounded-full after:content-[''] focus-visible:after:ring-2 focus-visible:after:ring-white"
-                >
-                  <img src={userIcon} alt="" className="h-[18px] w-[18px]" />
-                </motion.button>
-              ) : (
-                <motion.img
-                  layout="position"
-                  transition={transition}
-                  src={userIcon}
-                  alt="계정"
-                  className="mr-24 h-[18px] w-[18px] shrink-0"
-                />
-              )}
+              {/* 계정 아이콘 — 로그인 여부와 무관하게 같은 버튼 구조라 Tab 포커스 시 흰 원(after ring)이
+                  똑같이 뜬다. img 로 두면 포커스 자체가 안 잡혀 게스트에서만 링이 없었다.
+                  가는 곳만 다르다: 로그인 상태는 마이페이지(/app), 게스트는 로그인(/login). */}
+              <motion.button
+                layout="position"
+                transition={transition}
+                type="button"
+                onClick={() => navigate(isAuthenticated ? '/app' : '/login')}
+                aria-label={isAuthenticated ? '마이페이지' : '로그인'}
+                title={isAuthenticated ? '마이페이지' : '로그인'}
+                className="relative mr-24 flex h-40 w-[18px] shrink-0 items-center justify-center rounded-full outline-none after:pointer-events-none after:absolute after:left-1/2 after:top-1/2 after:h-40 after:w-40 after:-translate-x-1/2 after:-translate-y-1/2 after:rounded-full after:content-[''] focus-visible:after:ring-2 focus-visible:after:ring-white"
+              >
+                <img src={userIcon} alt="" className="h-[18px] w-[18px]" />
+              </motion.button>
             </GlassNavMenu>
 
             {isAuthenticated && (
