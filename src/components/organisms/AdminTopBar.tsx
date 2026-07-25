@@ -1,19 +1,34 @@
 import { Link, useLocation } from 'react-router-dom'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import topbarLogoutIcon from '@/assets/icons/topbar-logout.svg'
+import { MobileMenuButton } from '@atoms'
 import { useLogout } from '@hooks'
 import { pageFadeTransition } from '@templates'
 import type { AdminTopBarProps } from '@types'
 
 // 셸(AdminSidebarShell)이 상단에 고정하는 UI 컴포넌트.
 // title·breadcrumb 는 셸에서 계산해 prop 으로 내려준다(dumb organism). 경로 변경 시 크로스페이드.
-export function AdminTopBar({ title, breadcrumb }: AdminTopBarProps) {
+// lg 미만(사이드바가 숨는 구간)에서는 좌측에 햄버거가 붙는다 — Figma 관리자페이지 상단바 모바일.
+export function AdminTopBar({
+  title,
+  breadcrumb,
+  menuOpen,
+  onMenuToggle,
+  menuControls,
+}: AdminTopBarProps) {
   const location = useLocation()
   const reduce = useReducedMotion()
   const handleLogout = useLogout()
 
   return (
-    <div className="flex w-full items-center justify-between overflow-hidden bg-white px-32 py-16 shrink-0">
+    <div className="flex w-full shrink-0 items-center justify-between gap-24 overflow-hidden bg-white px-24 py-16">
+      <MobileMenuButton
+        open={menuOpen}
+        onToggle={onMenuToggle}
+        controls={menuControls}
+        className="h-20 w-20 shrink-0 text-black lg:hidden"
+        barClassName="w-20"
+      />
       <div className="grid flex-1">
         <AnimatePresence mode="sync">
           <motion.div

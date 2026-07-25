@@ -20,7 +20,12 @@ export function ListSection({
       : `총 ${totalCount}건`
 
   return (
-    <section className={cn('flex w-full flex-col gap-24 rounded-16 bg-white px-32 py-24', className)}>
+    <section
+      className={cn(
+        'flex w-full flex-col gap-24 rounded-16 bg-white px-24 py-24 sm:px-32',
+        className,
+      )}
+    >
       {header}
       <div className="flex items-center justify-between">
         <p className="text-m-14 text-black">{countText}</p>

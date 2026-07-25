@@ -10,10 +10,10 @@ export function NotFoundPanel() {
   const { role } = useAuth()
 
   return (
-    <div className="flex flex-col items-center justify-center gap-24 py-[76px]">
-      <img src={errorIcon} alt="" className="h-[80px] w-[80px]" />
-      <h1 className="text-h1 text-black">404 접속오류</h1>
-      <p className="text-center text-m-20 leading-[1.5] text-black">
+    <div className="flex flex-col items-center justify-center gap-24 px-24 py-[76px]">
+      <img src={errorIcon} alt="" className="h-64 w-64 sm:h-[80px] sm:w-[80px]" />
+      <h1 className="text-sm-22 text-black sm:text-h1">404 접속오류</h1>
+      <p className="text-center text-m-16 leading-[1.5] text-black sm:text-m-20">
         요청하신 페이지를 찾을 수 없습니다.
         <br />
         주소가 바뀌었거나 삭제되었을 수 있어요.

@@ -43,7 +43,6 @@ export interface CalendarProps {
   onRegister?: () => void
   // 일정 칩 클릭 — 클릭된 DOM(위치 계산용)과 함께 전달. ScheduleCalendar 가 이걸로 팝업을 띄운다.
   onEventClick?: (event: CalendarEvent, target: HTMLElement) => void
-  responsiveVariant?: 'user'
   className?: string
 }
 
@@ -54,7 +53,6 @@ export interface CalendarDayProps {
   events: CalendarEvent[]
   // 일정 칩 클릭 — 클릭된 DOM(위치 계산용)과 함께 전달. 없으면 칩은 비클릭 텍스트.
   onEventClick?: (event: CalendarEvent, target: HTMLElement) => void
-  responsiveVariant?: 'user'
 }
 
 // Calendar + SchedulePopup 조합 — 일정 칩 클릭 시 셀 옆에 상세 말풍선을 띄운다.
@@ -68,7 +66,6 @@ export interface ScheduleCalendarProps {
   // 팝업의 수정/삭제. 없으면 읽기 전용으로 뜬다.
   onEventEdit?: (event: CalendarEvent) => void
   onEventDelete?: (event: CalendarEvent) => void
-  responsiveVariant?: 'user'
   className?: string
 }
 

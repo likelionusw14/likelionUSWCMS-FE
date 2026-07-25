@@ -46,58 +46,79 @@ export function MemberEditModal({
 
   return (
     <>
-      <Modal open={open} onClose={onClose} panelClassName="" ariaLabel="회원정보 수정">
-      <WindowPanel className="w-[640px]" bodyClassName="flex flex-col items-center gap-40">
-        <div className="flex w-full flex-col items-center gap-24">
-          <div className="flex w-full items-center justify-between">
-            <h2 className="text-sm-22 text-black">회원정보 수정</h2>
-            <button type="button" onClick={() => setConfirmOpen(true)} className="text-m-14 text-error underline">
-              회원정보 삭제
-            </button>
-          </div>
+      {/* 폭은 Modal 패널에 건다 — Modal 의 패널 div 는 shrink-to-fit 이라 WindowPanel 쪽 w-full 만으로는 640px 이 서지 않는다.
+          오버레이 px-24 덕분에 모바일에서는 자동으로 화면폭-48 로 줄어든다. */}
+      <Modal
+        open={open}
+        onClose={onClose}
+        panelClassName="w-full max-w-[640px]"
+        ariaLabel="회원정보 수정"
+      >
+        <WindowPanel className="w-full" bodyClassName="flex flex-col items-center gap-40">
+          <div className="flex w-full flex-col items-center gap-24">
+            {/* 제목 + 삭제 링크 — 모바일에서도 한 줄(Figma 1249:20794, 272px 안에 수납). 좁아지면 줄바꿈되도록 gap 부여. */}
+            <div className="flex w-full flex-wrap items-center justify-between gap-8">
+              <h2 className="text-sm-22 text-black">회원정보 수정</h2>
+              <button
+                type="button"
+                onClick={() => setConfirmOpen(true)}
+                className="text-m-14 text-error underline"
+              >
+                회원정보 삭제
+              </button>
+            </div>
 
-          <div className="flex flex-col gap-8">
-            <div className="flex flex-col gap-8">
-              <span className="px-8 text-m-16 text-black">이름</span>
-              <div className="flex h-48 w-[280px] flex-col gap-4">
-                <input
-                  className={FIELD}
-                  value={name}
-                  onChange={(event) => {
-                    setName(event.target.value)
-                    if (nameError) setNameError(false)
-                  }}
-                  placeholder="이름"
-                />
-                {nameError && (
-                  <p className="text-r-12 text-error">
-                    이름을 다시 확인해주세요
-                  </p>
-                )}
+            {/* 폼 열 — 데스크톱은 내용폭 hug(중앙 정렬), 모바일은 전체폭. */}
+            <div className="flex w-full flex-col gap-8 sm:w-auto">
+              <div className="flex flex-col gap-8">
+                <span className="px-8 text-m-16 text-black">이름</span>
+                <div className="flex h-48 w-full flex-col gap-4 sm:w-[280px]">
+                  <input
+                    className={FIELD}
+                    value={name}
+                    onChange={(event) => {
+                      setName(event.target.value)
+                      if (nameError) setNameError(false)
+                    }}
+                    placeholder="이름"
+                  />
+                  {nameError && <p className="text-r-12 text-error">이름을 다시 확인해주세요</p>}
+                </div>
+              </div>
+              {/* 기수 + 파트 — 모바일 내부폭 279px 에 120+32+120=272 가 들어간다(Figma 1249:20804). 더 좁아지면 줄바꿈. */}
+              <div className="flex flex-wrap gap-x-32 gap-y-8">
+                <div className="flex flex-col gap-8">
+                  <span className="px-8 text-m-16 text-black">기수</span>
+                  <Dropdown
+                    value={cohort}
+                    onChange={setCohort}
+                    options={cohortOptions}
+                    placeholder="기수"
+                  />
+                </div>
+                <div className="flex flex-col gap-8">
+                  <span className="px-8 text-m-16 text-black">파트</span>
+                  <Dropdown
+                    value={part}
+                    onChange={setPart}
+                    options={partOptions}
+                    placeholder="파트"
+                  />
+                </div>
               </div>
             </div>
-            <div className="flex gap-32">
-              <div className="flex flex-col gap-8">
-                <span className="px-8 text-m-16 text-black">기수</span>
-                <Dropdown value={cohort} onChange={setCohort} options={cohortOptions} placeholder="기수" />
-              </div>
-              <div className="flex flex-col gap-8">
-                <span className="px-8 text-m-16 text-black">파트</span>
-                <Dropdown value={part} onChange={setPart} options={partOptions} placeholder="파트" />
-              </div>
-            </div>
           </div>
-        </div>
 
-        <div className="flex gap-16">
-          <Button variant="primary" onClick={handleSave}>
-            저장
-          </Button>
-          <Button variant="outline" onClick={onClose}>
-            취소
-          </Button>
-        </div>
-      </WindowPanel>
+          {/* 저장/취소 — 모바일에서도 가로 2열 유지. flex-1 로 폭을 나눠 min-w-128 두 개가 들어간다(Figma 1249:20813). */}
+          <div className="flex w-full justify-center gap-16">
+            <Button variant="primary" onClick={handleSave} className="flex-1 sm:flex-none">
+              저장
+            </Button>
+            <Button variant="outline" onClick={onClose} className="flex-1 sm:flex-none">
+              취소
+            </Button>
+          </div>
+        </WindowPanel>
       </Modal>
       <ConfirmDialog
         open={confirmOpen}

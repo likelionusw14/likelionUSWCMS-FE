@@ -2,7 +2,12 @@ import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { Calendar, SchedulePopup } from '@molecules'
-import type { CalendarEvent, ScheduleCalendarProps, ScheduleCalendarSelected, SchedulePopupEvent } from '@types'
+import type {
+  CalendarEvent,
+  ScheduleCalendarProps,
+  ScheduleCalendarSelected,
+  SchedulePopupEvent,
+} from '@types'
 
 const GAP = 8
 
@@ -29,7 +34,6 @@ export function ScheduleCalendar({
   onRegister,
   onEventEdit,
   onEventDelete,
-  responsiveVariant,
   className,
 }: ScheduleCalendarProps) {
   const [selected, setSelected] = useState<ScheduleCalendarSelected | null>(null)
@@ -78,7 +82,6 @@ export function ScheduleCalendar({
         onDateSelect={onDateSelect}
         onRegister={onRegister}
         onEventClick={handleEventClick}
-        responsiveVariant={responsiveVariant}
         className={className}
       />
       {createPortal(
@@ -96,9 +99,24 @@ export function ScheduleCalendar({
                 top: selected.chipRect.top + selected.chipRect.height / 2,
                 transformOrigin: selected.tail === 'left' ? 'left center' : 'right center',
               }}
-              initial={{ opacity: 0, scale: reduce ? 1 : 0.95, x: selected.tail === 'left' ? 0 : '-100%', y: '-50%' }}
-              animate={{ opacity: 1, scale: 1, x: selected.tail === 'left' ? 0 : '-100%', y: '-50%' }}
-              exit={{ opacity: 0, scale: reduce ? 1 : 0.95, x: selected.tail === 'left' ? 0 : '-100%', y: '-50%' }}
+              initial={{
+                opacity: 0,
+                scale: reduce ? 1 : 0.95,
+                x: selected.tail === 'left' ? 0 : '-100%',
+                y: '-50%',
+              }}
+              animate={{
+                opacity: 1,
+                scale: 1,
+                x: selected.tail === 'left' ? 0 : '-100%',
+                y: '-50%',
+              }}
+              exit={{
+                opacity: 0,
+                scale: reduce ? 1 : 0.95,
+                x: selected.tail === 'left' ? 0 : '-100%',
+                y: '-50%',
+              }}
               transition={{ duration: reduce ? 0 : 0.16, ease: [0.16, 1, 0.3, 1] }}
             >
               <SchedulePopup

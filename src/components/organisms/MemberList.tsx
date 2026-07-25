@@ -3,6 +3,7 @@ import { ListSection } from '@organisms'
 import type { Column, Member, MemberListProps } from '@types'
 
 // 회원 목록 — 이름·분류(권한수정 링크)·기수·파트·가입상태·수정 링크 + 페이지네이션. Figma 15:12626.
+// 모바일(375) 대응 — 이름 열은 64px 고정이라 긴 이름이 여러 줄로 감싸져 40px 행 높이를 넘고 아래 행과 겹친다. Figma 모바일(1203:16917) 이름 셀처럼 말줄임 처리.
 export function MemberList({
   members,
   totalCount,
@@ -13,7 +14,14 @@ export function MemberList({
   onEditMember,
 }: MemberListProps) {
   const columns: Column<Member>[] = [
-    { id: 'name', header: '이름', accessor: (m) => m.name, width: 64, align: 'center' },
+    {
+      id: 'name',
+      header: '이름',
+      accessor: (m) => m.name,
+      width: 64,
+      align: 'center',
+      truncate: true,
+    },
     {
       id: 'role',
       header: '분류',

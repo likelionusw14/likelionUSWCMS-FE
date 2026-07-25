@@ -26,7 +26,7 @@ export function Pagination({ page, totalPages, onPageChange }: PaginationProps) 
   const pages = buildPages(page, totalPages)
 
   return (
-    <div className="flex w-full items-center justify-center">
+    <div className="flex w-full flex-wrap items-center justify-center gap-y-8">
       <button
         type="button"
         aria-label="이전 페이지"

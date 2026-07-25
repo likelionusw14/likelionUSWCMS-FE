@@ -20,8 +20,11 @@ export function RemarkModal({ open, onClose, onSubmit, value = '' }: RemarkModal
   }
 
   return (
-    <Modal open={open} onClose={onClose} panelClassName="" ariaLabel="비고">
-      <WindowPanel className="w-[320px]" bodyClassName="!p-24">
+    // 폭은 Modal 패널에 건다 — Modal 의 패널 div 는 shrink-to-fit 이라 WindowPanel 쪽 w-full 만으로는 320px 이 서지 않는다.
+    <Modal open={open} onClose={onClose} panelClassName="w-full max-w-[320px]" ariaLabel="비고">
+      {/* 모바일(375) — 카드 320px 이 오버레이 px-24 안쪽 327px 에 그대로 들어가고, 본문 !p-24 기준 내부폭 272px 은
+          Figma 1249:20441(272) 과 동일하다. 입력은 w-full, 버튼은 56+10+56=122 라 축약 없이 가로 유지. */}
+      <WindowPanel className="w-full" bodyClassName="!p-24">
         <div className="flex flex-col gap-8">
           <div className="flex flex-col gap-8">
             <span className="px-8 text-m-16 text-black">비고</span>
@@ -35,7 +38,12 @@ export function RemarkModal({ open, onClose, onSubmit, value = '' }: RemarkModal
             </div>
           </div>
           <div className="flex justify-center gap-[10px]">
-            <Button size="sm" variant="primary" onClick={handleSubmit} className="whitespace-nowrap">
+            <Button
+              size="sm"
+              variant="primary"
+              onClick={handleSubmit}
+              className="whitespace-nowrap"
+            >
               저장
             </Button>
             <Button size="sm" variant="outline" onClick={onClose} className="whitespace-nowrap">

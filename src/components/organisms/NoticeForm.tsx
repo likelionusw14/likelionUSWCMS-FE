@@ -45,26 +45,32 @@ export function NoticeForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col items-center gap-24 px-24 pb-[120px] pt-32">
+    <form
+      onSubmit={handleSubmit}
+      className="flex flex-col items-center gap-24 px-24 pb-[120px] pt-32"
+    >
       <div className="flex w-full flex-col gap-4">
         <div className="w-full rounded-8 bg-white">
-          {/* 제목 / 태그 */}
-          <div className="relative z-40 flex h-[56px] w-full items-stretch border-b border-secondary-1">
-            <FormRow label="제목" labelClassName="rounded-tl-8">
+          {/* 제목 / 태그 — 모바일은 한 행에 두 칸을 넣을 폭이 없어 전폭 단일 행 2개로 쪼갠다 (Figma 1181:24151 / 24157) */}
+          <div className="relative z-40 flex w-full flex-col items-stretch border-b border-secondary-1 sm:h-[56px] sm:flex-row">
+            {/* input/textarea 는 FormRow 입력 셀(flex)의 자식이라 min-w-px 가 없으면
+                기본 폭(size=20, 약 188px) 아래로 줄지 않아 375에서 셀을 밀고 나간다. */}
+            <FormRow label="제목" labelClassName="rounded-tl-8" className="min-h-[56px] sm:min-h-0">
               <Input
                 variant="form"
+                className="min-w-px"
                 value={values.title}
                 onChange={(event) => change('title', event.target.value)}
                 placeholder="제목을 입력해주세요"
               />
             </FormRow>
-            <FormRow label="태그">
+            <FormRow label="태그" className="min-h-[56px] sm:min-h-0">
               <Dropdown
                 value={values.tag}
                 onChange={(value) => change('tag', value)}
                 options={tagOptions}
                 placeholder="태그"
-                className="w-[172px]"
+                className="w-[172px] min-w-px"
               />
             </FormRow>
           </div>
@@ -76,10 +82,14 @@ export function NoticeForm({
             </FormRow>
           </div>
 
-          {/* 첨부링크 */}
-          <div className="relative z-20 flex h-[115px] w-full items-stretch border-y border-secondary-1">
+          {/* 첨부링크 — 모바일은 업로드 박스 아래로 찾기/삭제가 접히므로 높이를 고정하지 않는다 (Figma 1181:24168) */}
+          <div className="relative z-20 flex w-full items-stretch border-y border-secondary-1 sm:h-[115px]">
             <FormRow label="첨부링크">
-              <FileUploadField fileName={fileName} onFileChange={onFileChange} onFileClear={onFileClear} />
+              <FileUploadField
+                fileName={fileName}
+                onFileChange={onFileChange}
+                onFileClear={onFileClear}
+              />
             </FormRow>
           </div>
 
@@ -89,7 +99,7 @@ export function NoticeForm({
               <textarea
                 ref={contentRef}
                 rows={6}
-                className="no-scrollbar min-h-[148px] w-full resize-none rounded-8 border border-secondary-1 bg-background-1 px-16 py-[8.5px] text-m-14 text-black placeholder:text-primary/50 focus:outline-none"
+                className="no-scrollbar min-h-[148px] w-full min-w-px resize-none rounded-8 border border-secondary-1 bg-background-1 px-16 py-[8.5px] text-m-14 text-black placeholder:text-primary/50 focus:outline-none"
                 value={values.content}
                 onChange={(event) => change('content', event.target.value)}
                 placeholder="공지내용을 작성해주세요"
@@ -98,7 +108,9 @@ export function NoticeForm({
           </div>
         </div>
 
-        {error && <p className="px-8 text-right text-r-12 text-error">작성내용을 다시 확인해주세요</p>}
+        {error && (
+          <p className="px-8 text-right text-r-12 text-error">작성내용을 다시 확인해주세요</p>
+        )}
       </div>
 
       <div className="flex w-full flex-col gap-16">

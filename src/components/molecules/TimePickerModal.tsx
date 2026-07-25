@@ -46,15 +46,23 @@ export function TimePickerModal({ open, onClose, onConfirm, value }: TimePickerM
   }
 
   return (
-    <Modal open={open} onClose={onClose} panelClassName="" ariaLabel="시간 선택">
-      <WindowPanel className="w-[366px]" bodyClassName="flex flex-col items-center gap-40">
+    <Modal
+      open={open}
+      onClose={onClose}
+      panelClassName="w-full max-w-[366px]"
+      ariaLabel="시간 선택"
+    >
+      <WindowPanel className="w-full" bodyClassName="flex flex-col items-center gap-40">
         {/* 제목 (SM/22, 왼쪽) */}
         <div className="w-full">
           <span className="text-sm-22 text-black">시간 선택</span>
         </div>
 
         {/* 3열 휠 (시 · 분 · AM/PM). 밴드 폭 230, 컨테이너 302 */}
-        <WheelDeck className="h-[220px] w-[302px] overflow-hidden rounded-8 bg-white" bandClassName="w-[230px]">
+        <WheelDeck
+          className="h-[220px] w-full max-w-[302px] overflow-hidden rounded-8 bg-white"
+          bandClassName="w-full max-w-[230px]"
+        >
           <WheelPicker
             items={HOURS}
             defaultIndex={initial.hourIdx}

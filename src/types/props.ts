@@ -147,9 +147,31 @@ export interface BreadcrumbSegment {
 }
 
 // 상단바 — 셸(AdminSidebarShell)이 getAdminBreadcrumb 로 계산해 내려준다.
+// lg 미만에서는 좌측에 햄버거가 붙어 모바일 메뉴(AdminMobileMenu)를 연다.
 export interface AdminTopBarProps {
   breadcrumb: BreadcrumbSegment[]
   title: string
+  menuOpen: boolean
+  onMenuToggle: () => void
+  menuControls: string
+}
+
+// lg 미만 관리자 메뉴 — 상단바 아래로 펼쳐지는 전체폭 패널(Figma 1356:10691).
+export interface AdminMobileMenuProps {
+  id: string
+  open: boolean
+  onClose: () => void
+  homeItem: NavItem
+  navItems: NavItem[]
+}
+
+// 햄버거 버튼 — 3줄 막대가 열리면 X 로 바뀐다. 색은 text-* 로 상속(bg-current).
+export interface MobileMenuButtonProps {
+  open: boolean
+  onToggle: () => void
+  controls: string
+  className?: string
+  barClassName?: string
 }
 
 export interface ChipProps {

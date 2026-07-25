@@ -23,11 +23,17 @@ function toFormValues(event: CalendarEvent | null | undefined): ScheduleFormValu
 }
 
 // 필드 공통 — bg-background-1 + secondary-1 테두리 + 8px 모서리 (Figma 일정 작성 인풋).
-const FIELD = 'h-32 w-full rounded-8 border border-secondary-1 bg-background-1 px-16 text-m-14 text-black placeholder:text-primary/50'
+const FIELD =
+  'h-32 w-full rounded-8 border border-secondary-1 bg-background-1 px-16 text-m-14 text-black placeholder:text-primary/50'
 
 // 일정 작성·수정 팝업 — 일정명·장소·날짜·시간·설명. 날짜/시간 필드는 내부에서 선택 팝업을 띄운다.
 // initialEvent 가 있으면 수정 모드(기존 값 하이드레이트), 없으면 신규 등록(빈 폼).
-export function ScheduleFormModal({ open, onClose, onSubmit, initialEvent }: ScheduleFormModalProps) {
+export function ScheduleFormModal({
+  open,
+  onClose,
+  onSubmit,
+  initialEvent,
+}: ScheduleFormModalProps) {
   const [values, setValues] = useState<ScheduleFormValues>(() => toFormValues(initialEvent))
   const [dateOpen, setDateOpen] = useState(false)
   const [timeOpen, setTimeOpen] = useState(false)
@@ -60,8 +66,15 @@ export function ScheduleFormModal({ open, onClose, onSubmit, initialEvent }: Sch
   }
 
   return (
-    <Modal open={open} onClose={onClose} panelClassName="" ariaLabel="일정 작성">
-      <WindowPanel className="w-[640px]" bodyClassName="flex flex-col items-center gap-40">
+    // 폭은 Modal 패널에 건다 — Modal 의 패널 div 는 shrink-to-fit 이라 WindowPanel 쪽 w-full 만으로는 640px 이 서지 않는다.
+    // 오버레이 px-24 덕분에 모바일에서는 자동으로 화면폭-48 로 줄어든다.
+    <Modal
+      open={open}
+      onClose={onClose}
+      panelClassName="w-full max-w-[640px]"
+      ariaLabel="일정 작성"
+    >
+      <WindowPanel className="w-full" bodyClassName="flex flex-col items-center gap-40">
         <h2 className="w-full text-sm-22 text-black">일정 작성</h2>
 
         <div className="flex w-full flex-col gap-8">
@@ -105,7 +118,8 @@ export function ScheduleFormModal({ open, onClose, onSubmit, initialEvent }: Sch
             </div>
           </div>
 
-          <div className="flex w-full gap-32">
+          {/* 날짜 + 시간 — 모바일(내부폭 279px)에서는 두 필드가 나란히 못 들어가 전체폭 세로 스택. Figma 1249:20752/20761. */}
+          <div className="flex w-full flex-col gap-8 sm:flex-row sm:gap-32">
             <div className="flex flex-1 flex-col gap-8">
               <span className="px-8 text-m-16 text-black">날짜</span>
               <button
@@ -165,11 +179,12 @@ export function ScheduleFormModal({ open, onClose, onSubmit, initialEvent }: Sch
           </div>
         </div>
 
-        <div className="flex gap-16">
-          <Button variant="primary" onClick={handleSave}>
+        {/* 저장/취소 — 모바일에서도 가로 2열 유지. flex-1 로 폭을 나눠 min-w-128 두 개가 들어간다(Figma 1249:20778 = 128+16+128). */}
+        <div className="flex w-full justify-center gap-16">
+          <Button variant="primary" onClick={handleSave} className="flex-1 sm:flex-none">
             저장
           </Button>
-          <Button variant="outline" onClick={onClose}>
+          <Button variant="outline" onClick={onClose} className="flex-1 sm:flex-none">
             취소
           </Button>
         </div>

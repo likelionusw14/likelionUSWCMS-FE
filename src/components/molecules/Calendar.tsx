@@ -29,7 +29,6 @@ export function Calendar({
   onDateSelect,
   onRegister,
   onEventClick,
-  responsiveVariant,
   className,
 }: CalendarProps) {
   const grid = buildMonthGrid(year, month)
@@ -74,15 +73,12 @@ export function Calendar({
     <WindowPanel
       className={className}
       headerClassName="h-40"
-      bodyClassName={cn(
-        'flex flex-col gap-40 !py-40',
-        responsiveVariant === 'user' && 'px-24 sm:px-32',
-      )}
+      bodyClassName="flex flex-col gap-40 px-24 !py-40 sm:px-32"
     >
       {/* 년월 + 등록 */}
       <div className="flex items-center justify-between">
         <span className="h-40 w-40" aria-hidden />
-        <div className={cn('flex items-center gap-16', responsiveVariant === 'user' && 'gap-8 sm:gap-16')}>
+        <div className="flex items-center gap-8 sm:gap-16">
           <button
             type="button"
             onClick={() => shift(-1)}
@@ -95,21 +91,13 @@ export function Calendar({
             <button
               type="button"
               onClick={onDateSelect}
-              className={cn(
-                'text-sm-22 text-black underline decoration-gray-500 underline-offset-4',
-                responsiveVariant === 'user' && 'whitespace-nowrap text-sm-18 sm:text-sm-22',
-              )}
+              className="whitespace-nowrap text-sm-18 text-black underline decoration-gray-500 underline-offset-4 sm:text-sm-22"
               aria-label="날짜 선택"
             >
               {year}년 {month + 1}월
             </button>
           ) : (
-            <span
-              className={cn(
-                'text-sm-22 text-black underline decoration-gray-500 underline-offset-4',
-                responsiveVariant === 'user' && 'whitespace-nowrap text-sm-18 sm:text-sm-22',
-              )}
-            >
+            <span className="whitespace-nowrap text-sm-18 text-black underline decoration-gray-500 underline-offset-4 sm:text-sm-22">
               {year}년 {month + 1}월
             </span>
           )}
@@ -153,7 +141,10 @@ export function Calendar({
           className="relative overflow-hidden"
           initial={false}
           animate={{ height: gridHeight ?? 'auto' }}
-          transition={{ duration: reduce || isFirstMeasureRef.current ? 0 : 0.35, ease: 'easeInOut' }}
+          transition={{
+            duration: reduce || isFirstMeasureRef.current ? 0 : 0.35,
+            ease: 'easeInOut',
+          }}
           onAnimationComplete={() => {
             isFirstMeasureRef.current = false
           }}
@@ -177,7 +168,6 @@ export function Calendar({
                     inMonth={inMonth}
                     events={byDate.get(key) ?? []}
                     onEventClick={onEventClick}
-                    responsiveVariant={responsiveVariant}
                   />
                 )
               })}
