@@ -26,8 +26,9 @@ export function SessionDetail({ session }: SessionDetailProps) {
           />
         </div>
         {/* 뷰어 — 쪽 표시줄이 미리보기 위에 얹힌다. 미리보기가 없으면 회색 판만 보인다. */}
-        {/* 높이는 모바일 222 → sm 이상 584 (Figma 375 실측), 폭은 카드에 맞춰 유동. */}
-        <div className="relative h-[222px] w-full overflow-hidden rounded-8 bg-gray-100 sm:h-[584px]">
+        {/* 높이는 Figma 실측대로 375=222 / 800=452 / 1280=584 (1205:17642 · 17457 · 17279).
+            sm:h-[584px] 하나로 두면 800 에서 452 가 아니라 584 가 돼 카드가 132px 길어진다. */}
+        <div className="relative h-[222px] w-full overflow-hidden rounded-8 bg-gray-100 sm:h-[452px] lg:h-[584px]">
           {session.previewUrl ? (
             <img
               src={session.previewUrl}
