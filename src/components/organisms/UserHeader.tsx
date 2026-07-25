@@ -1,5 +1,5 @@
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useLocation } from 'react-router-dom'
 import userIcon from '@/assets/icons/user-white.svg'
 import { MobileMenuButton } from '@atoms'
 import { GlassNavMenu } from '@molecules'
@@ -18,6 +18,9 @@ export function UserHeader({ navItems, onLogout }: UserHeaderProps) {
   const reduce = useReducedMotion()
   const transition = glassNavTransition(!!reduce)
   const menu = useMobileMenu()
+  const { pathname } = useLocation()
+  // 홈(/app)은 어두운 히어로 위에 얹히므로 드로어도 어두운 테마로 뒤집는다.
+  const isHome = pathname === '/app'
 
   return (
     <>
@@ -78,7 +81,10 @@ export function UserHeader({ navItems, onLogout }: UserHeaderProps) {
               animate={{ x: 0 }}
               exit={reduce ? undefined : { x: '100%' }}
               transition={{ duration: reduce ? 0 : 0.25, ease: 'easeInOut' }}
-              className="fixed inset-y-0 right-0 z-40 flex w-[280px] max-w-[85vw] flex-col bg-white px-16 pb-24 pt-24 opacity-100 shadow-drop lg:hidden"
+              className={cn(
+                'fixed right-0 top-0 z-40 flex h-[350px] w-[375px] max-w-full flex-col px-16 pb-24 pt-24 opacity-100 shadow-drop min-[376px]:h-full lg:hidden',
+                isHome ? 'bg-background-2' : 'bg-white',
+              )}
             >
               <div className="mb-16 flex items-center justify-between px-8">
                 <NavLink
@@ -92,7 +98,10 @@ export function UserHeader({ navItems, onLogout }: UserHeaderProps) {
                   type="button"
                   aria-label="메뉴 닫기"
                   onClick={menu.close}
-                  className="flex h-32 w-32 items-center justify-center rounded-8 text-sm-22 text-secondary-2 outline-none focus-visible:ring-2 focus-visible:ring-secondary-2"
+                  className={cn(
+                    'flex h-32 w-32 items-center justify-center rounded-8 text-sm-22 outline-none focus-visible:ring-2 focus-visible:ring-secondary-2',
+                    isHome ? 'text-white' : 'text-secondary-2',
+                  )}
                 >
                   ×
                 </button>
@@ -106,8 +115,9 @@ export function UserHeader({ navItems, onLogout }: UserHeaderProps) {
                     onClick={menu.close}
                     className={({ isActive }) =>
                       cn(
-                        'rounded-8 px-16 py-12 text-sm-16 text-black outline-none hover:bg-background-1 focus-visible:ring-2 focus-visible:ring-primary',
-                        isActive && 'bg-background-1',
+                        'rounded-8 px-16 py-12 text-sm-16 outline-none focus-visible:ring-2 focus-visible:ring-primary',
+                        isHome ? 'text-white hover:bg-primary' : 'text-black hover:bg-background-1',
+                        isActive && (isHome ? 'bg-primary' : 'bg-background-1'),
                       )
                     }
                   >

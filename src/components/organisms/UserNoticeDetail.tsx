@@ -15,10 +15,10 @@ function formatDateTime(value: string) {
 export function UserNoticeDetail({ notice }: UserNoticeDetailProps) {
   return (
     <WindowPanel bodyClassName="flex flex-col gap-24">
-      {/* 모바일(375): 제목이 태그와 한 줄을 다투면 63px 까지 눌려 읽을 수 없다 — 세로로 쌓고 sm 이상에서만 양끝 정렬. */}
-      <div className="flex flex-col gap-8 sm:flex-row sm:items-start sm:justify-between sm:gap-24">
-        <div className="min-w-0">
-          <h2 className="truncate text-sm-20 text-black">{notice.title}</h2>
+      {/* 모바일(375): 제목이 태그와 한 줄을 다투면 63px 까지 눌려 읽을 수 없다 — 줄바꿈으로 흘려 태그를 아래로 내린다. */}
+      <div className="flex flex-wrap items-start justify-between gap-x-24 gap-y-8">
+        <div className="w-max max-w-full shrink-0">
+          <h2 className="break-words text-sm-20 text-black">{notice.title}</h2>
           <p className="mt-4 text-r-14 text-gray-500">{formatDateTime(notice.publishedAt)}</p>
         </div>
         <p className="shrink-0 text-sm-16 text-secondary-2"># {notice.tagLabel}</p>

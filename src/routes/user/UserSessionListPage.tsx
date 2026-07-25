@@ -12,7 +12,7 @@ export function UserSessionListPage() {
         <div className="relative border-x border-secondary-2 bg-secondary-2/10 px-24 py-4">
           <span className="absolute -left-8 -top-8 h-16 w-16 rounded-full bg-secondary-2" />
           <span className="absolute -bottom-8 -right-8 h-16 w-16 rounded-full bg-secondary-2" />
-          <h1 className="text-h1 text-black">SESSION</h1>
+          <h1 className="text-sm-22 text-black sm:text-h1">SESSION</h1>
         </div>
         <p className="text-sm-18 text-black">세션자료</p>
       </header>
