@@ -51,11 +51,12 @@ export function NoticeForm({
     >
       <div className="flex w-full flex-col gap-4">
         <div className="w-full rounded-8 bg-white">
-          {/* 제목 / 태그 — 모바일은 한 행에 두 칸을 넣을 폭이 없어 전폭 단일 행 2개로 쪼갠다 (Figma 1181:24151 / 24157) */}
-          <div className="relative z-40 flex w-full flex-col items-stretch border-b border-secondary-1 sm:h-[56px] sm:flex-row">
+          {/* 제목 / 태그 — Figma 실측상 1280 만 2열(504+504)이고 800·375 는 전폭 단일 행 2개다
+              (800: 1181:24374/24380 각 752). 그래서 경계가 sm 이 아니라 lg 다. */}
+          <div className="relative z-40 flex w-full flex-col items-stretch border-b border-secondary-1 lg:h-[56px] lg:flex-row">
             {/* input/textarea 는 FormRow 입력 셀(flex)의 자식이라 min-w-px 가 없으면
                 기본 폭(size=20, 약 188px) 아래로 줄지 않아 375에서 셀을 밀고 나간다. */}
-            <FormRow label="제목" labelClassName="rounded-tl-8" className="min-h-[56px] sm:min-h-0">
+            <FormRow label="제목" labelClassName="rounded-tl-8" className="min-h-[56px] lg:min-h-0">
               <Input
                 variant="form"
                 className="min-w-px"
@@ -64,7 +65,7 @@ export function NoticeForm({
                 placeholder="제목을 입력해주세요"
               />
             </FormRow>
-            <FormRow label="태그" className="min-h-[56px] sm:min-h-0">
+            <FormRow label="태그" className="min-h-[56px] lg:min-h-0">
               <Dropdown
                 value={values.tag}
                 onChange={(value) => change('tag', value)}
@@ -82,8 +83,8 @@ export function NoticeForm({
             </FormRow>
           </div>
 
-          {/* 첨부링크 — 모바일은 업로드 박스 아래로 찾기/삭제가 접히므로 높이를 고정하지 않는다 (Figma 1181:24168) */}
-          <div className="relative z-20 flex w-full items-stretch border-y border-secondary-1 sm:h-[115px]">
+          {/* 첨부링크 — 800·375 는 업로드 박스 아래로 찾기/삭제가 접혀 높이가 달라진다(800: 103). */}
+          <div className="relative z-20 flex w-full items-stretch border-y border-secondary-1 lg:h-[115px]">
             <FormRow label="첨부링크">
               <FileUploadField
                 fileName={fileName}

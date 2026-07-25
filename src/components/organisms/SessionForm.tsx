@@ -41,9 +41,10 @@ export function SessionForm({
     >
       <div className="flex w-full flex-col gap-4">
         <div className="w-full rounded-8 bg-white">
-          {/* 주차 / 파트 — 모바일은 한 행에 두 칸을 넣을 폭이 없어 전폭 단일 행 2개로 쪼갠다 (Figma 1181:24897 / 24902) */}
-          <div className="relative z-20 flex w-full flex-col items-stretch border-b border-secondary-1 sm:h-[56px] sm:flex-row">
-            <FormRow label="주차" labelClassName="rounded-tl-8" className="min-h-[56px] sm:min-h-0">
+          {/* 주차 / 파트 — Figma 실측상 1280 만 2열(504+504)이고 800·375 는 전폭 단일 행 2개다
+              (800: 주차·파트 각 752). 그래서 경계가 sm 이 아니라 lg 다. */}
+          <div className="relative z-20 flex w-full flex-col items-stretch border-b border-secondary-1 lg:h-[56px] lg:flex-row">
+            <FormRow label="주차" labelClassName="rounded-tl-8" className="min-h-[56px] lg:min-h-0">
               <Dropdown
                 value={values.week}
                 onChange={(value) => change('week', value)}
@@ -52,7 +53,7 @@ export function SessionForm({
                 className="w-[172px] min-w-px"
               />
             </FormRow>
-            <FormRow label="파트" className="min-h-[56px] sm:min-h-0">
+            <FormRow label="파트" className="min-h-[56px] lg:min-h-0">
               <Dropdown
                 value={values.part}
                 onChange={(value) => change('part', value)}
@@ -62,8 +63,8 @@ export function SessionForm({
               />
             </FormRow>
           </div>
-          {/* 첨부파일 — 모바일은 업로드 박스 아래로 찾기/삭제가 접히므로 높이를 고정하지 않는다 (Figma 1181:24907) */}
-          <div className="relative z-10 flex w-full items-stretch sm:h-[115px]">
+          {/* 첨부파일 — 800·375 는 업로드 박스 아래로 찾기/삭제가 접혀 높이가 달라진다. */}
+          <div className="relative z-10 flex w-full items-stretch lg:h-[115px]">
             <FormRow label="첨부파일" labelClassName="rounded-bl-8">
               <FileUploadField
                 fileName={fileName}

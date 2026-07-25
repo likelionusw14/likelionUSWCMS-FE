@@ -21,9 +21,10 @@ export function NoticeDetail({ notice }: NoticeDetailProps) {
         </div>
 
         <div className="w-full overflow-hidden rounded-8 border border-secondary-1">
-          {/* 태그/작성일은 모바일에서 세로로 쌓고, sm 이상에서만 한 줄에 2열로 붙인다. */}
-          <div className="flex w-full flex-col border-b border-secondary-1 sm:flex-row">
-            <div className="flex min-w-px flex-1 border-b border-secondary-1 sm:border-b-0">
+          {/* 태그/작성일은 Figma 실측상 1280 에서만 한 줄 2열이고, 800·375 는 세로로 쌓인다
+              (800: 1205:20094/20099 가 y=0/40 으로 스택). 그래서 경계가 sm 이 아니라 lg 다. */}
+          <div className="flex w-full flex-col border-b border-secondary-1 lg:flex-row">
+            <div className="flex min-w-px flex-1 border-b border-secondary-1 lg:border-b-0">
               <span className={LABEL}>태그</span>
               <span className={VALUE}>{notice.tag}</span>
             </div>
