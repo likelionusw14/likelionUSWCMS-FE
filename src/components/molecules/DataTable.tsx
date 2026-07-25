@@ -32,10 +32,15 @@ export function DataTable<T>({
   className,
   ariaLabel,
   minWidth,
+  tightMobileEdge = false,
 }: DataTableProps<T>) {
-  // 표 좌우 끝단 여백은 Figma 기준 375=8 / sm 이상=32 다(공지 관리 1205:18908 · 18533 · 17907).
-  const rowBase =
-    'flex h-40 items-center justify-between border-b border-secondary-1 px-8 text-m-14 text-black sm:px-32'
+  // 표 좌우 끝단 여백 — Figma 기준 sm 이상은 전부 32.
+  // 375 는 세션·회원·출결 표가 32, 공지 표만 8 이라 기본 32 + 공지에서만 tightMobileEdge.
+  const edgeX = tightMobileEdge ? 'px-8 sm:px-32' : 'px-32'
+  const rowBase = cn(
+    'flex h-40 items-center justify-between border-b border-secondary-1 text-m-14 text-black',
+    edgeX,
+  )
   const autoMinWidth = columns.reduce((sum, c) => sum + (c.width ?? c.minWidth ?? 120), 0) + 64
   const tableMinWidth = minWidth ?? autoMinWidth
 
@@ -49,7 +54,10 @@ export function DataTable<T>({
       >
         <div
           role="row"
-          className="flex h-32 items-center justify-between border-y border-secondary-1 px-8 text-m-14 text-primary sm:px-32"
+          className={cn(
+            'flex h-32 items-center justify-between border-y border-secondary-1 text-m-14 text-primary',
+            edgeX,
+          )}
         >
           {columns.map((col) => (
             <span
@@ -78,7 +86,12 @@ export function DataTable<T>({
             </div>
           ))
         ) : rows.length === 0 ? (
-          <div className="flex h-40 items-center justify-center border-b border-secondary-1 px-8 text-m-14 text-gray-500 sm:px-32">
+          <div
+            className={cn(
+              'flex h-40 items-center justify-center border-b border-secondary-1 text-m-14 text-gray-500',
+              edgeX,
+            )}
+          >
             {emptyMessage}
           </div>
         ) : (

@@ -50,6 +50,7 @@ export function NoticeList({
         rowKey={(n) => n.id}
         getRowHref={(n) => `/admin/notices/${n.id}`}
         ariaLabel="공지 목록"
+        tightMobileEdge
       />
     </ListSection>
   )

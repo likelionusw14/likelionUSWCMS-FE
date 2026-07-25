@@ -65,6 +65,7 @@ export function UserNoticeList({
         loadingRowCount={20}
         emptyMessage="조건에 맞는 공지가 없습니다."
         ariaLabel="공지 목록"
+        tightMobileEdge
       />
     </ListSection>
   )

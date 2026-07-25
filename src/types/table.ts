@@ -51,4 +51,7 @@ export interface DataTableProps<T> {
   ariaLabel?: string
   // 이보다 좁아지면 가로 스크롤(스크롤바 숨김). 미지정 시 컬럼 폭 합으로 자동 계산.
   minWidth?: number
+  // 375 에서 좌우 끝단 여백을 8 로 좁힌다. Figma 상 공지 표만 8 이고
+  // 세션·회원·출결 표는 375 에서도 32 라, 기본값(32)을 두고 공지 목록만 켠다.
+  tightMobileEdge?: boolean
 }
