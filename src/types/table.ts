@@ -20,7 +20,7 @@ export interface Column<T> {
   minWidth?: number
   // 셀·헤더 정렬. 기본 left (메타 열은 center 로 지정).
   align?: ColumnAlign
-  // 넘칠 때 말줄임. 기본값: fill 열이면 true.
+  // 넘칠 때 말줄임. 기본값 true - 행 높이(40px) 고정이라 줄바꿈은 행을 깨뜨린다.
   truncate?: boolean
   // 셀 공통 class (조건부 색 등은 cell 에서 처리).
   className?: string
@@ -51,4 +51,7 @@ export interface DataTableProps<T> {
   ariaLabel?: string
   // 이보다 좁아지면 가로 스크롤(스크롤바 숨김). 미지정 시 컬럼 폭 합으로 자동 계산.
   minWidth?: number
+  // 375 에서 좌우 끝단 여백을 8 로 좁힌다. Figma 상 공지 표만 8 이고
+  // 세션·회원·출결 표는 375 에서도 32 라, 기본값(32)을 두고 공지 목록만 켠다.
+  tightMobileEdge?: boolean
 }

@@ -4,7 +4,6 @@ import { Dropdown } from '@atoms'
 import { useSessions, usePagination } from '@hooks'
 import { SearchBar, SessionList } from '@organisms'
 
-
 export function SessionListPage() {
   const { data: sessions } = useSessions()
   const [week, setWeek] = useState('')
@@ -21,7 +20,7 @@ export function SessionListPage() {
 
   return (
     <>
-      <div className="flex flex-col gap-24 px-24 pb-[120px] pt-32">
+      <div className="flex flex-col gap-24 px-24 pb-[90px] pt-32 min-[376px]:pb-[120px] lg:pb-[180px]">
         <SearchBar onSearch={() => setPage(1)}>
           <Dropdown
             value={week}

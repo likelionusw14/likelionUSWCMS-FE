@@ -29,7 +29,7 @@ export function Calendar({
   onDateSelect,
   onRegister,
   onEventClick,
-  responsiveVariant,
+  mobileTitleLeft = false,
   className,
 }: CalendarProps) {
   const grid = buildMonthGrid(year, month)
@@ -74,15 +74,17 @@ export function Calendar({
     <WindowPanel
       className={className}
       headerClassName="h-40"
-      bodyClassName={cn(
-        'flex flex-col gap-40 !py-40',
-        responsiveVariant === 'user' && 'px-24 sm:px-32',
-      )}
+      bodyClassName="flex flex-col gap-40 !px-32 !py-40"
     >
-      {/* 년월 + 등록 */}
+      {/* 년월 + 등록 - 시안의 좌측 '빈칸' 40 은 년월을 행 가운데로 미는 균형추다.
+          관리자 일정(1203:12588·13894)만 375·500 에서 hidden="true" 라 년월이 좌측(x=0)으로 붙고,
+          사용자·게스트(1181:10150·10997)는 모든 폭에서 가운데다(375 에서도 년월 x=52, 행 가운데). */}
       <div className="flex items-center justify-between">
-        <span className="h-40 w-40" aria-hidden />
-        <div className={cn('flex items-center gap-16', responsiveVariant === 'user' && 'gap-8 sm:gap-16')}>
+        <span
+          className={cn('h-40 w-40', mobileTitleLeft && 'max-[500px]:hidden')}
+          aria-hidden
+        />
+        <div className="flex items-center gap-16">
           <button
             type="button"
             onClick={() => shift(-1)}
@@ -95,21 +97,13 @@ export function Calendar({
             <button
               type="button"
               onClick={onDateSelect}
-              className={cn(
-                'text-sm-22 text-black underline decoration-gray-500 underline-offset-4',
-                responsiveVariant === 'user' && 'whitespace-nowrap text-sm-18 sm:text-sm-22',
-              )}
+              className="whitespace-nowrap text-sm-22 text-black underline decoration-gray-500 underline-offset-4"
               aria-label="날짜 선택"
             >
               {year}년 {month + 1}월
             </button>
           ) : (
-            <span
-              className={cn(
-                'text-sm-22 text-black underline decoration-gray-500 underline-offset-4',
-                responsiveVariant === 'user' && 'whitespace-nowrap text-sm-18 sm:text-sm-22',
-              )}
-            >
+            <span className="whitespace-nowrap text-sm-22 text-black underline decoration-gray-500 underline-offset-4">
               {year}년 {month + 1}월
             </span>
           )}
@@ -136,7 +130,10 @@ export function Calendar({
         )}
       </div>
 
-      {/* 요일 + 날짜 그리드 */}
+      {/* 요일 + 날짜 그리드 — 시안(563:8586)의 달력 박스에는 테두리가 없다.
+          선은 그리드(563:8602: bg·border 모두 secondary-1, radius 16)에만 걸려 있어
+          바깥 선과 셀 사이 1px 선이 이어지고 격자가 박스에 딱 맞는다.
+          시안 박스의 패딩 8 은 제거해 그리드가 년월 행과 같은 폭을 쓴다. */}
       <div className="flex flex-col gap-16">
         <div className="grid grid-cols-7">
           {WEEKDAYS.map((weekday) => (
@@ -153,7 +150,10 @@ export function Calendar({
           className="relative overflow-hidden"
           initial={false}
           animate={{ height: gridHeight ?? 'auto' }}
-          transition={{ duration: reduce || isFirstMeasureRef.current ? 0 : 0.35, ease: 'easeInOut' }}
+          transition={{
+            duration: reduce || isFirstMeasureRef.current ? 0 : 0.35,
+            ease: 'easeInOut',
+          }}
           onAnimationComplete={() => {
             isFirstMeasureRef.current = false
           }}
@@ -177,7 +177,6 @@ export function Calendar({
                     inMonth={inMonth}
                     events={byDate.get(key) ?? []}
                     onEventClick={onEventClick}
-                    responsiveVariant={responsiveVariant}
                   />
                 )
               })}

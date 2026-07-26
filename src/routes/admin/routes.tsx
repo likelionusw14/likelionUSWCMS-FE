@@ -1,7 +1,7 @@
 import type { RouteObject } from 'react-router-dom'
 import { AdminShell, AdminSidebarShell } from '@templates'
 import { RequireRole } from '@routes/guards/RequireRole'
-import { ADMIN_NAV, ADMIN_PAGE_TITLES, ADMIN_SIDEBAR_HOME, ADMIN_SIDEBAR_NAV } from './nav'
+import { ADMIN_PAGE_TITLES, ADMIN_SIDEBAR_HOME, ADMIN_SIDEBAR_NAV } from './nav'
 import { DashboardPage } from './DashboardPage'
 import { ProjectListPage } from './ProjectListPage'
 import { ProjectDetailPage } from './ProjectDetailPage'
@@ -24,7 +24,7 @@ export const adminRoutes: RouteObject[] = [
     element: <RequireRole area="admin" />,
     children: [
       {
-        element: <AdminShell navItems={ADMIN_NAV} pageTitles={ADMIN_PAGE_TITLES} />,
+        element: <AdminShell pageTitles={ADMIN_PAGE_TITLES} />,
         children: [{ path: '/admin', element: <DashboardPage /> }],
       },
       {

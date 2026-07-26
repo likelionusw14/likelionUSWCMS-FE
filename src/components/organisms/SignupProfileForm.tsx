@@ -12,10 +12,10 @@ export function SignupProfileForm({
 }: SignupProfileFormProps) {
   return (
     <WindowPanel
-      className="w-[993px]"
+      className="w-full max-w-[960px]"
       bodyClassName="flex h-[574px] flex-col items-center justify-center"
     >
-      <form onSubmit={onSubmit} className="flex w-[666px] flex-col items-center gap-24">
+      <form onSubmit={onSubmit} className="flex w-full max-w-[666px] flex-col items-center gap-24">
         <div className="flex flex-col items-center gap-4 text-center text-black">
           <h1 className="text-h1">LOGIN</h1>
           <p className="text-sm-18">추가정보 입력</p>
@@ -28,7 +28,7 @@ export function SignupProfileForm({
                 value={values.name}
                 onChange={(event) => onFieldChange('name', event.target.value)}
                 placeholder="이름을 입력하세요."
-                className="w-[320px]"
+                className="w-full sm:w-[320px]"
               />
             </FormField>
             <FormField label="학과" htmlFor="signup-department">
@@ -37,7 +37,7 @@ export function SignupProfileForm({
                 value={values.department}
                 onChange={(event) => onFieldChange('department', event.target.value)}
                 placeholder="학과를 입력하세요."
-                className="w-[320px]"
+                className="w-full sm:w-[320px]"
               />
             </FormField>
             <FormField label="학번" htmlFor="signup-student-id">
@@ -46,7 +46,7 @@ export function SignupProfileForm({
                 value={values.studentId}
                 onChange={(event) => onFieldChange('studentId', event.target.value)}
                 placeholder="학번을 입력하세요."
-                className="w-[320px]"
+                className="w-full sm:w-[320px]"
               />
             </FormField>
             <div className="flex items-center gap-16">

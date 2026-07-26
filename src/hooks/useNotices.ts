@@ -20,7 +20,9 @@ const TAG_LABEL: Record<ApiNoticeTag, string> = {
 const MOCK_TAGS: ApiNoticeTag[] = ['SCHEDULE', 'PROJECT', 'PROMOTION_EVENT', 'OTHER']
 
 // 백엔드 미연동 데모용 목데이터. 조회 경로(/notices)는 user 와 공용이라 응답 모양도 동일하게 유지한다.
-const MOCK_NOTICES: ApiNoticeResponse[] = Array.from({ length: 23 }, (_, index) => {
+// 건수는 페이지네이션(페이지당 20건) 접힘 동작을 확인할 수 있게 20페이지 분량으로 둔다 —
+// Figma 목록 시안도 '1/19 page' 에 `1 2 3 ... 17 18 19` 형태라 같은 규모다. 연동 시 서버 응답으로 대체된다.
+const MOCK_NOTICES: ApiNoticeResponse[] = Array.from({ length: 393 }, (_, index) => {
   const noticeId = index + 1
   const day = String((index % 28) + 1).padStart(2, '0')
   const tag = MOCK_TAGS[index % MOCK_TAGS.length]

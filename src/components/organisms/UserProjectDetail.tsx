@@ -2,10 +2,11 @@ import { WindowPanel } from '@atoms'
 import type { UserProjectDetailProps } from '@types'
 import cameraIcon from '@/assets/icons/camera-white.png'
 
-const INFO_ROW = 'flex min-h-64 items-center border-b border-secondary-1 py-16 last:border-b-0'
+const INFO_ROW =
+  'flex min-h-64 flex-wrap items-center justify-between gap-y-8 border-b border-secondary-1 py-16 last:border-b-0'
 const INFO_LABEL = 'w-[112px] shrink-0 text-sm-18 text-black sm:w-[160px]'
 const INFO_VALUE =
-  'min-w-0 flex-1 break-words text-right text-m-16 text-gray-500 [overflow-wrap:anywhere]'
+  'w-max max-w-full shrink-0 break-words text-left text-m-16 text-gray-500 [overflow-wrap:anywhere]'
 
 export function UserProjectDetail({ project }: UserProjectDetailProps) {
   const developedDate = `${project.startedMonth.replace('-', '.')} - ${project.endedMonth.replace('-', '.')}`
@@ -15,10 +16,7 @@ export function UserProjectDetail({ project }: UserProjectDetailProps) {
 
   return (
     <article className="flex flex-col gap-40 sm:gap-48">
-      <WindowPanel
-        headerClassName="h-32 p-8 sm:p-16"
-        bodyClassName="flex flex-col gap-8 p-0"
-      >
+      <WindowPanel headerClassName="h-32" bodyClassName="flex flex-col gap-8 !p-0">
         {project.thumbnailUrl ? (
           <img
             src={project.thumbnailUrl}
@@ -64,9 +62,9 @@ export function UserProjectDetail({ project }: UserProjectDetailProps) {
       </section>
 
       <dl>
-        <div className="flex min-h-64 flex-col items-start gap-8 border-b border-secondary-1 py-16 sm:flex-row sm:items-center sm:gap-0">
+        <div className={INFO_ROW}>
           <dt className={INFO_LABEL}>Lions</dt>
-          <dd className={`${INFO_VALUE} w-full text-left sm:w-auto sm:text-right`}>{participants}</dd>
+          <dd className={INFO_VALUE}>{participants}</dd>
         </div>
         <div className={INFO_ROW}>
           <dt className={INFO_LABEL}>Duration</dt>
