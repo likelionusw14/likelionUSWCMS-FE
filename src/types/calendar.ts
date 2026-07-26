@@ -43,7 +43,9 @@ export interface CalendarProps {
   onRegister?: () => void
   // 일정 칩 클릭 — 클릭된 DOM(위치 계산용)과 함께 전달. ScheduleCalendar 가 이걸로 팝업을 띄운다.
   onEventClick?: (event: CalendarEvent, target: HTMLElement) => void
-  responsiveVariant?: 'user'
+  // 500 이하에서 년월을 좌측으로 붙일지. 관리자 일정 시안(1203:12588·13894)만 좌측이고
+  // 사용자·게스트 시안(1181:10150 등)은 모든 폭에서 가운데다. 기본은 가운데.
+  mobileTitleLeft?: boolean
   className?: string
 }
 
@@ -54,7 +56,6 @@ export interface CalendarDayProps {
   events: CalendarEvent[]
   // 일정 칩 클릭 — 클릭된 DOM(위치 계산용)과 함께 전달. 없으면 칩은 비클릭 텍스트.
   onEventClick?: (event: CalendarEvent, target: HTMLElement) => void
-  responsiveVariant?: 'user'
 }
 
 // Calendar + SchedulePopup 조합 — 일정 칩 클릭 시 셀 옆에 상세 말풍선을 띄운다.
@@ -68,15 +69,13 @@ export interface ScheduleCalendarProps {
   // 팝업의 수정/삭제. 없으면 읽기 전용으로 뜬다.
   onEventEdit?: (event: CalendarEvent) => void
   onEventDelete?: (event: CalendarEvent) => void
-  responsiveVariant?: 'user'
+  mobileTitleLeft?: boolean
   className?: string
 }
 
-// ScheduleCalendar 내부 — 선택된 일정 칩의 위치 정보.
+// ScheduleCalendar 내부 - 선택된 일정 칩(앵커)의 화면 위치.
 export interface ScheduleCalendarSelected {
   event: CalendarEvent
-  // 가로 배치·꼬리 방향은 셀 기준, 세로 중심은 클릭한 칩 기준.
-  cellRect: DOMRect
+  // 클릭한 칩의 뷰포트 좌표. 팝업은 이 칩 바로 옆(또는 위/아래)에 붙고 꼬리가 칩을 가리킨다.
   chipRect: DOMRect
-  tail: 'left' | 'right'
 }

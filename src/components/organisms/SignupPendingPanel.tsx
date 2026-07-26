@@ -4,7 +4,7 @@ import { WindowPanel } from '@atoms'
 export function SignupPendingPanel() {
   return (
     <WindowPanel
-      className="w-[993px]"
+      className="w-full max-w-[960px]"
       bodyClassName="flex h-[406px] flex-col items-center justify-center"
     >
       <div className="flex flex-col items-center gap-24 text-center text-black">

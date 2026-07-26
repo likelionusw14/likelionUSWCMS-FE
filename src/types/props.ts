@@ -24,14 +24,15 @@ export interface RequireRoleProps {
 }
 
 export interface AdminShellProps {
-  navItems: NavItem[]
   // 경로 → 헤더에 띄울 페이지 제목.
   pageTitles: Record<string, string>
 }
 
 export interface AdminHeaderProps {
   title: string
-  navItems: NavItem[]
+  // 상단 메뉴는 404 처럼 네비가 필요한 화면에서만 넘긴다.
+  // 대시보드 홈 시안(Figma 1205:8630)의 헤더에는 타이틀·로그아웃뿐이라 넘기지 않는다.
+  navItems?: NavItem[]
   onLogout: () => void
 }
 
@@ -67,7 +68,7 @@ export type InputProps = InputHTMLAttributes<HTMLInputElement> & {
 
 // 공용 버튼 아톰 — variant(색)와 size(치수) 프리셋. 네이티브 button 속성 확장은 컴포넌트에서 병합한다.
 export interface ButtonProps {
-  variant?: 'primary' | 'outline' | 'danger'
+  variant?: 'primary' | 'outline' | 'neutral' | 'danger'
   size?: 'md' | 'block' | 'sm'
   className?: string
 }
@@ -107,14 +108,15 @@ export interface GlassNavMenuProps {
   children?: ReactNode
 }
 
+// tone 은 셸이 준다 — 배경이 어두운 게스트 홈(CommonHomePage)·로그인/가입(PublicShell)은 dark,
+// 밝은 게스트 콘텐츠(PublicContentShell)는 light. 모바일 드로어 색이 이걸 따른다.
 export interface PublicHeaderProps {
   navItems: NavItem[]
-  applyItem: NavItem
+  tone?: NavSidebarTone
 }
 
 export interface PublicShellProps {
   navItems: NavItem[]
-  applyItem: NavItem
 }
 
 export interface SocialLoginPanelProps {
@@ -129,10 +131,25 @@ export interface SignupProfileFormProps {
   partOptions: SelectOption[]
 }
 
-// ── 관리 페이지(사이드바 레이아웃) ──
-export interface AdminSidebarProps {
-  homeItem: NavItem
+// ── 공통 사이드바 ──
+// 관리자·사용자·게스트가 같은 NavSidebar 를 쓴다(Figma 1205:11709 / 1360:11150 — 사양 동일, 색만 다르다).
+// 폭·위치는 담는 쪽이 className 으로 정한다 — 관리자 lg 이상은 흐름 안 224px 고정 컬럼,
+// lg 미만은 NavSidebarDrawer(관리자 좌측 / 사용자·게스트 우측).
+// onClose 는 오버레이일 때만 준다 — 그때만 브랜드 옆 24x24 닫기(X)가 붙는다.
+// tone: light = 관리자 및 밝은 배경 라우트, dark = 어두운 배경인 게스트 홈(/)·사용자 홈(/app).
+export type NavSidebarTone = 'light' | 'dark'
+
+export interface NavSidebarProps {
+  // 있으면 브랜드 행이 붙는다(관리자 오버레이·고정 컬럼). 사용자·게스트는 헤더가 브랜드와
+  // 햄버거를 계속 띄우므로 넘기지 않는다 — 같은 행이 두 번 보이지 않게.
+  homeItem?: NavItem
   navItems: NavItem[]
+  onClose?: () => void
+  tone?: NavSidebarTone
+  className?: string
+  // 있으면 메뉴 목록 마지막에 다른 항목과 같은 모양의 '로그아웃' 행이 붙는다.
+  // 사용자·게스트 드로어 전용 — 관리자는 상단바 로그아웃 아이콘이 맡는다.
+  onLogout?: () => void
 }
 
 export interface AdminSidebarShellProps {
@@ -147,9 +164,48 @@ export interface BreadcrumbSegment {
 }
 
 // 상단바 — 셸(AdminSidebarShell)이 getAdminBreadcrumb 로 계산해 내려준다.
+// 사이드바가 닫혀 있을 때만 좌측에 여는 햄버거가 붙는다(Figma 상단바의 '모바일 햄버거메뉴' 레이어).
 export interface AdminTopBarProps {
   breadcrumb: BreadcrumbSegment[]
   title: string
+  sidebarOpen: boolean
+  onSidebarOpen: () => void
+  sidebarControls: string
+}
+
+// lg 미만 사이드바 오버레이 — 관리자·사용자·게스트 공용.
+// 모바일(<640)은 헤더 바로 아래로 내려오는 전폭 카드, 태블릿(640~1023)은 224px 측면 드로어.
+// side 는 태블릿 드로어가 붙는 쪽 — 햄버거 위치를 따른다(관리자 좌측 / 사용자·게스트 우측).
+export interface NavSidebarDrawerProps {
+  id: string
+  // 오버레이의 aria-label(예: '사용자 모바일 메뉴').
+  label: string
+  open: boolean
+  onClose: () => void
+  homeItem: NavItem
+  navItems: NavItem[]
+  side?: 'left' | 'right'
+  tone?: NavSidebarTone
+  // 바로 위 헤더가 이미 브랜드 + 햄버거를 띄우면 true — 그 헤더에 딱 붙는 모바일 카드에서만
+  // 브랜드 행을 생략한다(같은 줄이 두 번 보이므로). 태블릿 드로어는 헤더를 덮으므로 항상 붙는다.
+  headerHasBrand?: boolean
+  // 바로 위 헤더의 실제 높이(px). 모바일 카드가 헤더 아래가 아니라 화면 최상단에서부터
+  // 내려오도록 그만큼 위쪽 자리를 비운다. CSS 로는 알 수 없어 측정값을 받는다.
+  headerHeight?: number
+  // 있으면 메뉴 목록 마지막에 다른 항목과 같은 모양의 '로그아웃' 행이 붙는다(사용자·게스트 전용).
+  onLogout?: () => void
+}
+
+// 햄버거 버튼 — 3줄 막대가 열리면 X 로 바뀐다. 색은 text-* 로 상속(bg-current).
+// label 을 주면 aria-label/title 이 '<label>'/'<label> 닫기' 대신 그 문구로 고정된다
+// (관리자 상단바처럼 '여는' 용도로만 쓰이는 버튼).
+export interface MobileMenuButtonProps {
+  open: boolean
+  onToggle: () => void
+  controls: string
+  label?: string
+  className?: string
+  barClassName?: string
 }
 
 export interface ChipProps {
@@ -510,8 +566,16 @@ export interface SchedulePopupEvent {
 // 일정 팝업 — 캘린더 날짜 위 말풍선. 제목·날짜시간·장소·설명 + (선택)수정/삭제.
 export interface SchedulePopupProps {
   event: SchedulePopupEvent
-  // 꼬리 방향. left = 팝업이 셀 오른쪽(꼬리 왼쪽), right = 팝업이 셀 왼쪽(꼬리 오른쪽). 기본 left.
-  tail?: 'left' | 'right'
+  // 꼬리 방향(팝업이 앵커의 어느 쪽에 놓이는지의 반대). left = 앵커 오른쪽에 팝업,
+  // right = 앵커 왼쪽, top = 앵커 아래, bottom = 앵커 위. 기본 left.
+  // 네 방향 모두 같은 곡선을 회전만 시킨 것이라 실루엣이 동일하다.
+  tail?: 'left' | 'right' | 'top' | 'bottom'
+  // 꼬리 뾰족점 위치 - 꼬리가 붙는 변 기준 좌표(위/아래 꼬리는 x, 좌/우 꼬리는 y). 없으면 가운데.
+  tailOffset?: number
+  // 말풍선 전체(꼬리 포함) 최대 폭. 앵커 위치에 따라 남는 가로 공간이 다르므로 바깥에서 준다.
+  maxWidth?: number
+  // 렌더된 실제 크기 보고 - 부모가 화면 밖으로 안 나가게 배치·뒤집기를 정하는 데 쓴다.
+  onMeasure?: (size: { width: number; height: number }) => void
   // 있으면 하단 수정/삭제 버튼 표시.
   onEdit?: () => void
   onDelete?: () => void

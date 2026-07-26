@@ -68,6 +68,17 @@ export default {
       full: '999px', // Radius / 999
     },
     extend: {
+      transitionDuration: {
+        // 사이드바 오버레이 리듬 — src/components/templates/transitions.ts 의
+        // sidebarTransition(0.25s / easeInOut) 과 같은 값이다. 드로어가 밀려나오는 동안
+        // 헤더 색이 같은 속도로 따라오게 하려면 둘이 어긋나면 안 된다.
+        sidebar: '250ms',
+      },
+      transitionTimingFunction: {
+        // framer-motion 의 'easeInOut' 과 같은 곡선. Tailwind 기본 ease-in-out
+        // (0.4, 0, 0.2, 1) 은 값이 달라 드로어 슬라이드와 미묘하게 어긋난다.
+        sidebar: 'cubic-bezier(0.42, 0, 0.58, 1)',
+      },
       fontFamily: {
         // Figma 텍스트 스타일이 전부 Pretendard 단일 패밀리다 (라틴 전용 Inter 병기 폐지).
         sans: ['Pretendard Variable', 'Pretendard', 'system-ui', 'sans-serif'],
@@ -171,6 +182,13 @@ export default {
         },
         '.no-scrollbar::-webkit-scrollbar': {
           display: 'none',
+        },
+        // 스크롤바 자리 고정 — 내용 높이에 따라 스크롤바가 생겼다 사라지면 스크롤 컨테이너의
+        // 콘텐츠 폭이 스크롤바 폭만큼 널뛴다. 그 안의 sticky 헤더도 같이 좁아졌다 넓어져서
+        // 라우트를 옮길 때마다 유리 알약 메뉴가 좌우로 움찔한다(스크롤바를 겹쳐 그리는
+        // 환경에서는 원래 폭이 안 변하므로 이 유틸도 무해하다).
+        '.scrollbar-gutter-stable': {
+          'scrollbar-gutter': 'stable',
         },
         // 세로 스크롤 영역 상·하단을 투명으로 페이드(자연스럽게 사라지는 느낌).
         '.scroll-fade-y': {

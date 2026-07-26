@@ -34,7 +34,7 @@ export function AttendanceCheckIn({
         maxLength={6}
         placeholder="000000"
         aria-label="출석 코드"
-        className="h-56 w-full rounded-16 bg-secondary-1/40 text-center text-h1 tracking-[0.3em] text-black placeholder:text-primary/40 focus:outline-none"
+        className="h-[56px] w-full rounded-16 bg-secondary-1/40 text-center text-h1 tracking-[0.3em] text-black placeholder:text-primary/40 focus:outline-none"
       />
       <p className="text-m-14 text-primary">유효시간 {formatTime(remainingSeconds)}</p>
       <Button variant="primary" onClick={onSubmit} disabled={code.length < 6}>

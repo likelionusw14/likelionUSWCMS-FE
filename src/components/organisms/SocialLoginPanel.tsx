@@ -6,10 +6,10 @@ import type { SocialLoginPanelProps } from '@types'
 export function SocialLoginPanel({ onKakaoLogin }: SocialLoginPanelProps) {
   return (
     <WindowPanel
-      className="w-[993px]"
+      className="w-full max-w-[993px]"
       bodyClassName="flex h-[574px] flex-col items-center justify-center"
     >
-      <div className="flex w-[666px] flex-col items-center gap-24 text-center text-black">
+      <div className="flex w-full max-w-[666px] flex-col items-center gap-24 text-center text-black">
         <div className="flex flex-col items-center gap-4">
           <h1 className="text-h1">LOGIN</h1>
           <p className="text-sm-18">로그인</p>

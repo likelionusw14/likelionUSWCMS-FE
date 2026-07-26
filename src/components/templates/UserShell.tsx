@@ -25,9 +25,11 @@ export function UserShell({ navItems }: UserShellProps) {
 
   return (
     <div className="h-screen overflow-hidden bg-background-1">
-      <div ref={scrollRef} className="h-full overflow-y-auto">
+      <div ref={scrollRef} className="h-full overflow-y-auto scrollbar-gutter-stable">
         <UserHeader navItems={navItems} onLogout={handleLogout} />
-        <main>
+        {/* relative z-0 — 본문 내부 z-index(캘린더 팝업 z-50 등)가 sticky 헤더(z-20)와
+            모바일 드로어(z-40) 위로 올라가지 않도록 스택 컨텍스트를 가둔다. */}
+        <main className="relative z-0">
           <Outlet />
         </main>
         <SiteFooter variant="light" />

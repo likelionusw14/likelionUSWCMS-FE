@@ -47,7 +47,6 @@ export function UserSchedulePage() {
           events={events}
           onMonthChange={changeMonth}
           onDateSelect={() => setDatePickerOpen(true)}
-          responsiveVariant="user"
           className="w-full"
         />
         {isLoading && (
