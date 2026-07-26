@@ -13,7 +13,7 @@ export function WindowPanel({
       <div
         className={cn(
           'flex flex-col justify-center overflow-hidden rounded-t-16 bg-primary p-16 shadow-emboss-light',
-          headerClassName ?? 'h-32',
+          headerClassName ?? 'h-40',
         )}
       >
         <div className="flex items-center gap-8">
