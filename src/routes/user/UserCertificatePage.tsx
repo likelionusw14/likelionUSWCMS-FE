@@ -14,7 +14,6 @@ export function UserCertificatePage() {
           <span className="absolute -right-8 -bottom-8 h-16 w-16 rounded-full bg-secondary-2" />
           <h1 className="text-sm-22 text-black sm:text-h1">CERTIFICATE</h1>
         </div>
-        <p className="text-sm-18 text-black">활동증명서 발급</p>
       </header>
 
       <CertificateInfoPanel
