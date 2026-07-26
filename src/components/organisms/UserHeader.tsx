@@ -1,7 +1,6 @@
 import { useRef } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
 import { NavLink, useLocation } from 'react-router-dom'
-import closeIcon from '@/assets/icons/close.svg'
 import userIcon from '@/assets/icons/user-white.svg'
 import { MobileMenuButton } from '@atoms'
 import { GlassNavMenu } from '@molecules'
@@ -14,12 +13,6 @@ import { NavSidebarDrawer } from './NavSidebarDrawer'
 
 const MOBILE_MENU_ID = 'user-mobile-menu'
 const HOME_ITEM = { to: '/app', label: BRAND_NAME }
-
-// Figma 공통 사이드바 — 회원·활동증명서 두 항목만 더 큰 모서리(16px)로 그룹핑되어 있다.
-const ROUNDED_16_PATHS = new Set(['/app/members', '/app/certificates'])
-
-// Figma 공통 사이드바 — 상단 두 항목(프로젝트·세션자료)만 40px, 나머지는 44px 높이.
-const HEIGHT_40_PATHS = new Set(['/app/projects', '/app/sessions'])
 
 // 사용자 영역 상단 헤더 — 브랜드 + 알약형 메뉴(GlassNavMenu, UserHeader/PublicHeader 공유) + 계정 버튼.
 // Figma 717:1684. 헤더는 backdrop-blur(2.5)위에 Primary 세로 그라디언트(30%->2%)를 얹은
