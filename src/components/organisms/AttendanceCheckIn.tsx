@@ -20,11 +20,16 @@ export function AttendanceCheckIn({
 }: AttendanceCheckInProps) {
   return (
     <section className="flex flex-col items-center gap-24 rounded-16 bg-white px-16 py-24 shadow-emboss-light sm:px-32 sm:py-32">
-      <h2 className="text-sm-20 text-black">출석 코드 입력</h2>
+      <h2 className="text-sm-22 text-black">출석 코드 입력</h2>
       <div className="flex items-center gap-16">
-        <span className="h-[44px] w-[44px] shrink-0 rounded-full bg-secondary-1" />
-        <span className="max-w-[230px] rounded-16 bg-primary px-24 py-12 text-m-16 text-white sm:max-w-[320px]">
+        <span className="h-[44px] w-[44px] shrink-0 rounded-full bg-secondary-1 shadow-emboss-light" />
+        <span className="relative max-w-[230px] rounded-[18px] bg-primary px-24 py-16 text-m-14 text-white/90 sm:max-w-[320px]">
           운영진이 제공한 출석 코드를 입력하여 출석해주세요.
+          {/* 말풍선 꼬리 — 왼쪽 아래에서 프로필 쪽을 향한다(Figma Tail 재현). */}
+          <span
+            aria-hidden
+            className="absolute -left-[6px] bottom-[8px] h-0 w-0 border-y-[7px] border-r-[9px] border-y-transparent border-r-primary"
+          />
         </span>
       </div>
       <input
@@ -34,9 +39,9 @@ export function AttendanceCheckIn({
         maxLength={6}
         placeholder="000000"
         aria-label="출석 코드"
-        className="h-56 w-full rounded-16 bg-secondary-1/40 text-center text-h1 tracking-[0.3em] text-black placeholder:text-primary/40 focus:outline-none"
+        className="h-64 w-full rounded-16 bg-secondary-1 text-center text-h1 text-white placeholder:text-white focus:outline-none"
       />
-      <p className="text-m-14 text-primary">유효시간 {formatTime(remainingSeconds)}</p>
+      <p className="text-sm-18 text-primary">유효시간 {formatTime(remainingSeconds)}</p>
       <Button variant="primary" onClick={onSubmit} disabled={code.length < 6}>
         출석
       </Button>
