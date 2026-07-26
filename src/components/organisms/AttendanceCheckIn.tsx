@@ -19,11 +19,11 @@ export function AttendanceCheckIn({
   onCloseResult,
 }: AttendanceCheckInProps) {
   return (
-    <section className="flex flex-col items-center gap-24 rounded-16 bg-white px-32 py-32 shadow-emboss-light">
+    <section className="flex flex-col items-center gap-24 rounded-16 bg-white px-16 py-24 shadow-emboss-light sm:px-32 sm:py-32">
       <h2 className="text-sm-20 text-black">출석 코드 입력</h2>
       <div className="flex items-center gap-16">
-        <span className="h-40 w-40 shrink-0 rounded-full bg-secondary-1" />
-        <span className="rounded-16 bg-primary px-24 py-12 text-m-16 text-white">
+        <span className="h-[44px] w-[44px] shrink-0 rounded-full bg-secondary-1" />
+        <span className="max-w-[230px] rounded-16 bg-primary px-24 py-12 text-m-16 text-white sm:max-w-[320px]">
           운영진이 제공한 출석 코드를 입력하여 출석해주세요.
         </span>
       </div>
