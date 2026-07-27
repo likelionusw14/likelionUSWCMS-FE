@@ -23,7 +23,7 @@ export function AttendanceCheckIn({
       <h2 className="text-sm-22 text-black">출석 코드 입력</h2>
       <div className="flex items-end gap-16">
         <span className="h-[44px] w-[44px] shrink-0 rounded-full bg-secondary-1 shadow-emboss-light" />
-        <span className="relative max-w-[230px] rounded-[18px] bg-primary px-24 py-16 text-m-14 text-white/90 sm:max-w-[320px]">
+        <span className="relative max-w-[230px] rounded-[18px] bg-primary px-24 py-16 text-m-14 text-white/90 sm:max-w-none">
           운영진이 제공한 출석 코드를 입력하여 출석해주세요.
           {/* 말풍선 꼬리 — Figma Tail(23:1027) 벡터 그대로(아래-왼쪽으로 둥글게 꺾이는 곡선). 색은 primary 토큰. */}
           <svg
