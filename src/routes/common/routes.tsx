@@ -10,6 +10,7 @@ import { UserProjectListPage } from '@routes/user/UserProjectListPage'
 import { UserSchedulePage } from '@routes/user/UserSchedulePage'
 import { RedirectAuthenticated } from '@routes/guards/RedirectAuthenticated'
 import { PUBLIC_NAV } from './nav'
+import { AuthCallbackPage } from './AuthCallbackPage'
 import { CommonHomePage } from './CommonHomePage'
 import { DemoLoginPage } from './DemoLoginPage'
 import { LoginPage } from './LoginPage'
@@ -30,6 +31,9 @@ export const commonRoutes: RouteObject[] = [
     element: <PublicShell navItems={PUBLIC_NAV} />,
     children: [
       { path: '/login', element: <LoginPage /> },
+      // 카카오 인증 착지 지점 — 백엔드 콜백이 쿠키를 심은 뒤 여기로 돌려보낸다.
+      // 백엔드의 프론트 리다이렉트 설정과 이 경로가 일치해야 한다.
+      { path: '/auth/callback', element: <AuthCallbackPage /> },
       { path: '/signup/profile', element: <SignupProfilePage /> },
       { path: '/signup/pending', element: <SignupPendingPage /> },
     ],
