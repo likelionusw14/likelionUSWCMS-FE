@@ -43,9 +43,7 @@ export async function updateAttendance(
 }
 
 // 출결 코드 생성/재발급.
-export async function createAttendanceCode(
-  scheduleId: string,
-): Promise<ApiAttendanceCodeResponse> {
+export async function createAttendanceCode(scheduleId: string): Promise<ApiAttendanceCodeResponse> {
   const { data } = await apiClient.post<ApiAttendanceCodeResponse>(
     endpoints.adminAttendanceCode(scheduleId),
   )
@@ -53,9 +51,7 @@ export async function createAttendanceCode(
 }
 
 // 현재 유효한 출결 코드 조회.
-export async function fetchAttendanceCode(
-  scheduleId: string,
-): Promise<ApiAttendanceCodeResponse> {
+export async function fetchAttendanceCode(scheduleId: string): Promise<ApiAttendanceCodeResponse> {
   const { data } = await apiClient.get<ApiAttendanceCodeResponse>(
     endpoints.adminAttendanceCode(scheduleId),
   )

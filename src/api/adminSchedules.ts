@@ -1,9 +1,5 @@
 import { apiClient, endpoints } from '@api'
-import type {
-  ApiCreateScheduleRequest,
-  ApiScheduleResponse,
-  ApiUpdateScheduleRequest,
-} from '@api'
+import type { ApiCreateScheduleRequest, ApiScheduleResponse, ApiUpdateScheduleRequest } from '@api'
 
 export interface AdminScheduleQuery {
   // 'YYYY-MM' 형식.
@@ -26,9 +22,7 @@ export async function fetchSchedule(scheduleId: string): Promise<ApiScheduleResp
   return data
 }
 
-export async function createSchedule(
-  body: ApiCreateScheduleRequest,
-): Promise<ApiScheduleResponse> {
+export async function createSchedule(body: ApiCreateScheduleRequest): Promise<ApiScheduleResponse> {
   const { data } = await apiClient.post<ApiScheduleResponse>(endpoints.adminSchedules, body)
   return data
 }

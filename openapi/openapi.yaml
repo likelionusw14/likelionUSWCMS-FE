@@ -1277,7 +1277,20 @@ components:
     AccountResponse:
       type: object
       additionalProperties: false
-      required: [userId, name, department, studentId, cohort, part, role, status, version, createdAt, updatedAt]
+      required:
+        [
+          userId,
+          name,
+          department,
+          studentId,
+          cohort,
+          part,
+          role,
+          status,
+          version,
+          createdAt,
+          updatedAt,
+        ]
       properties:
         userId: { $ref: '#/components/schemas/Id' }
         name: { type: string }
@@ -1371,7 +1384,20 @@ components:
     ProjectResponse:
       type: object
       additionalProperties: false
-      required: [projectId, title, description, projectType, cohort, startedMonth, endedMonth, participants, version, createdAt, updatedAt]
+      required:
+        [
+          projectId,
+          title,
+          description,
+          projectType,
+          cohort,
+          startedMonth,
+          endedMonth,
+          participants,
+          version,
+          createdAt,
+          updatedAt,
+        ]
       properties:
         projectId: { $ref: '#/components/schemas/Id' }
         title: { type: string }
@@ -1483,7 +1509,8 @@ components:
     LearningResourceResponse:
       type: object
       additionalProperties: false
-      required: [resourceId, title, week, targetPart, file, createdBy, version, createdAt, updatedAt]
+      required:
+        [resourceId, title, week, targetPart, file, createdBy, version, createdAt, updatedAt]
       properties:
         resourceId: { $ref: '#/components/schemas/Id' }
         title: { type: string }
@@ -1536,7 +1563,19 @@ components:
     NoticeResponse:
       type: object
       additionalProperties: false
-      required: [noticeId, title, content, tag, isFixed, createdBy, publishedAt, version, createdAt, updatedAt]
+      required:
+        [
+          noticeId,
+          title,
+          content,
+          tag,
+          isFixed,
+          createdBy,
+          publishedAt,
+          version,
+          createdAt,
+          updatedAt,
+        ]
       properties:
         noticeId: { $ref: '#/components/schemas/Id' }
         title: { type: string }

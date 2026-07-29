@@ -63,9 +63,7 @@ export function useAttendanceList(query?: AdminAttendanceQuery) {
 
     // 로컬 반영(데모 유지).
     setRecords((previous) =>
-      previous.map((record) =>
-        record.id === target.id ? { ...record, remark: value } : record,
-      ),
+      previous.map((record) => (record.id === target.id ? { ...record, remark: value } : record)),
     )
 
     // 연동 + version 있으면 실 mutation(비고=memo, 기존 상태 보존).

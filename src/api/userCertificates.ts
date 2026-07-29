@@ -13,11 +13,9 @@ export async function fetchCertificatePreview(): Promise<ApiCertificatePreviewRe
 
 // 활동증명서 발급 — 서버가 최신 정보를 스냅샷. 중복 방지 Idempotency-Key 동봉.
 export async function issueCertificate(): Promise<ApiCertificateResponse> {
-  const { data } = await apiClient.post<ApiCertificateResponse>(
-    endpoints.certificates,
-    undefined,
-    { headers: { 'Idempotency-Key': crypto.randomUUID() } },
-  )
+  const { data } = await apiClient.post<ApiCertificateResponse>(endpoints.certificates, undefined, {
+    headers: { 'Idempotency-Key': crypto.randomUUID() },
+  })
   return data
 }
 

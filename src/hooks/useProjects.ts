@@ -3,7 +3,13 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import projectMidnight from '@/assets/home/projects/project-1.png'
 import projectMealdo from '@/assets/home/projects/project-2.png'
 import projectBitemind from '@/assets/home/projects/project-3.jpg'
-import { createProject, deleteProject, fetchUserProject, fetchUserProjects, updateProject } from '@api'
+import {
+  createProject,
+  deleteProject,
+  fetchUserProject,
+  fetchUserProjects,
+  updateProject,
+} from '@api'
 import type {
   ApiCreateProjectRequest,
   ApiProjectResponse,

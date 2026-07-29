@@ -35,7 +35,7 @@ function toYearMonth(date: string | null | undefined): string {
 function toCertificateInfo(response: ApiCertificatePreviewResponse): CertificateInfo {
   const start = toYearMonth(response.activityStartedAt)
   const end = toYearMonth(response.activityEndedAt)
-  const activityPeriod = start && end ? `${start} ~ ${end}` : (start || end || '-')
+  const activityPeriod = start && end ? `${start} ~ ${end}` : start || end || '-'
   return {
     name: response.name,
     studentId: response.studentId,

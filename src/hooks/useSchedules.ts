@@ -1,15 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import {
-  createSchedule,
-  deleteSchedule,
-  fetchSchedules,
-  updateSchedule,
-} from '@api'
-import type {
-  ApiCreateScheduleRequest,
-  ApiScheduleResponse,
-  ApiUpdateScheduleRequest,
-} from '@api'
+import { createSchedule, deleteSchedule, fetchSchedules, updateSchedule } from '@api'
+import type { ApiCreateScheduleRequest, ApiScheduleResponse, ApiUpdateScheduleRequest } from '@api'
 import { isBackendConnected } from '@config'
 import type { CalendarEvent, QueryResult, ScheduleFormValues } from '@types'
 
@@ -31,7 +22,9 @@ const startOffset = (new Date(Y, M, 1).getDay() + 6) % 7
 const daysInMonth = new Date(Y, M + 1, 0).getDate()
 const totalCells = Math.ceil((startOffset + daysInMonth) / 7) * 7
 const spillDate =
-  startOffset > 0 ? new Date(Y, M, 1 - startOffset) : new Date(Y, M, 1 - startOffset + totalCells - 1)
+  startOffset > 0
+    ? new Date(Y, M, 1 - startOffset)
+    : new Date(Y, M, 1 - startOffset + totalCells - 1)
 
 const MOCK_SCHEDULES: CalendarEvent[] = [
   {

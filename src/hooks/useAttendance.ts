@@ -52,9 +52,10 @@ function toAttendanceRecord(response: ApiAttendanceResponse): AttendanceRecord {
 }
 
 // 출석 내역 조회. scheduleId 가 있고 백엔드 연동 시 실 API, 그 외 mock.
-export function useAttendance(
-  query?: AdminAttendanceQuery,
-): { data: AttendanceRecord[]; isLoading: boolean } {
+export function useAttendance(query?: AdminAttendanceQuery): {
+  data: AttendanceRecord[]
+  isLoading: boolean
+} {
   const enabled = isBackendConnected && query?.scheduleId !== undefined
   const request = useQuery({
     queryKey: ['admin-attendances', query],

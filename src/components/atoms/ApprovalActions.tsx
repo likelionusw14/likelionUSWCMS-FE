@@ -3,7 +3,12 @@ import type { ApprovalActionsProps } from '@types'
 
 // 승인/취소 버튼 쌍 (승인대기 목록 행 액션 등). Figma 1000:1550.
 // 승인 = primary 배경·흰 글자, 취소 = secondary-1 테두리·primary 글자. 둘 다 px-12 py-4 rounded-8 M/14.
-export function ApprovalActions({ onApprove, onCancel, disabled, className }: ApprovalActionsProps) {
+export function ApprovalActions({
+  onApprove,
+  onCancel,
+  disabled,
+  className,
+}: ApprovalActionsProps) {
   return (
     <div className={cn('flex items-center gap-8', className)}>
       <button

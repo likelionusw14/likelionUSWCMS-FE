@@ -94,7 +94,9 @@ const MOCK_ACCOUNTS = createMockAccounts()
 function createMockAccountPage(query: AdminAccountQuery): ApiAccountPage {
   const page = query.page ?? 0
   const size = query.size ?? 20
-  const filtered = MOCK_ACCOUNTS.filter((account) => !query.status || account.status === query.status)
+  const filtered = MOCK_ACCOUNTS.filter(
+    (account) => !query.status || account.status === query.status,
+  )
   const totalElements = filtered.length
   const totalPages = Math.max(1, Math.ceil(totalElements / size))
   const start = page * size

@@ -40,9 +40,7 @@ export async function putFileToStorage(
   })
 }
 
-export async function completeFileUpload(
-  body: ApiFileAssetRequest,
-): Promise<ApiFileAssetResponse> {
+export async function completeFileUpload(body: ApiFileAssetRequest): Promise<ApiFileAssetResponse> {
   const { data } = await apiClient.post<ApiFileAssetResponse>(endpoints.files, body)
   return data
 }
