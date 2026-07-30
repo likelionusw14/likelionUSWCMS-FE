@@ -5,6 +5,7 @@ import {
   AUTH_ERROR_MESSAGE,
   AUTH_INVALID_ENTRY,
   AUTH_SESSION_EXPIRED,
+  SIGNUP_STATUS_ROUTE,
   roleHome,
 } from '@constants'
 import type { AuthErrorCode } from '@types'
@@ -62,10 +63,11 @@ export function useAuthCallback() {
         setError(result.message)
         return
       }
-      // 승인 전 계정은 활동 권한이 없어 역할 홈 대신 대기 안내로 보낸다.
-      const target =
-        result.user.status === 'PENDING' ? '/signup/pending' : roleHome(result.user.role)
-      navigate(target, { replace: true })
+      // 승인 전(PENDING)·거절(REJECTED) 계정은 활동 권한이 없다. 역할 홈으로 보내면
+      // 게스트 홈에 아무 설명 없이 떨어지므로 각각의 안내 화면으로 보낸다.
+      navigate(SIGNUP_STATUS_ROUTE[result.user.status ?? 'ACTIVE'] ?? roleHome(result.user.role), {
+        replace: true,
+      })
     })
   }, [navigate, pathname, searchParams])
 

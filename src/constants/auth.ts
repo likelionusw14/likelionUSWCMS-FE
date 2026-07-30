@@ -1,4 +1,12 @@
+import type { ApiAccountStatus } from '@api'
 import type { AuthErrorCode } from '@types'
+
+// 가입 상태별 안내 화면. 활동 권한이 없는 상태(PENDING·REJECTED)만 전용 화면으로 보내고,
+// ACTIVE 는 역할 홈으로 가야 하므로 여기에 두지 않는다.
+export const SIGNUP_STATUS_ROUTE: Partial<Record<ApiAccountStatus, string>> = {
+  PENDING: '/signup/pending',
+  REJECTED: '/signup/rejected',
+}
 
 // 카카오 콜백 실패 사유 라벨.
 // 백엔드가 `/auth/callback?error=<code>` 로 넘겨주는 코드를 사용자 문구로 옮긴다.

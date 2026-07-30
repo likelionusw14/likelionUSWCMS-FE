@@ -91,6 +91,12 @@ export default {
         // 히어로 전용 디스플레이 크기 (홈 메인 비주얼 헤딩): 1·2행 64px / 3행 80px, 자간 0.
         'hero-64': ['64px', { lineHeight: 'normal', fontWeight: '700' }],
         'hero-80': ['80px', { lineHeight: 'normal', fontWeight: '700' }],
+        // 마퀴(흐르는 브랜드 띠) 전용 디스플레이 크기. Figma 894:2977·646:3125 의 88px ExtraBold 이
+        // 기준이고, 좁은 화면용 두 단계는 띠 높이에 맞춰 같은 비율로 줄인 값이다.
+        // 굵기가 번들에 있어야 하므로(별도 font-extrabold 는 fontSize 번들에 밀린다) 셋 다 800 을 싣는다.
+        'marquee-48': ['48px', { lineHeight: 'normal', fontWeight: '800' }],
+        'marquee-64': ['64px', { lineHeight: 'normal', fontWeight: '800' }],
+        'marquee-88': ['88px', { lineHeight: 'normal', fontWeight: '800' }],
         h1: ['40px', { lineHeight: 'normal', fontWeight: '700' }], // Heading / H1
         'sm-22': ['22px', { lineHeight: 'normal', fontWeight: '600' }],
         'sm-20': ['20px', { lineHeight: 'normal', fontWeight: '600' }],

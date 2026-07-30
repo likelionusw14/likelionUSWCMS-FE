@@ -16,6 +16,7 @@ import { DemoLoginPage } from './DemoLoginPage'
 import { LoginPage } from './LoginPage'
 import { SignupPendingPage } from './SignupPendingPage'
 import { SignupProfilePage } from './SignupProfilePage'
+import { SignupRejectedPage } from './SignupRejectedPage'
 
 // 공통(공개) 영역 — 게스트 포함 전체 접근.
 // 랜딩(/)만 가드가 있다: 로그인 상태면 자기 영역 홈으로 보낸다. 나머지는 가드 없음.
@@ -38,6 +39,7 @@ export const commonRoutes: RouteObject[] = [
       { path: '/onboarding', element: <AuthCallbackPage /> },
       { path: '/signup/profile', element: <SignupProfilePage /> },
       { path: '/signup/pending', element: <SignupPendingPage /> },
+      { path: '/signup/rejected', element: <SignupRejectedPage /> },
     ],
   },
   // 게스트 콘텐츠(프로젝트·공지·일정) — 멤버 페이지를 밝은 게스트 셸에서 재사용. 헤더 메뉴 경로와 일치한다.

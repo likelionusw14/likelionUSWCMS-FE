@@ -19,7 +19,9 @@ import { PUBLIC_NAV } from './nav'
 // 끌어올려 처음부터 다크 히어로가 헤더 블러 뒤로 비치게 한다.
 export function CommonHomePage() {
   return (
-    <div className="flex min-h-screen flex-col bg-background-2">
+    // Figma 894:2755 의 페이지 배경은 background-1 이다. 각 섹션이 자기 배경을 칠하므로
+    // 이 색이 실제로 드러나는 곳은 배경 없는 브랜드 마퀴 띠뿐이다.
+    <div className="flex min-h-screen flex-col bg-background-1">
       <PublicHeader navItems={PUBLIC_NAV} tone="dark" />
       <main className="flex-1">
         <div className="-mt-[80px]">

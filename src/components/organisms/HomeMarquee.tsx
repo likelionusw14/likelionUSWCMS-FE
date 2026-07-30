@@ -13,10 +13,9 @@ const MARQUEE_ITEMS = Array.from({ length: MARQUEE_REPEAT * 2 }, (_, index) => i
 // 한 바퀴(한 벌만큼 이동)에 걸리는 시간(초).
 const MARQUEE_DURATION = 40
 
-// 디자인은 88px ExtraBold 지만 타이포 토큰에 88px 이 없어 가장 큰 토큰(text-h0, 56px)으로 근사한다.
-// 자간(h0 는 6%)·굵기(h0 는 Bold)는 디자인(자간 0, ExtraBold)에 맞춰 유틸로 되돌린다.
+// 디자인은 88px ExtraBold. 좁은 화면은 띠 높이와 같은 비율로 줄인다.
 const MARQUEE_TEXT =
-  'text-sm-22 sm:text-h1 lg:text-h0 font-extrabold leading-none tracking-normal whitespace-nowrap'
+  'text-marquee-48 sm:text-marquee-64 lg:text-marquee-88 leading-none whitespace-nowrap'
 
 // 파트 섹션 위 다크 마퀴 (Figma 665:3295 — 1280x160, 배경 #04102D).
 export function HomeMarquee() {
@@ -52,12 +51,14 @@ export function HomeMarquee() {
   )
 }
 
-// 밝은 배경 위 브랜드 마퀴 (Figma 588:4541 — 높이 60, 배경 투명 / 글자 #04102D).
+// 밝은 배경 위 브랜드 마퀴 (Figma 894:2977 — 높이 60, 글자 88px ExtraBold #04102D).
+// 띠(60)가 글자(88)보다 낮아 위아래가 잘리는 게 디자인 의도다. 좁은 화면도 같은 비율(≈0.68)로 줄인다.
+// 배경은 갖지 않는다 — 홈 셸 배경(background-1) 위에 그대로 얹힌다.
 export function HomeBrandMarquee() {
   const reduceMotion = useReducedMotion()
 
   return (
-    <section className="relative h-[60px] w-full overflow-hidden">
+    <section className="relative h-[32px] w-full overflow-hidden sm:h-[44px] lg:h-[60px]">
       <span className="sr-only">{BRAND_NAME}</span>
       <div className="flex h-full items-center">
         <motion.div
