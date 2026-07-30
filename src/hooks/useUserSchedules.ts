@@ -51,8 +51,7 @@ function createMockSchedules(year: number, month: number): ApiScheduleResponse[]
       return {
         scheduleId,
         title: eventIndex === 0 ? `정기 일정 ${scheduleId}` : `추가 일정 ${scheduleId}`,
-        description:
-          '멋쟁이사자처럼 활동 일정입니다. 자세한 내용과 준비사항을 확인해 주세요.',
+        description: '멋쟁이사자처럼 활동 일정입니다. 자세한 내용과 준비사항을 확인해 주세요.',
         cohort: { cohortId: 14, number: 14, name: '14기' },
         scheduleDate: `${yearMonth}-${pad2(day)}`,
         isAllDay: false,

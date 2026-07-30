@@ -8,10 +8,7 @@ import type {
 export async function createResource(
   body: ApiCreateLearningResourceRequest,
 ): Promise<ApiLearningResourceResponse> {
-  const { data } = await apiClient.post<ApiLearningResourceResponse>(
-    endpoints.adminResources,
-    body,
-  )
+  const { data } = await apiClient.post<ApiLearningResourceResponse>(endpoints.adminResources, body)
   return data
 }
 

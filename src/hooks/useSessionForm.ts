@@ -2,7 +2,11 @@ import type { FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { createResource, updateResource } from '@api'
-import type { ApiCreateLearningResourceRequest, ApiPartType, ApiUpdateLearningResourceRequest } from '@api'
+import type {
+  ApiCreateLearningResourceRequest,
+  ApiPartType,
+  ApiUpdateLearningResourceRequest,
+} from '@api'
 import { isBackendConnected } from '@config'
 import { useEntityForm } from '@hooks'
 import type { Session, SessionFormValues } from '@types'

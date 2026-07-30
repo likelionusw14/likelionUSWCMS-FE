@@ -5,6 +5,15 @@ export const endpoints = {
   health: '/health',
   login: '/auth/login',
 
+  // Auth (카카오 OIDC — 교환·검증은 백엔드가 수행하는 BFF 구조)
+  // kakaoLogin 은 fetch 대상이 아니라 브라우저를 통째로 보내는 이동 목적지다.
+  kakaoLogin: '/api/auth/kakao/login',
+  authTokens: '/api/auth/tokens',
+  authSession: '/api/auth/session',
+
+  // Accounts (가입 신청 — onboarding 세션으로 추가정보 제출)
+  accounts: '/api/accounts',
+
   // Cohorts (기수 선택지)
   cohorts: '/api/cohorts',
 
@@ -58,8 +67,7 @@ export const endpoints = {
 
   // Attendances (사용자 — 본인 출결/코드 인증)
   attendances: '/api/attendances',
-  attendanceCheckIn: (scheduleId: string) =>
-    `/api/schedules/${scheduleId}/attendance-check-ins`,
+  attendanceCheckIn: (scheduleId: string) => `/api/schedules/${scheduleId}/attendance-check-ins`,
 
   // Attendances (관리자)
   adminAttendances: '/api/admin/attendances',

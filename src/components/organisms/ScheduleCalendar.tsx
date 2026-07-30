@@ -99,8 +99,7 @@ export function ScheduleCalendar({
           transformOrigin: side === 'left' ? 'left center' : 'right center',
         },
         // 긴 제목으로 본문이 늘어나도 화면을 넘지 않도록 그 쪽에 실제로 남은 폭까지만.
-        maxWidth:
-          side === 'left' ? vw - EDGE - (chipRect.right + GAP) : chipRect.left - GAP - EDGE,
+        maxWidth: side === 'left' ? vw - EDGE - (chipRect.right + GAP) : chipRect.left - GAP - EDGE,
         tailOffset: anchorY - top,
       }
     }

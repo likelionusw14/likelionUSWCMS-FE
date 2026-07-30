@@ -24,7 +24,9 @@ export function HomeStats() {
         >
           {/* 타이틀 */}
           <div className="flex flex-col items-center gap-24 text-center">
-            <h2 className="text-center text-sm-22 text-black sm:text-h1">수원대학교 멋쟁이사자처럼</h2>
+            <h2 className="text-center text-sm-22 text-black sm:text-h1">
+              수원대학교 멋쟁이사자처럼
+            </h2>
             {/* 디자인 줄간격 27px → 본문 토큰(text-m-18-body, 26px)으로 근사 */}
             <p className="text-m-18-body text-black">
               상상만 하던 아이디어를 실제 서비스로 구현하는 곳

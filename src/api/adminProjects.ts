@@ -1,13 +1,7 @@
 import { apiClient, endpoints } from '@api'
-import type {
-  ApiCreateProjectRequest,
-  ApiProjectResponse,
-  ApiUpdateProjectRequest,
-} from '@api'
+import type { ApiCreateProjectRequest, ApiProjectResponse, ApiUpdateProjectRequest } from '@api'
 
-export async function createProject(
-  body: ApiCreateProjectRequest,
-): Promise<ApiProjectResponse> {
+export async function createProject(body: ApiCreateProjectRequest): Promise<ApiProjectResponse> {
   const { data } = await apiClient.post<ApiProjectResponse>(endpoints.adminProjects, body)
   return data
 }

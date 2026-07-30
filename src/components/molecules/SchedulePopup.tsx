@@ -172,12 +172,7 @@ export function SchedulePopup({
         viewBox={`0 0 ${w} ${h}`}
         className="absolute inset-0 overflow-visible text-primary"
       >
-        <path
-          d={bubblePath(w, h, tail, at)}
-          fill="white"
-          stroke="currentColor"
-          strokeWidth="1"
-        />
+        <path d={bubblePath(w, h, tail, at)} fill="white" stroke="currentColor" strokeWidth="1" />
       </svg>
 
       <div

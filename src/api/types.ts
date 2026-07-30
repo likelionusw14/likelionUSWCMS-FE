@@ -24,7 +24,11 @@ export type ApiFileAssetRequest = components['schemas']['FileAssetRequest']
 export type ApiFileAssetResponse = components['schemas']['FileAssetResponse']
 export type ApiFileView = components['schemas']['FileView']
 
+// Auth (카카오 OIDC)
+export type ApiAccessTokenResponse = components['schemas']['AccessTokenResponse']
+
 // Accounts (회원)
+export type ApiCreateAccountRequest = components['schemas']['CreateAccountRequest']
 export type ApiAccountResponse = components['schemas']['AccountResponse']
 export type ApiAccountPage = components['schemas']['AccountPage']
 export type ApiUpdateAccountRequest = components['schemas']['UpdateAccountRequest']

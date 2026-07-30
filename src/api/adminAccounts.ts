@@ -62,7 +62,10 @@ export async function updateAccountRole(
   userId: string,
   body: ApiUpdateRoleRequest,
 ): Promise<ApiAccountResponse> {
-  const { data } = await apiClient.patch<ApiAccountResponse>(endpoints.adminAccountRole(userId), body)
+  const { data } = await apiClient.patch<ApiAccountResponse>(
+    endpoints.adminAccountRole(userId),
+    body,
+  )
   return data
 }
 

@@ -152,7 +152,10 @@ export function HomeReviews() {
                 initial={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.3 }}
-                transition={{ duration: reduceMotion ? 0 : 0.5, delay: reduceMotion ? 0 : index * 0.06 }}
+                transition={{
+                  duration: reduceMotion ? 0 : 0.5,
+                  delay: reduceMotion ? 0 : index * 0.06,
+                }}
               >
                 {/* 강조 상태 전환은 이 래퍼에서만 처리: scale(강조 1.08 / 축소 0.92)·blur·opacity.
                     framer 는 li 의 등장 모션(opacity·y)만 다루므로 인라인 transform 충돌이 없다. */}
@@ -171,10 +174,14 @@ export function HomeReviews() {
                       isActive ? 'gap-4 px-24 py-8 shadow-emboss-light' : 'gap-[2px] px-16 py-8',
                     )}
                   >
-                    <span className={cn(isActive ? 'text-sm-16 font-bold' : 'text-r-12 font-semibold')}>
+                    <span
+                      className={cn(isActive ? 'text-sm-16 font-bold' : 'text-r-12 font-semibold')}
+                    >
                       {review.name}
                     </span>
-                    <span className={cn('truncate', isActive ? 'text-m-14' : 'text-r-12 font-medium')}>
+                    <span
+                      className={cn('truncate', isActive ? 'text-m-14' : 'text-r-12 font-medium')}
+                    >
                       {review.part}
                     </span>
                   </div>
@@ -189,7 +196,12 @@ export function HomeReviews() {
                         : 'bg-secondary-1 px-16 py-24',
                     )}
                   >
-                    <p className={cn('text-black', isActive ? 'text-m-18-body' : 'text-m-14 leading-[20px]')}>
+                    <p
+                      className={cn(
+                        'text-black',
+                        isActive ? 'text-m-18-body' : 'text-m-14 leading-[20px]',
+                      )}
+                    >
                       {review.content}
                     </p>
                   </div>
