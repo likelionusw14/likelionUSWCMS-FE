@@ -7,6 +7,6 @@ export const USER_NAV: NavItem[] = [
   { to: '/app/notices', label: '공지' },
   { to: '/app/schedule', label: '일정' },
   { to: '/app/attendance', label: '출결' },
-  { to: '/app/members', label: '사자' },
+  { to: '/app/members', label: '회원' },
   { to: '/app/certificates', label: '활동증명서' },
 ]

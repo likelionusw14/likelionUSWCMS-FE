@@ -108,12 +108,17 @@ export function UserHeader({ navItems, onLogout }: UserHeaderProps) {
         open={menu.isOpen}
         onClose={menu.close}
         homeItem={HOME_ITEM}
-        navItems={navItems}
+        // navItems={navItems}
+        navItems={navItems.map((item) =>
+          item.to === '/app/certificates'
+            ? { ...item, label: '활동증명서 발급' }
+            : item,
+        )}
         side="right"
         tone={tone}
         headerHasBrand
         headerHeight={headerHeight}
-        onLogout={onLogout}
+        // onLogout={onLogout}
       />
     </div>
   )
