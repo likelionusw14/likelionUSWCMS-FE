@@ -31,9 +31,11 @@ export const commonRoutes: RouteObject[] = [
     element: <PublicShell navItems={PUBLIC_NAV} />,
     children: [
       { path: '/login', element: <LoginPage /> },
-      // 카카오 인증 착지 지점 — 백엔드 콜백이 쿠키를 심은 뒤 여기로 돌려보낸다.
-      // 백엔드의 프론트 리다이렉트 설정과 이 경로가 일치해야 한다.
+      // 카카오 인증 착지 지점 — 백엔드 콜백이 쿠키를 심은 뒤 `?status=` 를 달아 여기로 보낸다.
+      // /onboarding 은 백엔드가 status 를 붙이기 전까지 쓰는 전환용 별칭이다
+      // (경로 자체를 status=onboarding 으로 해석한다 — useAuthCallback 참고).
       { path: '/auth/callback', element: <AuthCallbackPage /> },
+      { path: '/onboarding', element: <AuthCallbackPage /> },
       { path: '/signup/profile', element: <SignupProfilePage /> },
       { path: '/signup/pending', element: <SignupPendingPage /> },
     ],
