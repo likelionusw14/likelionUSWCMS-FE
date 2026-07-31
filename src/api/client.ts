@@ -25,6 +25,12 @@ apiClient.interceptors.request.use((config) => {
 // 재시도 1회 표시 — 갱신 후 재요청이 또 401 이면 무한 루프에 빠지지 않도록 한다.
 type RetriableConfig = InternalAxiosRequestConfig & { _retried?: boolean }
 
+// 401 이어도 Access Token 재발급을 시도하지 않는 요청.
+// - authTokens/authSession: 재발급·로그아웃 자체 (무한 루프)
+// - accounts: onboarding_session 으로 나가는 가입 신청이라 refresh_session 이 애초에 없다.
+//   여기서 401 은 "가입 세션 만료" 이므로 재발급이 아니라 재로그인이 답이다.
+const NO_REFRESH_URLS: string[] = [endpoints.authTokens, endpoints.authSession, endpoints.accounts]
+
 // 동시에 401 이 여러 개 떠도 재발급은 한 번만 (single-flight). 나머지는 같은 약속을 기다린다.
 let refreshInFlight: Promise<string> | null = null
 
@@ -51,10 +57,9 @@ apiClient.interceptors.response.use(
     if (!axios.isAxiosError(error)) throw error
 
     const config = error.config as RetriableConfig | undefined
-    const isAuthEndpoint =
-      config?.url === endpoints.authTokens || config?.url === endpoints.authSession
+    const skipRefresh = config?.url !== undefined && NO_REFRESH_URLS.includes(config.url)
 
-    if (error.response?.status !== 401 || !config || config._retried || isAuthEndpoint) {
+    if (error.response?.status !== 401 || !config || config._retried || skipRefresh) {
       throw error
     }
 

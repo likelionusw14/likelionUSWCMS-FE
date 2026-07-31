@@ -129,6 +129,11 @@ export interface SignupProfileFormProps {
   onSubmit: (event: FormEvent<HTMLFormElement>) => void
   cohortOptions: SelectOption[]
   partOptions: SelectOption[]
+  /** 모든 항목이 채워져 제출 가능한 상태인지. */
+  canSubmit: boolean
+  isSubmitting: boolean
+  /** 가입 신청 실패 안내 (없으면 null). */
+  error: string | null
 }
 
 // ── 공통 사이드바 ──
