@@ -9,6 +9,9 @@ export function SignupProfileForm({
   onSubmit,
   cohortOptions,
   partOptions,
+  canSubmit,
+  isSubmitting,
+  error,
 }: SignupProfileFormProps) {
   return (
     <WindowPanel
@@ -53,8 +56,8 @@ export function SignupProfileForm({
               <FormField label="기수" htmlFor="signup-cohort">
                 <Select
                   id="signup-cohort"
-                  value={values.cohort}
-                  onChange={(event) => onFieldChange('cohort', event.target.value)}
+                  value={values.cohortId}
+                  onChange={(event) => onFieldChange('cohortId', event.target.value)}
                   options={cohortOptions}
                   placeholder="기수"
                   className="w-[128px]"
@@ -72,13 +75,21 @@ export function SignupProfileForm({
               </FormField>
             </div>
           </div>
-          {/* Button atom 은 기존(구 디자인) 치수를 갖고 있어 여기서는 디자인 값으로 직접 그린다. */}
-          <button
-            type="submit"
-            className="flex h-48 min-w-[128px] items-center justify-center rounded-8 bg-primary px-32 text-sm-18 text-white"
-          >
-            저장
-          </button>
+          <div className="flex flex-col items-center gap-12">
+            {error ? (
+              <p role="alert" className="text-m-16 text-error">
+                {error}
+              </p>
+            ) : null}
+            {/* Button atom 은 기존(구 디자인) 치수를 갖고 있어 여기서는 디자인 값으로 직접 그린다. */}
+            <button
+              type="submit"
+              disabled={!canSubmit || isSubmitting}
+              className="flex h-48 min-w-[128px] items-center justify-center rounded-8 bg-primary px-32 text-sm-18 text-white disabled:opacity-50"
+            >
+              {isSubmitting ? '저장 중' : '저장'}
+            </button>
+          </div>
         </div>
       </form>
     </WindowPanel>
