@@ -13,8 +13,14 @@ import type { Role, User } from '@types'
 
 // 카카오 로그인 시작 URL. fetch 가 아니라 브라우저를 통째로 보내야 하는 이동 목적지다
 // (백엔드가 302 로 카카오 인증 화면에 넘긴다 — XHR 로는 이 리다이렉트를 따라갈 수 없다).
+//
+// origin 쿼리로 "인증이 끝나면 어느 프론트로 돌려보낼지"를 백엔드에 알려준다.
+// 이 값을 넘기지 않으면 백엔드가 자기 설정값으로 되돌려보내는데, 그 설정이 환경마다
+// 달라야 해서(로컬·프리뷰·운영) 요청하는 쪽이 자기 오리진을 직접 싣는 편이 안전하다.
+// window.location.origin 이라 별도 환경변수가 필요 없다.
 export function kakaoLoginUrl(): string {
-  return `${env.apiBaseUrl}${endpoints.kakaoLogin}`
+  const params = new URLSearchParams({ origin: window.location.origin })
+  return `${env.apiBaseUrl}${endpoints.kakaoLogin}?${params.toString()}`
 }
 
 // Access Token 재발급. refresh_session 쿠키가 유효하면 계정 정보까지 함께 돌려준다.

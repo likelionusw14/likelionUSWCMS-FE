@@ -1,10 +1,10 @@
 import { WindowPanel } from '@atoms'
 
-// 가입 승인 대기 안내 패널.
+// 가입 승인 대기 안내 패널 (Figma 541:6072).
 export function SignupPendingPanel() {
   return (
     <WindowPanel
-      className="w-full max-w-[960px]"
+      className="w-full max-w-[993px]"
       bodyClassName="flex h-[406px] flex-col items-center justify-center"
     >
       <div className="flex flex-col items-center gap-24 text-center text-black">

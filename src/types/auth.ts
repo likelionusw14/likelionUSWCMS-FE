@@ -28,8 +28,17 @@ export interface AuthState {
   logout: () => void
 }
 
-// 카카오 콜백 처리 결과 — 콜백 화면의 라우팅 분기 입력.
-// 미가입자와 기존 계정은 백엔드가 서로 다른 HttpOnly 쿠키를 심어 구분하는데,
-// 쿠키를 JS 로 읽을 수 없으므로 /auth/tokens 응답(200/401)으로 판별한다.
-export type AuthCallbackOutcome =
-  { kind: 'member'; user: User } | { kind: 'onboarding' } | { kind: 'failed'; message: string }
+// 카카오 콜백이 실어 보내는 인증 결과. 백엔드가 `?status=` 로 명시한다.
+// 쿠키(onboarding_session/refresh_session)는 HttpOnly 라 프론트가 직접 볼 수 없어,
+// 어느 쪽인지는 이 파라미터로만 안다. 값이 없으면 카카오를 거치지 않은 직접 진입이다.
+export type AuthCallbackStatus = 'onboarding' | 'member'
+
+// 콜백 실패 사유. 백엔드가 `?error=` 로 넘긴다 (문구는 AUTH_ERROR_MESSAGE).
+export type AuthErrorCode = 'access_denied' | 'invalid_state' | 'kakao_error' | 'server_error'
+
+// 세션 복원 결과 — refresh_session 쿠키로 Access JWT 를 받아오는 시도의 결말.
+// expired 는 쿠키가 없거나 만료된 정상적 실패라, 통신 실패(failed)와 문구를 달리한다.
+export type AuthSessionResult =
+  | { kind: 'ok'; user: User }
+  | { kind: 'expired' }
+  | { kind: 'failed'; message: string }
