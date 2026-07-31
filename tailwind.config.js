@@ -1,3 +1,5 @@
+import plugin from 'tailwindcss/plugin.js'
+
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ['./index.html', './src/**/*.{ts,tsx}'],
@@ -8,10 +10,20 @@ export default {
       transparent: 'transparent',
       current: 'currentColor',
       inherit: 'inherit',
-      white: '#FFFFFF', // Color / White
-      black: '#000000', // Color / Black
-      primary: { 500: '#FF4823', DEFAULT: '#FF4823' }, // Color / Primary
-      secondary: { 500: '#E3FDFF', DEFAULT: '#E3FDFF' }, // Color / Secondary
+      white: '#FFFFFF', // Color / White / 500
+      black: '#000000', // Color / Black / 500
+      primary: { 500: '#3A60FB', DEFAULT: '#3A60FB' }, // Color / Primary / 500
+      // Secondary·Background 는 Figma 에서 값이 둘(500 1 / 500 2)이라 숫자 접미사로 노출한다.
+      secondary: {
+        1: '#D7E2FF', // Color / Secondary / 500 1
+        2: '#FF7B2F', // Color / Secondary / 500 2
+        DEFAULT: '#D7E2FF',
+      },
+      background: {
+        1: '#EEF3FF', // Color / Background / 500 1
+        2: '#04102D', // Color / Background / 500 2
+        DEFAULT: '#EEF3FF',
+      },
       gray: {
         100: '#F6F6F6',
         300: '#E0E0E0',
@@ -19,11 +31,15 @@ export default {
         700: '#484848',
         900: '#282828',
       },
-      navy: { 500: '#08192E', DEFAULT: '#08192E' }, // Color / Navy
-      success: { 500: '#22C55E', DEFAULT: '#22C55E' }, // Color / Success
-      error: { 500: '#EF4444', DEFAULT: '#EF4444' }, // Color / Error
-      warning: { 500: '#FFD640', DEFAULT: '#FFD640' }, // Color / Warning
-      info: { 500: '#3B82F6', DEFAULT: '#3B82F6' }, // Color / Info
+      // 카카오 브랜드 색 — 디자인 팔레트가 아니라 카카오 로그인 버튼 규정 값이다 (Figma 의 Kakao 변수).
+      kakao: {
+        DEFAULT: '#FEE500', // Kakao / bg
+        text: 'rgba(0, 0, 0, 0.85)', // Kakao / text
+      },
+      success: { 500: '#22C55E', DEFAULT: '#22C55E' }, // Color / Success / 500
+      error: { 500: '#EF4444', DEFAULT: '#EF4444' }, // Color / Error / 500
+      warning: { 500: '#FFD640', DEFAULT: '#FFD640' }, // Color / Warning / 500
+      info: { 500: '#3B82F6', DEFAULT: '#3B82F6' }, // Color / Info / 500
     },
     // ── 간격(Spacing): Figma 토큰. 키 = px 값 (예: p-16 = 16px, gap-8 = 8px). ──
     // Tailwind 기본 배수 스케일을 대체하므로 숫자는 곧 픽셀이다.
@@ -41,37 +57,163 @@ export default {
       64: '64px',
       96: '96px',
     },
-    // ── 모서리(Radius): Figma 토큰만. rounded = 8px, rounded-full = 999px. ──
+    // ── 모서리(Radius): Figma 토큰만. 키 = px 값 (spacing 과 동일 규칙). ──
+    // DEFAULT(=rounded) 는 8px 로 둔다 (기존 사용처 유지).
     borderRadius: {
       none: '0px',
       DEFAULT: '8px', // Radius / 8
+      4: '4px', // Radius / 4
+      8: '8px', // Radius / 8
+      16: '16px', // Radius / 16
       full: '999px', // Radius / 999
     },
     extend: {
+      transitionDuration: {
+        // 사이드바 오버레이 리듬 — src/components/templates/transitions.ts 의
+        // sidebarTransition(0.25s / easeInOut) 과 같은 값이다. 드로어가 밀려나오는 동안
+        // 헤더 색이 같은 속도로 따라오게 하려면 둘이 어긋나면 안 된다.
+        sidebar: '250ms',
+      },
+      transitionTimingFunction: {
+        // framer-motion 의 'easeInOut' 과 같은 곡선. Tailwind 기본 ease-in-out
+        // (0.4, 0, 0.2, 1) 은 값이 달라 드로어 슬라이드와 미묘하게 어긋난다.
+        sidebar: 'cubic-bezier(0.42, 0, 0.58, 1)',
+      },
       fontFamily: {
-        // 영문/숫자 = Inter, 한글 = Pretendard. Inter 를 앞에 둬 라틴 글리프에만 적용.
-        // Inter 는 Medium(500) 한 weight 만 로드 + body 의 font-synthesis:none →
-        // bold 문맥에서도 라틴은 항상 Inter Medium, 한글만 Pretendard 가 실제 가중치로 렌더.
-        sans: ['Inter', 'Pretendard Variable', 'Pretendard', 'system-ui', 'sans-serif'],
-        inter: ['Inter', 'sans-serif'],
-        pretendard: ['Pretendard Variable', 'Pretendard', 'sans-serif'],
+        // Figma 텍스트 스타일이 전부 Pretendard 단일 패밀리다 (라틴 전용 Inter 병기 폐지).
+        sans: ['Pretendard Variable', 'Pretendard', 'system-ui', 'sans-serif'],
       },
       fontSize: {
-        // ── Figma 텍스트 스타일 (size / line-height Auto=normal / weight 번들) ──
-        // Heading=Bold(700), SM=Semibold(600), M=Medium(500), R=Regular(400)
-        h1: ['40px', { lineHeight: 'normal', fontWeight: '700' }],
-        h2: ['18px', { lineHeight: 'normal', fontWeight: '700' }],
+        // ── Figma 텍스트 스타일 (size / line-height / letter-spacing / weight 번들) ──
+        // Heading=Bold(700), SM=Semibold(600), M=Medium(500), R=Regular(400).
+        // Figma 의 line-height "Auto" 는 normal, letter-spacing 은 % → em 으로 옮긴다.
+        h0: ['56px', { lineHeight: '72px', letterSpacing: '0.06em', fontWeight: '700' }], // Heading / H0
+        // 히어로 전용 디스플레이 크기 (홈 메인 비주얼 헤딩): 1·2행 64px / 3행 80px, 자간 0.
+        'hero-64': ['64px', { lineHeight: 'normal', fontWeight: '700' }],
+        'hero-80': ['80px', { lineHeight: 'normal', fontWeight: '700' }],
+        // 마퀴(흐르는 브랜드 띠) 전용 디스플레이 크기. Figma 894:2977·646:3125 의 88px ExtraBold 이
+        // 기준이고, 좁은 화면용 두 단계는 띠 높이에 맞춰 같은 비율로 줄인 값이다.
+        // 굵기가 번들에 있어야 하므로(별도 font-extrabold 는 fontSize 번들에 밀린다) 셋 다 800 을 싣는다.
+        'marquee-48': ['48px', { lineHeight: 'normal', fontWeight: '800' }],
+        'marquee-64': ['64px', { lineHeight: 'normal', fontWeight: '800' }],
+        'marquee-88': ['88px', { lineHeight: 'normal', fontWeight: '800' }],
+        h1: ['40px', { lineHeight: 'normal', fontWeight: '700' }], // Heading / H1
         'sm-22': ['22px', { lineHeight: 'normal', fontWeight: '600' }],
         'sm-20': ['20px', { lineHeight: 'normal', fontWeight: '600' }],
         'sm-18': ['18px', { lineHeight: 'normal', fontWeight: '600' }],
         'sm-16': ['16px', { lineHeight: 'normal', fontWeight: '600' }],
         'm-20': ['20px', { lineHeight: 'normal', fontWeight: '500' }],
         'm-18': ['18px', { lineHeight: 'normal', fontWeight: '500' }],
+        // 본문 전용: 줄간격·자간이 붙은 별도 스타일 (M/18 (본문용), M/16 (홈 본문용))
+        'm-18-body': ['18px', { lineHeight: '26px', letterSpacing: '0.02em', fontWeight: '500' }],
         'm-16': ['16px', { lineHeight: 'normal', fontWeight: '500' }],
+        'm-16-home': ['16px', { lineHeight: '24px', letterSpacing: '-0.02em', fontWeight: '500' }],
         'm-14': ['14px', { lineHeight: 'normal', fontWeight: '500' }],
+        'r-20': ['20px', { lineHeight: 'normal', fontWeight: '400' }],
         'r-14': ['14px', { lineHeight: 'normal', fontWeight: '400' }],
+        'r-12': ['12px', { lineHeight: 'normal', fontWeight: '400' }],
+      },
+      // ── 그라디언트: Figma 색상 스타일. 레이어 순서(위→아래)를 그대로 옮긴다. ──
+      // Figma 는 [방사형/선형 오버레이] 위에 [솔리드 베이스] 를 깐 2겹 구성이라
+      // background-image 다중 레이어로 그대로 재현한다(오버레이 불투명도는 stop alpha 에 곱해 넣음).
+      // 위치·반지름은 Figma gradientTransform 을 오브젝트 좌표계로 역변환해 얻은 값이다.
+      backgroundImage: {
+        // 메인컬러 그라디언트: Primary 위에 Secondary-1 방사형 30%
+        'gradient-primary':
+          'radial-gradient(ellipse 77.6% 131.6% at 21.3% 12.1%, rgb(215 226 255 / 0.3) 0%, rgb(215 226 255 / 0) 100%), linear-gradient(#3A60FB, #3A60FB)',
+        // 서브컬러 그라디언트: Secondary-1 위에 Primary 방사형 20%
+        'gradient-secondary':
+          'radial-gradient(ellipse 64.9% 220.7% at 94.6% -5.3%, rgb(58 96 251 / 0.2) 0%, rgb(58 96 251 / 0) 100%), linear-gradient(#D7E2FF, #D7E2FF)',
+        // 화이트 그라디언트: White 위에 Secondary-1 방사형 50%
+        'gradient-white':
+          'radial-gradient(ellipse 47.8% 83.1% at 94.0% 76.2%, rgb(215 226 255 / 0.5) 0%, rgb(215 226 255 / 0) 100%), linear-gradient(#FFFFFF, #FFFFFF)',
+        // 타이포: White 위에 Primary 선형 70% (아래로 갈수록 진해짐).
+        // 텍스트에 쓸 때는 `bg-gradient-typo bg-clip-text text-transparent` 조합.
+        'gradient-typo':
+          'linear-gradient(to bottom, rgb(58 96 251 / 0) 33.8%, rgb(58 96 251 / 0.604) 100%), linear-gradient(#FFFFFF, #FFFFFF)',
+        // 서브컬러 타이포 그라디언트(히어로 "멋쟁이사자처럼"): amber → secondary-2 세로.
+        'gradient-typo-secondary':
+          'linear-gradient(to bottom, #FFBD2F 0%, #FF9D2F 26.13%, #FF7B2F 100%)',
+        // 사용자 헤더 알약 메뉴: Primary 솔리드 위에 우상단 대각선 하이라이트(반사) 그라디언트.
+        // 위치·반경은 Figma gradientTransform 을 오브젝트 좌표계로 역변환해 얻은 값이다.
+        'gradient-user-menu':
+          'radial-gradient(ellipse 56.4% 440% at 95.5% 34%, rgb(215 226 255 / 0.3) 0%, rgb(215 226 255 / 0) 100%), linear-gradient(#3A60FB, #3A60FB)',
+        // 사용자 헤더 배경: 유리판 위에 Primary 를 위->아래로 옅게 겹치는 세로 그라디언트.
+        'gradient-user-header':
+          'linear-gradient(180deg, rgb(58 96 251 / 0.3) 0%, rgb(58 96 251 / 0.02) 100%)',
+      },
+      // 사용자 헤더 배경 흐림(2.5) · 알약 메뉴 배경 흐림(5.9). Figma 실측치.
+      backdropBlur: {
+        header: '2.5px',
+        menu: '5.9px',
+      },
+      // ── 효과(그림자): Figma 효과 스타일. ──
+      boxShadow: {
+        // 그림자 — 바깥쪽 그림자 X0 Y4 B8 S0, #070D28 20%
+        drop: '0 4px 8px 0 rgb(7 13 40 / 0.2)',
+        // 화이트배경 엠보 — 위 흰색 하이라이트 + 아래 primary 음영
+        'emboss-light':
+          'inset 0 4px 4px 0 rgb(255 255 255 / 0.3), inset 0 -4px 4px 0 rgb(58 96 251 / 0.3)',
+        // 다크배경 엠보 — 같은 구성, 더 강한 대비
+        'emboss-dark':
+          'inset 0 4px 4px 0 rgb(255 255 255 / 1), inset 0 -4px 4px 0 rgb(58 96 251 / 0.5)',
       },
     },
   },
-  plugins: [],
+  plugins: [
+    plugin(({ addUtilities }) => {
+      // ── 유리(Glass) 효과 ──
+      // Figma 의 GLASS 는 굴절까지 계산하는 전용 효과라 CSS 에 1:1 대응이 없다.
+      // blur radius 5 → backdrop-blur, depth 1 + lightAngle -45° + intensity 100%
+      // → 좌상단이 밝고 우하단이 어두운 1px inset 하이라이트로 근사한다.
+      // (실제 화면에서 Figma 와 대조 후 미세조정 필요)
+      addUtilities({
+        '.effect-glass': {
+          'backdrop-filter': 'blur(5px)',
+          '-webkit-backdrop-filter': 'blur(5px)',
+          'box-shadow':
+            'inset 1px 1px 1px 0 rgb(255 255 255 / 0.6), inset -1px -1px 1px 0 rgb(255 255 255 / 0.25)',
+        },
+        // 유리+그림자 — 유리 위에 `그림자`(shadow-drop) 를 얹은 Figma 스타일
+        '.effect-glass-shadow': {
+          'backdrop-filter': 'blur(5px)',
+          '-webkit-backdrop-filter': 'blur(5px)',
+          'box-shadow':
+            '0 4px 8px 0 rgb(7 13 40 / 0.2), inset 1px 1px 1px 0 rgb(255 255 255 / 0.6), inset -1px -1px 1px 0 rgb(255 255 255 / 0.25)',
+        },
+        // 스크롤바 숨김 — 스크롤은 되되 스크롤바 미표시(캘린더 셀 내부 등).
+        '.no-scrollbar': {
+          'scrollbar-width': 'none',
+          '-ms-overflow-style': 'none',
+        },
+        '.no-scrollbar::-webkit-scrollbar': {
+          display: 'none',
+        },
+        // 스크롤바 자리 고정 — 내용 높이에 따라 스크롤바가 생겼다 사라지면 스크롤 컨테이너의
+        // 콘텐츠 폭이 스크롤바 폭만큼 널뛴다. 그 안의 sticky 헤더도 같이 좁아졌다 넓어져서
+        // 라우트를 옮길 때마다 유리 알약 메뉴가 좌우로 움찔한다(스크롤바를 겹쳐 그리는
+        // 환경에서는 원래 폭이 안 변하므로 이 유틸도 무해하다).
+        '.scrollbar-gutter-stable': {
+          'scrollbar-gutter': 'stable',
+        },
+        // 세로 스크롤 영역 상·하단을 투명으로 페이드(자연스럽게 사라지는 느낌).
+        '.scroll-fade-y': {
+          'mask-image':
+            'linear-gradient(to bottom, transparent 0, #000 12px, #000 calc(100% - 12px), transparent 100%)',
+          '-webkit-mask-image':
+            'linear-gradient(to bottom, transparent 0, #000 12px, #000 calc(100% - 12px), transparent 100%)',
+        },
+        '.scroll-fade-top': {
+          'mask-image': 'linear-gradient(to bottom, transparent 0, #000 12px, #000 100%)',
+          '-webkit-mask-image': 'linear-gradient(to bottom, transparent 0, #000 12px, #000 100%)',
+        },
+        '.scroll-fade-bottom': {
+          'mask-image':
+            'linear-gradient(to bottom, #000 0, #000 calc(100% - 12px), transparent 100%)',
+          '-webkit-mask-image':
+            'linear-gradient(to bottom, #000 0, #000 calc(100% - 12px), transparent 100%)',
+        },
+      })
+    }),
+  ],
 }

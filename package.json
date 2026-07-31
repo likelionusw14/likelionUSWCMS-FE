@@ -15,12 +15,13 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "api:fetch": "node scripts/fetch-swagger.mjs",
-    "api:types": "openapi-typescript openapi/openapi.json -o src/api/types.generated.ts",
+    "api:types": "openapi-typescript openapi/openapi.yaml -o src/api/types.generated.ts",
     "api:sync": "npm run api:fetch && npm run api:types"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.101.2",
     "axios": "^1.18.1",
+    "framer-motion": "^12.42.2",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "react-router-dom": "^7.18.1",

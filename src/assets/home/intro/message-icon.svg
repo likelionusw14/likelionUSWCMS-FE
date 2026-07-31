@@ -1,0 +1,15 @@
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_0_1)">
+<rect id="Icon Background" width="24" height="24" fill="url(#paint0_linear_0_1)"/>
+<path id="Ellipse 34" d="M20.7656 11.4844C20.7656 15.4971 16.8411 18.75 12 18.75C11.434 18.75 10.8806 18.7055 10.3445 18.6206C9.826 18.5385 9.30271 18.5526 8.85559 18.8277C8.28967 19.176 7.51712 19.6578 6.57492 19.7612C6.42863 19.7773 6.34557 19.6107 6.43415 19.4932C7.12734 18.5736 7.55354 17.7547 7.24219 17.5876C4.83032 16.2932 3.23438 14.0433 3.23438 11.4844C3.23438 7.47168 7.15888 4.21875 12 4.21875C16.8411 4.21875 20.7656 7.47168 20.7656 11.4844Z" fill="white"/>
+</g>
+<defs>
+<linearGradient id="paint0_linear_0_1" x1="12" y1="0" x2="12" y2="24" gradientUnits="userSpaceOnUse">
+<stop stop-color="#5CF777"/>
+<stop offset="1" stop-color="#0EBC29"/>
+</linearGradient>
+<clipPath id="clip0_0_1">
+<rect width="24" height="24" rx="3" fill="white"/>
+</clipPath>
+</defs>
+</svg>

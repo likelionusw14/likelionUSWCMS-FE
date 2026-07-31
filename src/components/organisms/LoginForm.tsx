@@ -8,10 +8,7 @@ const DEMO_ROLES: Role[] = ['GUEST', 'MEMBER', 'STAFF']
 
 export function LoginForm({ role, onRoleChange, id, onIdChange, error, onSubmit }: LoginFormProps) {
   return (
-    <form
-      onSubmit={onSubmit}
-      className="w-[320px] rounded border border-gray-300 bg-white p-32"
-    >
+    <form onSubmit={onSubmit} className="w-[320px] rounded border border-gray-300 bg-white p-32">
       <h1 className="text-sm-22 text-gray-900">멋사 USW CMS</h1>
       <p className="mb-24 mt-4 text-r-14 text-gray-700">로그인 (백엔드 연동 전 데모)</p>
 

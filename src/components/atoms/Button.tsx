@@ -1,24 +1,38 @@
 import type { ButtonHTMLAttributes } from 'react'
 import { cn } from '@utils'
+import type { ButtonProps } from '@types'
 
-type Variant = 'primary' | 'secondary' | 'ghost'
-
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: Variant
+// 공용 버튼 아톰 — Figma 저장/취소/삭제 버튼 규격을 담는다.
+// variant: primary(채움) · outline(흰 배경 + primary 테두리) · neutral(흰 배경 + gray 테두리) · danger(흰 배경 + error 테두리).
+// size: md(모달 기본 h-48 min-w-128) · block(폼 전체폭 h-48) · sm(소형 h-32 w-56).
+const VARIANT_CLASS: Record<NonNullable<ButtonProps['variant']>, string> = {
+  primary: 'bg-primary text-white',
+  outline: 'border border-primary bg-white text-primary',
+  // 삭제 확인 팝업의 취소 버튼 — Figma 254:2758 은 gray/500 테두리 + gray/500 글자다(primary 아웃라인과 구분).
+  neutral: 'border border-gray-500 bg-white text-gray-500',
+  danger: 'border border-error bg-white text-error',
 }
 
-const variantClass: Record<Variant, string> = {
-  primary: 'bg-primary text-white hover:bg-primary/90',
-  secondary: 'bg-gray-100 text-gray-900 hover:bg-gray-300',
-  ghost: 'bg-transparent text-gray-700 hover:bg-gray-100',
+const SIZE_CLASS: Record<NonNullable<ButtonProps['size']>, string> = {
+  md: 'h-48 min-w-[128px] px-32 text-sm-18',
+  block: 'h-48 w-full px-32 text-sm-18',
+  sm: 'h-32 w-[56px] text-m-14',
 }
 
-export function Button({ variant = 'primary', className, ...props }: ButtonProps) {
+export function Button({
+  variant = 'primary',
+  size = 'md',
+  className,
+  type = 'button',
+  ...props
+}: ButtonProps & ButtonHTMLAttributes<HTMLButtonElement>) {
   return (
     <button
+      type={type}
       className={cn(
-        'inline-flex items-center justify-center rounded px-16 py-8 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50',
-        variantClass[variant],
+        'inline-flex items-center justify-center rounded-8 transition-colors disabled:cursor-not-allowed disabled:opacity-50',
+        VARIANT_CLASS[variant],
+        SIZE_CLASS[size],
         className,
       )}
       {...props}
