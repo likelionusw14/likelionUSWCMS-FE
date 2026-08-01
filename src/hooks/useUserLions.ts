@@ -168,10 +168,12 @@ export function useUserLions(query: UserLionQuery): { data: Lion[]; isLoading: b
     queryFn: () => fetchUserLions(query),
     enabled: isBackendConnected,
   })
-  const response = request.data ?? createMockLionPage(query)
+  // 연동 상태에서는 실 응답만 쓴다 — 조회 실패·로딩 중에 mock 을 끼워 넣으면
+  // 가짜 사자가 실제 목록인 것처럼 보인다. mock 은 미연동 동안 화면을 채우는 용도로만 남긴다.
+  const items = isBackendConnected ? (request.data?.items ?? []) : createMockLionPage(query).items
 
   return {
-    data: response.items.map(toLion),
+    data: items.map(toLion),
     isLoading: isBackendConnected && request.isLoading,
   }
 }
