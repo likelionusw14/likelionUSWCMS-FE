@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { COHORT_OPTIONS, PROJECT_CATEGORY_OPTIONS } from '@constants'
+import { PROJECT_CATEGORY_OPTIONS } from '@constants'
 import { isBackendConnected } from '@config'
-import { useDeleteProject, useProject, useProjectForm } from '@hooks'
+import { useCohorts, useDeleteProject, useProject, useProjectForm } from '@hooks'
 import { ConfirmDialog, ResultDialog } from '@molecules'
 import { ProjectForm } from '@organisms'
 
@@ -15,6 +15,9 @@ export function ProjectFormPage() {
   const { values, setField, handleSubmit, fileName, selectFile, clearFile } =
     useProjectForm(project)
   const deleteProject = useDeleteProject()
+  // 기수 선택지는 백엔드에서 받는다 — value 가 곧 cohortId 다.
+  // 하드코딩한 '14기' 를 parseInt 해서 보내면 존재하지 않는 기수 ID(14)가 나간다.
+  const cohorts = useCohorts()
   const [confirmOpen, setConfirmOpen] = useState(false)
   const [deleteDoneOpen, setDeleteDoneOpen] = useState(false)
 
@@ -34,7 +37,7 @@ export function ProjectFormPage() {
         onFieldChange={setField}
         onSubmit={handleSubmit}
         onDelete={isEdit ? () => setConfirmOpen(true) : undefined}
-        cohortOptions={COHORT_OPTIONS}
+        cohortOptions={cohorts.data}
         categoryOptions={PROJECT_CATEGORY_OPTIONS}
         fileName={fileName}
         onFileChange={selectFile}
