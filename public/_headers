@@ -1,12 +1,29 @@
 # Cloudflare Pages 응답 헤더 규칙.
 
-# 해시된 정적 자산(빌드 시 파일명에 해시가 붙는다)은 내용이 바뀌면 파일명도 바뀌므로
-# 장기 불변 캐시가 안전하다.
+# 해시된 정적 자산. 파일명에 해시가 붙으니 원칙적으로는 immutable 1년이 맞지만,
+# 여기서는 의도적으로 하루로 줄이고 immutable 을 뺀다.
+#
+# 없는 자산 요청이 _redirects 의 SPA 폴백에 걸려 index.html 로 응답되는데(그 규칙을 끌 방법이
+# 없다 — _redirects 주석 참고), 이 헤더가 그 HTML 에도 그대로 붙는다. immutable 1년이면
+# 브라우저가 JS 주소 자리에 HTML 을 1년간 물고 재검증도 하지 않아, 하드 리로드로도 복구되지
+# 않는 흰 화면이 된다. 운영에서 실제로 발생했다.
+#
+# 하루면 배포가 잦은 지금 캐시 효율 손실은 거의 없고(배포마다 해시가 바뀐다), 혹시 오염돼도
+# 24시간 안에 저절로 낫는다. 배포 빈도가 줄면 이 값을 다시 늘려도 된다.
 /assets/*
-  Cache-Control: public, max-age=31536000, immutable
+  Cache-Control: public, max-age=86400
 
 # 기본 보안 헤더 (전체 경로).
 /*
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
   X-Frame-Options: DENY
+
+# HTML 은 캐시하지 않는다 (자산과 반대로 파일명이 고정이라 내용이 바뀌어도 이름이 그대로다).
+# 오래된 index.html 은 이미 사라진 해시 자산을 요청하고, 없는 경로는 _redirects 의 SPA 폴백에
+# 걸려 index.html(text/html)이 200 으로 돌아온다. 그러면 브라우저가 JS 모듈 자리에 HTML 을 받아
+# "Expected a JavaScript-or-Wasm module script ..." 로 화면이 통째로 안 뜬다.
+/
+  Cache-Control: no-cache
+/index.html
+  Cache-Control: no-cache
