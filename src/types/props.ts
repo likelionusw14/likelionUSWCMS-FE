@@ -321,14 +321,16 @@ export interface ProjectFormProps {
   cohortOptions: SelectOption[]
   categoryOptions: SelectOption[]
   fileName: string
-  onFileChange: (fileName: string) => void
+  /** 고른 파일. 업로드는 저장 시점에 일어난다 (선택 즉시 올리지 않는다). */
+  onFileChange: (file: File) => void
   onFileClear: () => void
 }
 
 // 관리 폼 공용 업로드 박스 — 아이콘 + 파일명 + 찾기/삭제 버튼. 공지·세션자료·프로젝트 작성이 공유한다.
 export interface FileUploadFieldProps {
   fileName: string
-  onFileChange: (fileName: string) => void
+  /** 고른 파일. 업로드는 저장 시점에 일어난다 (선택 즉시 올리지 않는다). */
+  onFileChange: (file: File) => void
   onFileClear: () => void
   accept?: string
 }
@@ -378,7 +380,8 @@ export interface SessionFormProps {
   weekOptions: SelectOption[]
   partOptions: SelectOption[]
   fileName: string
-  onFileChange: (fileName: string) => void
+  /** 고른 파일. 업로드는 저장 시점에 일어난다 (선택 즉시 올리지 않는다). */
+  onFileChange: (file: File) => void
   onFileClear: () => void
 }
 
@@ -614,7 +617,8 @@ export interface NoticeFormProps {
   onPinnedChange: (pinned: boolean) => void
   tagOptions: SelectOption[]
   fileName: string
-  onFileChange: (fileName: string) => void
+  /** 고른 파일. 업로드는 저장 시점에 일어난다 (선택 즉시 올리지 않는다). */
+  onFileChange: (file: File) => void
   onFileClear: () => void
 }
 

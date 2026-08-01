@@ -19,9 +19,8 @@ const PART_LABEL: Record<ApiPartType, string> = {
   COMMON: '공통',
 }
 
-// [추정] admin 출결 목록은 scheduleId 필수(스펙). 현 UI 는 scheduleId 개념 없이
-// 날짜 필터만 있어 스펙과 구조가 다르다. 데모 단계이므로 mock fallback 으로 화면을
-// 유지하고 실 API 경로만 준비해 둔다. scheduleId 가 주어지고 백엔드 연동 시에만 실 조회.
+// admin 출결 목록은 scheduleId 필수(스펙). UI 의 날짜 필터를 해당 날짜의 일정으로 옮겨
+// scheduleId 를 얻는다(useAttendanceList). 아래 mock 은 백엔드 미연동 데모에서만 쓴다.
 const NAMES = ['김멋사', '이사자', '박수원', '최운영', '정기획', '한디자']
 const PARTS = ['기획', '디자인', '프론트엔드', '백엔드']
 
@@ -51,7 +50,11 @@ function toAttendanceRecord(response: ApiAttendanceResponse): AttendanceRecord {
   }
 }
 
-// 출석 내역 조회. scheduleId 가 있고 백엔드 연동 시 실 API, 그 외 mock.
+// 출석 내역 조회.
+// - 미연동: mock (데모 유지)
+// - 연동 + scheduleId 있음: 실 조회
+// - 연동 + scheduleId 없음(그 날짜에 일정이 없음): 빈 목록. mock 으로 되돌리지 않는다 —
+//   있지도 않은 출결이 있는 것처럼 보이면 안 된다.
 export function useAttendance(query?: AdminAttendanceQuery): {
   data: AttendanceRecord[]
   isLoading: boolean
@@ -64,9 +67,12 @@ export function useAttendance(query?: AdminAttendanceQuery): {
     enabled,
   })
 
-  if (!enabled) {
-    // 미연동 데모: mock 유지.
+  if (!isBackendConnected) {
     return { data: MOCK_ATTENDANCE, isLoading: false }
+  }
+
+  if (!enabled) {
+    return { data: [], isLoading: false }
   }
 
   const data = request.data?.items.map(toAttendanceRecord) ?? []

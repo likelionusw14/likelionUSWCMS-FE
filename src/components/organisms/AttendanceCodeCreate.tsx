@@ -32,7 +32,8 @@ export function AttendanceCodeCreate({
             code ? 'font-medium text-black' : 'font-normal text-white',
           )}
         >
-          {code ?? '0000000'}
+          {/* 발급 전 자리표시자도 실제 코드와 같은 6자리 (인증 API 제약 ^\d{6}$). */}
+          {code ?? '000000'}
         </span>
       </div>
 

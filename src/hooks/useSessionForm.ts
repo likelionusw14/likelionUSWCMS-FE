@@ -1,7 +1,7 @@
 import type { FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { createResource, updateResource } from '@api'
+import { createResource, updateResource, uploadFile } from '@api'
 import type {
   ApiCreateLearningResourceRequest,
   ApiPartType,
@@ -86,24 +86,36 @@ export function useSessionForm(session?: Session) {
       return
     }
 
+    // 파일을 새로 골랐을 때만 업로드한다. 수정에서 미전달은 '기존 파일 유지'.
+    const fileAssetId = form.file
+      ? await uploadFile('LEARNING_RESOURCE', form.file, crypto.randomUUID())
+      : undefined
+
+    // title 은 스펙상 required 이나 폼엔 입력이 없어 '{주차} {파트} 자료'로 생성한다.
+    const title = `${form.values.week} ${form.values.part} 자료`.trim()
+
     if (session) {
-      // 수정: fileAssetId 미전달 = 기존 파일 유지. targetPart/week/title 만 갱신.
-      // title 은 스펙상 required 이나 폼엔 입력이 없어 '{주차} {파트} 자료'로 생성한다.
       await updateSession.mutateAsync({
         version: session.version,
-        title: `${form.values.week} ${form.values.part} 자료`.trim(),
+        title,
         week: parseWeek(form.values.week),
         targetPart: PART_ENUM[form.values.part],
+        ...(fileAssetId === undefined ? {} : { fileAssetId }),
       })
       navigate('/admin/sessions')
       return
     }
 
-    // 신규 등록: CreateLearningResourceRequest 는 fileAssetId 가 필수다.
-    // TODO(파일 업로드): FileUploadField 가 파일명 문자열만 다뤄 실제 File 객체가 없다.
-    //   폼이 File 객체를 넘기도록 확장한 뒤 uploadFile('LEARNING_RESOURCE', file) 로
-    //   fileAssetId 를 획득해 아래 create 요청에 전달해야 한다.
-    //   현재는 fileAssetId 를 확보할 수 없어 방어적으로 등록을 건너뛰고 목록으로 이동한다.
+    // 신규 등록은 fileAssetId 가 필수다. SessionForm 이 파일 없이 제출을 막지만,
+    // 그 방어를 뚫고 들어와도 잘못된 요청을 보내지 않도록 여기서도 막는다.
+    if (fileAssetId === undefined) return
+
+    await createSession.mutateAsync({
+      title,
+      week: parseWeek(form.values.week),
+      targetPart: PART_ENUM[form.values.part],
+      fileAssetId,
+    })
     navigate('/admin/sessions')
   }
 

@@ -33,11 +33,15 @@ export async function putFileToStorage(
   file: File,
 ): Promise<void> {
   // Presigned URL 은 외부(S3) 주소이므로 공용 apiClient(Authorization/baseURL) 대신 fetch 로 직접 PUT.
-  await fetch(upload.uploadUrl, {
+  const response = await fetch(upload.uploadUrl, {
     method: 'PUT',
     headers: { ...upload.requiredHeaders },
     body: file,
   })
+  // 실패를 삼키면 다음 단계(완료 검증)가 "업로드된 적 없는 objectKey" 로 실패해 원인이 흐려진다.
+  if (!response.ok) {
+    throw new Error(`파일 업로드에 실패했습니다 (HTTP ${response.status})`)
+  }
 }
 
 // 업로드 완료 검증. Idempotency-Key 는 스펙상 필수 헤더이므로 호출부에서 업로드 1건당 하나를 만들어 넘긴다.
