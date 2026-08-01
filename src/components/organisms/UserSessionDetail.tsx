@@ -26,6 +26,7 @@ function PreviewPlaceholder() {
 
 export function UserSessionDetail({ session }: UserSessionDetailProps) {
   const pageText = session.pageCount ? `Page (1/${session.pageCount})` : 'Page'
+  const isImage = session.mimeType.startsWith('image/')
 
   return (
     <WindowPanel bodyClassName="flex flex-col gap-24 p-32">
@@ -33,7 +34,13 @@ export function UserSessionDetail({ session }: UserSessionDetailProps) {
         <h2 className="min-w-0 truncate text-sm-18 text-black">{session.fileName}</h2>
         <p className="shrink-0 text-m-16 text-gray-500">{pageText}</p>
       </div>
-      {session.previewUrl ? (
+      {session.previewUrl && isImage ? (
+        <img
+          src={session.previewUrl}
+          alt={`${session.title} 미리보기`}
+          className="max-h-screen w-full object-contain"
+        />
+      ) : session.previewUrl ? (
         <iframe
           src={session.previewUrl}
           title={`${session.title} 미리보기`}

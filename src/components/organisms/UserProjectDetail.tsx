@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { WindowPanel } from '@atoms'
 import type { UserProjectDetailProps } from '@types'
 import cameraIcon from '@/assets/icons/camera-white.png'
@@ -9,6 +10,18 @@ const INFO_VALUE =
   'w-max max-w-full shrink-0 break-words text-left text-m-16 text-gray-500 [overflow-wrap:anywhere]'
 
 export function UserProjectDetail({ project }: UserProjectDetailProps) {
+  const initialImage = project.imageUrls[0] ?? project.thumbnailUrl
+  const projectImages = project.imageUrls.length
+    ? project.imageUrls
+    : project.thumbnailUrl
+      ? [project.thumbnailUrl]
+      : []
+  const [selectedImage, setSelectedImage] = useState(initialImage)
+
+  useEffect(() => {
+    setSelectedImage(initialImage)
+  }, [project.id, initialImage])
+
   const developedDate = `${project.startedMonth.replace('-', '.')} - ${project.endedMonth.replace('-', '.')}`
   const participants = project.participants
     .map((participant) => `${participant.name}(${participant.role})`)
@@ -17,9 +30,9 @@ export function UserProjectDetail({ project }: UserProjectDetailProps) {
   return (
     <article className="flex flex-col gap-40 sm:gap-48">
       <WindowPanel headerClassName="h-32" bodyClassName="flex flex-col gap-8 !p-0">
-        {project.thumbnailUrl ? (
+        {selectedImage ? (
           <img
-            src={project.thumbnailUrl}
+            src={selectedImage}
             alt={`${project.title} 대표 이미지`}
             className="aspect-[1120/630] w-full object-cover"
           />
@@ -27,24 +40,21 @@ export function UserProjectDetail({ project }: UserProjectDetailProps) {
           <div className="aspect-[1120/630] w-full bg-gray-100" />
         )}
         <div className="flex w-full gap-8 overflow-hidden px-8 sm:px-16">
-          {project.thumbnailUrl ? (
-            <img
-              src={project.thumbnailUrl}
-              alt="선택된 프로젝트 이미지"
-              className="aspect-[16/9] w-[104px] shrink-0 rounded-4 object-cover"
-            />
-          ) : (
-            <div
-              aria-hidden="true"
-              className="aspect-[16/9] w-[104px] shrink-0 rounded-4 bg-gray-100"
-            />
-          )}
-          {Array.from({ length: 5 }, (_, index) => (
-            <div
-              key={index}
-              aria-hidden="true"
-              className="aspect-[16/9] w-[104px] shrink-0 rounded-4 bg-gray-100"
-            />
+          {projectImages.map((imageUrl, index) => (
+            <button
+              key={`${imageUrl}-${index}`}
+              type="button"
+              onClick={() => setSelectedImage(imageUrl)}
+              aria-label={`${index + 1}번째 프로젝트 이미지 보기`}
+              aria-pressed={selectedImage === imageUrl}
+              className="aspect-[16/9] w-[104px] shrink-0 overflow-hidden rounded-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            >
+              <img
+                src={imageUrl}
+                alt={`${project.title} 프로젝트 이미지 ${index + 1}`}
+                className="h-full w-full object-cover"
+              />
+            </button>
           ))}
         </div>
         <div className="flex justify-center py-8">
