@@ -133,7 +133,8 @@ function toLion(response: ApiLionResponse): Lion {
     cohort: response.cohort.name,
     cohortId: response.cohort.cohortId,
     part: PART_LABEL[response.part],
-    activityType: response.activityType,
+    // 스펙상 activityType 은 enum 이 아니라 plain string 이라 앱 유니온으로 좁힌다.
+    activityType: response.activityType as Lion['activityType'],
     department: extra.department ?? '',
     imageUrl: extra.imageUrl ?? null,
   }

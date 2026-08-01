@@ -131,17 +131,16 @@ export function toCreateScheduleRequest(
 }
 
 // ScheduleFormValues → UpdateScheduleRequest. version 은 수정 대상(editingEvent)의 값을 필수 전달.
+// 수정 요청 바디에는 cohortId 가 없다(등록 때 정해진 기수는 바꾸지 않는다).
 export function toUpdateScheduleRequest(
   values: ScheduleFormValues,
   version: number,
-  cohortId: number = DEFAULT_COHORT_ID,
 ): ApiUpdateScheduleRequest {
   const hasTime = Boolean(values.time.trim())
   return {
     version,
     title: values.title.trim(),
     description: values.description.trim() || null,
-    cohortId,
     scheduleDate: values.date.replace(/\./g, '-'),
     isAllDay: !hasTime,
     startTime: hasTime ? values.time : null,

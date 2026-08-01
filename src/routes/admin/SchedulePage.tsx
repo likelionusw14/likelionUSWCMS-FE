@@ -45,7 +45,7 @@ export function SchedulePage() {
       updateSchedule.mutate({
         scheduleId: editingEvent.id,
         // version 은 낙관적 동시성 필수. 응답에서 받은 값을 그대로 전달한다.
-        body: toUpdateScheduleRequest(values, editingEvent.version ?? 0, editingEvent.cohortId),
+        body: toUpdateScheduleRequest(values, editingEvent.version ?? 0),
       })
     } else {
       createSchedule.mutate(toCreateScheduleRequest(values))

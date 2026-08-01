@@ -177,9 +177,7 @@ export function toCreateProjectRequest(values: ProjectFormValues): ApiCreateProj
     cohortId: Number.parseInt(values.cohort, 10) || 0,
     startedMonth: toYearMonth(values.startDate),
     endedMonth: toYearMonth(values.endDate),
-    // [추정] 관리자 폼 참여자는 자유 텍스트라 userId(필수)를 신뢰성 있게 추출할 수 없다.
-    // 구조화된 참여자 편집 UI 도입 전까지 빈 배열로 전달한다(잘못된 userId 전송 방지).
-    participants: [],
+    // 참여자는 등록 요청 바디에 없다 — 별도 참여자 API 로 붙이는 구조로 보인다.
   }
 }
 
@@ -198,8 +196,7 @@ export function toUpdateProjectRequest(
     cohortId: Number.parseInt(values.cohort, 10) || 0,
     startedMonth: toYearMonth(values.startDate),
     endedMonth: toYearMonth(values.endDate),
-    // [추정] 참여자는 create 와 동일 이유로 빈 배열 전달(구조화된 편집 UI 도입 전까지).
-    participants: [],
+    // 참여자는 수정 요청 바디에 없다 (create 와 동일).
   }
 }
 
