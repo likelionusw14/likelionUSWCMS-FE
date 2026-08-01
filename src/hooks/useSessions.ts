@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { fetchUserResource, fetchUserResources } from '@api'
+import { fetchUserResource, fetchUserResourceDownloadUrl, fetchUserResources } from '@api'
 import type { ApiLearningResourceResponse, ApiPartType, ApiResourcePage } from '@api'
 import { isBackendConnected } from '@config'
 import type { QueryResult, Session } from '@types'
@@ -44,14 +44,15 @@ const MOCK_RESOURCES: ApiLearningResourceResponse[] = Array.from({ length: 45 },
 })
 
 // LearningResourceResponse → 관리자 Session 화면모델 변환.
-// pageCount 는 응답에 없으므로 0, previewUrl 은 미리보기 URL이 없어 빈 문자열.
-function toSession(response: ApiLearningResourceResponse): Session {
+// previewUrl 은 별도 발급인 다운로드 URL 이라 호출부가 넘긴다(목록에서는 필요 없어 빈 문자열).
+// pageCount 는 응답에 없다 — 0 이면 'Page (1/0)' 이 되므로 표시하지 않는다는 뜻의 0 으로 둔다.
+function toSession(response: ApiLearningResourceResponse, previewUrl = ''): Session {
   return {
     id: String(response.resourceId),
     fileName: response.file.originalFileName,
     week: `${response.week}주차`,
     part: PART_LABEL[response.targetPart],
-    previewUrl: '',
+    previewUrl,
     pageCount: 0,
     version: response.version,
   }
@@ -82,22 +83,32 @@ export function useSessions(): QueryResult<Session[]> {
   })
   const response = request.data ?? createMockResourcePage()
   return {
-    data: response.items.map(toSession),
+    // map 이 넘기는 index 가 previewUrl 자리로 들어가지 않도록 인자를 명시한다.
+    data: response.items.map((resource) => toSession(resource)),
     isLoading: isBackendConnected && request.isLoading,
   }
 }
 
 // 세션자료 단건 조회.
+// 미리보기 URL 은 본문 응답에 없고 별도 발급(GET /resources/{id}/download-url)이라
+// 사용자 상세(useUserSessionDetail)와 같이 함께 받는다 — 이걸 안 받으면 뷰어가 늘 빈 판이다.
 export function useSession(id: string | undefined): QueryResult<Session | undefined> {
+  const enabled = isBackendConnected && Boolean(id)
   const request = useQuery({
     queryKey: ['admin-session', id],
     queryFn: () => fetchUserResource(id as string),
-    enabled: isBackendConnected && Boolean(id),
+    enabled,
+  })
+  const downloadRequest = useQuery({
+    queryKey: ['admin-session-download-url', id],
+    queryFn: () => fetchUserResourceDownloadUrl(id as string),
+    enabled,
+    retry: false,
   })
   const response =
     request.data ?? MOCK_RESOURCES.find((resource) => String(resource.resourceId) === id)
   return {
-    data: response ? toSession(response) : undefined,
-    isLoading: isBackendConnected && request.isLoading,
+    data: response ? toSession(response, downloadRequest.data?.downloadUrl ?? '') : undefined,
+    isLoading: isBackendConnected && (request.isLoading || downloadRequest.isLoading),
   }
 }

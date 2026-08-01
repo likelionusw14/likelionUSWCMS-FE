@@ -29,15 +29,18 @@ export function SessionDetail({ session }: SessionDetailProps) {
         {/* 높이는 Figma 실측대로 375=222 / 800=452 / 1280=584 (1205:17642 · 17457 · 17279).
             sm:h-[584px] 하나로 두면 800 에서 452 가 아니라 584 가 돼 카드가 132px 길어진다. */}
         <div className="relative h-[222px] w-full overflow-hidden rounded-8 bg-gray-100 sm:h-[452px] lg:h-[584px]">
+          {/* 자료는 PDF 등 문서라 img 로는 그려지지 않는다 — 사용자 상세와 같이 iframe 으로 띄운다.
+              쪽 표시줄이 위에 얹히므로 미리보기는 그만큼 내려서 시작한다. */}
           {session.previewUrl ? (
-            <img
+            <iframe
               src={session.previewUrl}
-              alt=""
-              className="absolute inset-0 h-full w-full object-cover"
+              title={`${session.fileName} 미리보기`}
+              className="absolute inset-x-0 bottom-0 top-40 w-full border-0"
             />
           ) : null}
           <p className="relative flex h-40 w-full items-center bg-secondary-1 px-24 py-8 text-m-14 text-black">
-            Page (1/{session.pageCount})
+            {/* 쪽수는 응답에 없다. 0 을 그대로 쓰면 'Page (1/0)' 이 된다. */}
+            {session.pageCount ? `Page (1/${session.pageCount})` : 'Page'}
           </p>
         </div>
       </section>
