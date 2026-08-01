@@ -1,14 +1,13 @@
-# 해시 자산은 SPA 폴백에서 제외한다 (자기 자신으로 rewrite — 있으면 그대로, 없으면 404).
+# [확인된 제약] 없는 /assets/* 요청을 404 로 떨구는 방법이 없다.
+# 아래 /* 폴백에 걸려 index.html 이 text/html 200 으로 나가고, _headers 의 /assets/* 규칙이
+# 거기에 캐시 헤더를 붙인다. 브라우저는 JS 주소 자리에 HTML 을 캐시하게 되고, 그 뒤로
+# "Expected a JavaScript-or-Wasm module script ... MIME type of text/html" + 흰 화면이 된다.
+# 운영 도메인에서 실제로 발생했고 하드 리로드로도 풀리지 않았다(immutable 1년이었기 때문).
 #
-# 이 규칙이 없으면 없는 자산이 아래 /* 에 걸려 index.html 이 text/html 200 으로 나가는데,
-# _headers 의 /assets/* 규칙이 거기에 immutable 1년 캐시를 붙인다. 그러면 브라우저가 JS 주소
-# 자리에 HTML 을 1년간 물고 있게 되고, immutable 이라 재검증도 안 해서 하드 리로드로도 안 풀린다.
-# 증상은 "Expected a JavaScript-or-Wasm module script ... MIME type of text/html" + 흰 화면.
-# 배포 중 옛 index.html 이 이미 사라진 해시를 요청하는 짧은 순간에 실제로 발생했다.
-#
-# 자기 자신으로 rewrite(/assets/:splat 200)하는 방법은 통하지 않는다 — 대상이 없으면
-# 그대로 다음 규칙으로 흘러가 결국 index.html 이 나간다(운영에서 확인). 404 로 떨궈야 한다.
-/assets/*    /404.html   404
+# 두 가지를 시도했고 둘 다 Cloudflare Pages 에서 동작하지 않는 것을 운영에서 확인했다:
+#   /assets/*  /assets/:splat  200   → 대상이 없으면 다음 규칙으로 흘러가 index.html 이 나감
+#   /assets/*  /404.html       404   → 404 상태 코드를 지원하지 않아 규칙 자체가 무시됨
+# 그래서 폴백을 막는 대신 _headers 에서 캐시 수명을 줄여 피해 시간을 제한한다(거기 주석 참고).
 
 # SPA fallback — 클라이언트 라우팅(React Router / BrowserRouter)용.
 # 정적 파일이 없는 모든 경로를 index.html 로 200 응답해 앱이 라우팅을 처리하게 한다.
