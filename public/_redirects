@@ -5,7 +5,10 @@
 # 자리에 HTML 을 1년간 물고 있게 되고, immutable 이라 재검증도 안 해서 하드 리로드로도 안 풀린다.
 # 증상은 "Expected a JavaScript-or-Wasm module script ... MIME type of text/html" + 흰 화면.
 # 배포 중 옛 index.html 이 이미 사라진 해시를 요청하는 짧은 순간에 실제로 발생했다.
-/assets/*    /assets/:splat   200
+#
+# 자기 자신으로 rewrite(/assets/:splat 200)하는 방법은 통하지 않는다 — 대상이 없으면
+# 그대로 다음 규칙으로 흘러가 결국 index.html 이 나간다(운영에서 확인). 404 로 떨궈야 한다.
+/assets/*    /404.html   404
 
 # SPA fallback — 클라이언트 라우팅(React Router / BrowserRouter)용.
 # 정적 파일이 없는 모든 경로를 index.html 로 200 응답해 앱이 라우팅을 처리하게 한다.
