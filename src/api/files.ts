@@ -40,21 +40,35 @@ export async function putFileToStorage(
   })
 }
 
-export async function completeFileUpload(body: ApiFileAssetRequest): Promise<ApiFileAssetResponse> {
-  const { data } = await apiClient.post<ApiFileAssetResponse>(endpoints.files, body)
+// 업로드 완료 검증. Idempotency-Key 는 스펙상 필수 헤더이므로 호출부에서 업로드 1건당 하나를 만들어 넘긴다.
+export async function completeFileUpload(
+  body: ApiFileAssetRequest,
+  idempotencyKey: string,
+): Promise<ApiFileAssetResponse> {
+  const { data } = await apiClient.post<ApiFileAssetResponse>(endpoints.files, body, {
+    headers: { 'Idempotency-Key': idempotencyKey },
+  })
   return data
 }
 
 // 편의 함수: 업로드 URL 발급 → PUT → 완료 검증까지 한 번에 처리하고 fileAssetId 를 반환한다.
-export async function uploadFile(purpose: ApiFilePurpose, file: File): Promise<number> {
+// 완료 검증에 쓸 Idempotency-Key 도 호출부가 정한다 (업로드 1건 = 키 1개).
+export async function uploadFile(
+  purpose: ApiFilePurpose,
+  file: File,
+  idempotencyKey: string,
+): Promise<number> {
   const upload = await requestFileUploadUrl({ purpose, file })
   await putFileToStorage(upload, file)
-  const asset = await completeFileUpload({
-    purpose,
-    objectKey: upload.objectKey,
-    originalFileName: file.name,
-    mimeType: file.type || 'application/octet-stream',
-    sizeBytes: file.size,
-  })
+  const asset = await completeFileUpload(
+    {
+      purpose,
+      objectKey: upload.objectKey,
+      originalFileName: file.name,
+      mimeType: file.type || 'application/octet-stream',
+      sizeBytes: file.size,
+    },
+    idempotencyKey,
+  )
   return asset.fileAssetId
 }

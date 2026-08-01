@@ -46,7 +46,9 @@ function parseWeek(week: string): number {
 export function useCreateSession() {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: (body: ApiCreateLearningResourceRequest) => createResource(body),
+    // Idempotency-Key 는 제출 1건당 새로 만든다 (같은 키는 24시간 동안 첫 응답을 재생한다).
+    mutationFn: (body: ApiCreateLearningResourceRequest) =>
+      createResource(body, crypto.randomUUID()),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['admin-sessions'] }),
   })
 }

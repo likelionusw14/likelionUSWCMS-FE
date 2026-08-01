@@ -22,8 +22,14 @@ export async function fetchSchedule(scheduleId: string): Promise<ApiScheduleResp
   return data
 }
 
-export async function createSchedule(body: ApiCreateScheduleRequest): Promise<ApiScheduleResponse> {
-  const { data } = await apiClient.post<ApiScheduleResponse>(endpoints.adminSchedules, body)
+// 일정 등록. Idempotency-Key 는 스펙상 필수 헤더이므로 호출부에서 제출 1건당 하나를 만들어 넘긴다.
+export async function createSchedule(
+  body: ApiCreateScheduleRequest,
+  idempotencyKey: string,
+): Promise<ApiScheduleResponse> {
+  const { data } = await apiClient.post<ApiScheduleResponse>(endpoints.adminSchedules, body, {
+    headers: { 'Idempotency-Key': idempotencyKey },
+  })
   return data
 }
 
