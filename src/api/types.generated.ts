@@ -4,49 +4,7 @@
  */
 
 export interface paths {
-    "/auth/kakao/login": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 카카오 로그인 시작
-         * @description 서버가 state와 nonce를 생성해 임시 저장하고 카카오 인증 화면으로 이동합니다.
-         */
-        get: operations["startKakaoLogin"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/auth/kakao/callback": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 카카오 OIDC 콜백 처리
-         * @description Authorization Code를 교환하고 ID Token의 서명, iss, aud, exp, nonce, sub를 검증합니다.
-         *     미가입자는 짧은 만료의 `onboarding_session` HttpOnly 쿠키를, 기존 계정은
-         *     회전 가능한 `refresh_session` HttpOnly 쿠키를 설정한 뒤 프론트로 이동합니다.
-         */
-        get: operations["handleKakaoCallback"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/auth/tokens": {
+    "/api/schedules/{scheduleId}/attendance-check-ins": {
         parameters: {
             query?: never;
             header?: never;
@@ -55,10 +13,38 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /**
-         * 서비스 Access Token 재발급
-         * @description Refresh Token을 회전하고 짧은 만료의 Access JWT를 반환합니다.
-         */
+        post: operations["checkIn"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/certificates": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["issueCertificate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/tokens": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
         post: operations["reissueAccessToken"];
         delete?: never;
         options?: never;
@@ -66,7 +52,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/auth/session": {
+    "/api/admin/schedules": {
         parameters: {
             query?: never;
             header?: never;
@@ -75,18 +61,30 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        post?: never;
-        /**
-         * 서비스 로그아웃
-         * @description 서버 저장소의 Refresh Token을 폐기하고 쿠키를 만료시킵니다. 카카오 연결 해제는 수행하지 않습니다.
-         */
-        delete: operations["logout"];
+        post: operations["create"];
+        delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/accounts": {
+    "/api/admin/schedules/{scheduleId}/attendance-code": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getCurrentCode"];
+        put?: never;
+        post: operations["createOrReissueCode"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/resources": {
         parameters: {
             query?: never;
             header?: never;
@@ -95,165 +93,14 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /**
-         * 최초 추가 정보 입력 및 가입 신청
-         * @description 검증된 카카오 onboarding 세션에 추가 정보를 결합하여 PENDING 계정을 생성합니다.
-         *     추가 정보 입력 전에 이탈하면 AppUser를 생성하지 않습니다.
-         */
-        post: operations["createAccount"];
+        post: operations["create_1"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/admin/accounts": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** 회원 목록 조회 */
-        get: operations["listAccounts"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/admin/accounts/{userId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                userId: components["parameters"]["UserId"];
-            };
-            cookie?: never;
-        };
-        /** 회원 상세 조회 */
-        get: operations["getAccountById"];
-        put?: never;
-        post?: never;
-        /**
-         * 회원 삭제
-         * @description Soft delete합니다. 마지막 ADMIN은 삭제할 수 없습니다.
-         */
-        delete: operations["deleteAccount"];
-        options?: never;
-        head?: never;
-        /** 회원 정보 수정 */
-        patch: operations["updateAccount"];
-        trace?: never;
-    };
-    "/admin/accounts/{userId}/status": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                userId: components["parameters"]["UserId"];
-            };
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        /**
-         * 가입 승인 또는 거절
-         * @description PENDING 계정을 ACTIVE 또는 REJECTED로 변경하고 처리자·시각·사유를 감사 로그에 남깁니다.
-         */
-        patch: operations["updateAccountStatus"];
-        trace?: never;
-    };
-    "/admin/accounts/{userId}/role": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                userId: components["parameters"]["UserId"];
-            };
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        /**
-         * 회원 역할 변경
-         * @description ACTIVE 회원만 변경할 수 있으며 마지막 ADMIN의 MEMBER 변경은 차단합니다.
-         */
-        patch: operations["updateAccountRole"];
-        trace?: never;
-    };
-    "/cohorts": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 기수 선택지 조회
-         * @description 프로젝트의 기수 태그 선택에 사용할 전체 기수를 기수 번호 내림차순으로 반환합니다.
-         */
-        get: operations["listCohorts"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/projects": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 프로젝트 목록 및 태그별 조회
-         * @description 기수, 해커톤, 아이디어톤 필터는 각각 독립적으로 선택할 수 있습니다.
-         *     `cohortId`와 `projectTypes`를 함께 전달하면 `cohortId AND projectType IN (projectTypes)`로 조회합니다.
-         *     예를 들어 기수·해커톤·아이디어톤을 모두 선택하면 해당 기수의 해커톤 또는 아이디어톤 프로젝트를 반환합니다.
-         */
-        get: operations["listProjects"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/projects/{projectId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                projectId: components["parameters"]["ProjectId"];
-            };
-            cookie?: never;
-        };
-        /** 프로젝트 상세 조회 */
-        get: operations["getProject"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/admin/projects": {
+    "/api/admin/projects": {
         parameters: {
             query?: never;
             header?: never;
@@ -262,38 +109,47 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** 프로젝트 등록 */
-        post: operations["createProject"];
+        post: operations["create_2"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/admin/projects/{projectId}": {
+    "/api/admin/notices": {
         parameters: {
             query?: never;
             header?: never;
-            path: {
-                projectId: components["parameters"]["ProjectId"];
-            };
+            path?: never;
             cookie?: never;
         };
         get?: never;
         put?: never;
-        post?: never;
-        /** 프로젝트 삭제 */
-        delete: operations["deleteProject"];
+        post: operations["create_3"];
+        delete?: never;
         options?: never;
         head?: never;
-        /**
-         * 프로젝트 수정
-         * @description thumbnailAssetId 미전달은 유지, null은 이미지 제거입니다.
-         */
-        patch: operations["updateProject"];
+        patch?: never;
         trace?: never;
     };
-    "/admin/file-upload-urls": {
+    "/api/admin/files": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** 업로드 완료 검증 및 파일 자산 등록 */
+        post: operations["completeUpload"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/file-upload-urls": {
         parameters: {
             query?: never;
             header?: never;
@@ -303,14 +159,14 @@ export interface paths {
         get?: never;
         put?: never;
         /** 파일 업로드 URL 발급 */
-        post: operations["createFileUploadUrl"];
+        post: operations["createUploadUrl"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/admin/files": {
+    "/api/accounts": {
         parameters: {
             query?: never;
             header?: never;
@@ -319,73 +175,14 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /**
-         * 업로드 완료 검증 및 파일 자산 등록
-         * @description 발급 기록과 S3 HEAD의 객체 키·MIME·크기·체크섬을 검증한 뒤 FileAsset을 생성합니다.
-         */
-        post: operations["completeFileUpload"];
+        post: operations["create_4"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/resources": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** 세션 자료 목록 조회 */
-        get: operations["listResources"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/resources/{resourceId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                resourceId: components["parameters"]["ResourceId"];
-            };
-            cookie?: never;
-        };
-        /** 세션 자료 상세 조회 */
-        get: operations["getResource"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/resources/{resourceId}/download-url": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                resourceId: components["parameters"]["ResourceId"];
-            };
-            cookie?: never;
-        };
-        /** 자료 미리보기·다운로드 URL 발급 */
-        get: operations["getResourceDownloadUrl"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/admin/resources": {
+    "/api/admin/schedules/{scheduleId}": {
         parameters: {
             query?: never;
             header?: never;
@@ -394,73 +191,14 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** 세션 자료 등록 */
-        post: operations["createLearningResource"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/admin/resources/{resourceId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                resourceId: components["parameters"]["ResourceId"];
-            };
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
         post?: never;
-        delete?: never;
+        delete: operations["delete"];
         options?: never;
         head?: never;
-        /**
-         * 세션 자료 수정
-         * @description fileAssetId 미전달은 기존 파일 유지이며 null은 허용하지 않습니다.
-         */
-        patch: operations["updateLearningResource"];
+        patch: operations["update"];
         trace?: never;
     };
-    "/notices": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** 공지 목록 조회 */
-        get: operations["listNotices"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/notices/{noticeId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                noticeId: components["parameters"]["NoticeId"];
-            };
-            cookie?: never;
-        };
-        /** 공지 상세 조회 */
-        get: operations["getNotice"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/admin/notices": {
+    "/api/admin/resources/{resourceId}": {
         parameters: {
             query?: never;
             header?: never;
@@ -469,21 +207,34 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** 공지 등록 */
-        post: operations["createNotice"];
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
-        patch?: never;
+        patch: operations["update_1"];
         trace?: never;
     };
-    "/admin/notices/{noticeId}": {
+    "/api/admin/projects/{projectId}": {
         parameters: {
             query?: never;
             header?: never;
-            path: {
-                noticeId: components["parameters"]["NoticeId"];
-            };
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: operations["delete_1"];
+        options?: never;
+        head?: never;
+        patch: operations["update_2"];
+        trace?: never;
+    };
+    "/api/admin/notices/{noticeId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
             cookie?: never;
         };
         get?: never;
@@ -492,25 +243,97 @@ export interface paths {
         delete?: never;
         options?: never;
         head?: never;
-        /**
-         * 공지 수정
-         * @description imageAssetId 미전달은 유지, null은 이미지 제거입니다.
-         */
-        patch: operations["updateNotice"];
+        patch: operations["update_3"];
         trace?: never;
     };
-    "/lions": {
+    "/api/admin/attendances/{attendanceId}": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /**
-         * 사자 목록 조회
-         * @description 별도 Lion 테이블이 아닌 ACTIVE AppUser의 공개 필드만 조회합니다.
-         */
-        get: operations["listLions"];
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["updateAttendance"];
+        trace?: never;
+    };
+    "/api/admin/accounts/{userId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["get"];
+        put?: never;
+        post?: never;
+        delete: operations["delete_2"];
+        options?: never;
+        head?: never;
+        patch: operations["update_4"];
+        trace?: never;
+    };
+    "/api/admin/accounts/{userId}/role": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["changeRole"];
+        trace?: never;
+    };
+    "/api/admin/accounts/{userId}/rejection": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["reject"];
+        trace?: never;
+    };
+    "/api/admin/accounts/{userId}/approval": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["approve"];
+        trace?: never;
+    };
+    "/health": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["healthCheck"];
         put?: never;
         post?: never;
         delete?: never;
@@ -519,15 +342,14 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/schedules": {
+    "/api/schedules": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** 월별 일정 조회 */
-        get: operations["listSchedules"];
+        get: operations["getSchedules"];
         put?: never;
         post?: never;
         delete?: never;
@@ -536,16 +358,13 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/schedules/{scheduleId}": {
+    "/api/schedules/{scheduleId}": {
         parameters: {
             query?: never;
             header?: never;
-            path: {
-                scheduleId: components["parameters"]["ScheduleId"];
-            };
+            path?: never;
             cookie?: never;
         };
-        /** 일정 상세 조회 */
         get: operations["getSchedule"];
         put?: never;
         post?: never;
@@ -555,58 +374,14 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/admin/schedules": {
+    "/api/resources": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        get?: never;
-        put?: never;
-        /** 일정 등록 */
-        post: operations["createSchedule"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/admin/schedules/{scheduleId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                scheduleId: components["parameters"]["ScheduleId"];
-            };
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        /** 일정 삭제 */
-        delete: operations["deleteSchedule"];
-        options?: never;
-        head?: never;
-        /**
-         * 일정 수정
-         * @description 종일 일정으로 변경하면 startTime을 제거하고, 시간 일정은 startTime이 필수입니다.
-         */
-        patch: operations["updateSchedule"];
-        trace?: never;
-    };
-    "/attendances": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 본인 출결 목록 조회
-         * @description JWT의 내부 userId를 사용하며 다른 사용자의 ID를 받지 않습니다.
-         */
-        get: operations["listMyAttendances"];
+        get: operations["getResources"];
         put?: never;
         post?: never;
         delete?: never;
@@ -615,41 +390,14 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/schedules/{scheduleId}/attendance-check-ins": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                scheduleId: components["parameters"]["ScheduleId"];
-            };
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * 6자리 출결 코드 인증
-         * @description Redis의 현재 코드 해시와 서버 시각을 검증합니다. 성공 시 본인 출결을
-         *     NOT_CHECKED에서 PRESENT로 원자적으로 변경합니다. 중복 인증은 새 출결을 만들지 않습니다.
-         */
-        post: operations["checkInAttendance"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/admin/attendances": {
+    "/api/resources/{resourceId}": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /**
-         * 일정+파트별 출결 현황 조회
-         * @description scheduleId로 대상 일정을 지정하고, part로 특정 파트만 조회합니다.
-         */
-        get: operations["listAttendances"];
+        get: operations["getResource"];
         put?: never;
         post?: never;
         delete?: never;
@@ -658,60 +406,142 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/admin/attendances/{attendanceId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                attendanceId: components["parameters"]["AttendanceId"];
-            };
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        /**
-         * 출결 상태 수정
-         * @description 변경 사유를 memo에 필수로 기록하고 관리자 감사 로그를 남깁니다.
-         */
-        patch: operations["updateAttendance"];
-        trace?: never;
-    };
-    "/admin/schedules/{scheduleId}/attendance-code": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                scheduleId: components["parameters"]["ScheduleId"];
-            };
-            cookie?: never;
-        };
-        /** 현재 출결 코드 조회 */
-        get: operations["getAttendanceCode"];
-        put?: never;
-        /**
-         * 출결 코드 생성
-         * @description 대상 기수 ACTIVE 회원의 Attendance가 없으면 NOT_CHECKED로 생성합니다.
-         *     랜덤 6자리 코드를 Redis에 해시로 300초 저장합니다.
-         */
-        post: operations["createOrReissueAttendanceCode"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/certificates/preview": {
+    "/api/resources/{resourceId}/download-url": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** 활동증명서 반영 정보 조회 */
+        get: operations["getDownloadUrl"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/projects": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getProjects"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/projects/{projectId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getProject"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/notices": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/notices/{noticeId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["get_1"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/lions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getLions"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/cohorts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 기수 목록 조회 (번호 내림차순) */
+        get: operations["getCohorts"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/certificates/{certificateId}/download-url": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getDownloadUrl_1"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/certificates/preview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
         get: operations["previewMyCertificateData"];
         put?: never;
         post?: never;
@@ -721,7 +551,87 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/certificates": {
+    "/api/auth/kakao/login": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["loginRedirect"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/kakao/callback": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["callback"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/attendances": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["listMine"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/attendances": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["listAttendances"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/accounts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["list_1"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/session": {
         parameters: {
             query?: never;
             header?: never;
@@ -730,71 +640,8 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /**
-         * 활동증명서 발급
-         * @description 서버의 최신 사용자·기수 정보를 스냅샷으로 저장하고 PDF를 Private S3에 생성합니다.
-         */
-        post: operations["issueCertificate"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/certificates/{certificateId}/download-url": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                certificateId: components["parameters"]["CertificateId"];
-            };
-            cookie?: never;
-        };
-        /**
-         * 활동증명서 다운로드 URL 발급
-         * @description JWT의 userId와 증명서 소유자를 비교합니다. 불일치도 404로 처리합니다.
-         */
-        get: operations["getCertificateDownloadUrl"];
-        put?: never;
         post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/health/live": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** 애플리케이션 생존 확인 */
-        get: operations["getLiveness"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/health/ready": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 트래픽 수신 준비 확인
-         * @description 응답에는 내부 호스트명·자격증명·상세 스택을 노출하지 않습니다.
-         */
-        get: operations["getReadiness"];
-        put?: never;
-        post?: never;
-        delete?: never;
+        delete: operations["logout"];
         options?: never;
         head?: never;
         patch?: never;
@@ -804,945 +651,661 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
-        /** Format: int64 */
-        Id: number;
-        /** @enum {string} */
-        AccountStatus: "PENDING" | "ACTIVE" | "REJECTED";
-        /** @enum {string} */
-        SystemRole: "MEMBER" | "ADMIN";
-        /** @enum {string} */
-        PartType: "PLANNING" | "DESIGN" | "FRONTEND" | "BACKEND" | "COMMON";
-        /** @enum {string} */
-        AttendanceStatus: "NOT_CHECKED" | "PRESENT" | "LATE" | "ABSENT";
-        /** @enum {string} */
-        CheckInSource: "SELF_CODE" | "ADMIN";
-        /** @enum {string} */
-        NoticeTag: "SCHEDULE" | "PROJECT" | "PROMOTION_EVENT" | "OTHER";
-        /**
-         * @description 프로젝트 유형 태그. HACKATHON은 해커톤, IDEATHON은 아이디어톤입니다.
-         * @enum {string}
-         */
-        ProjectType: "HACKATHON" | "IDEATHON";
-        /** @enum {string} */
-        FilePurpose: "PROJECT_THUMBNAIL" | "LEARNING_RESOURCE" | "NOTICE_IMAGE" | "CERTIFICATE";
-        /** @enum {string} */
-        CertificateIssueStatus: "ISSUED" | "FAILED";
-        PageMeta: {
-            page: number;
-            size: number;
-            totalElements: number;
-            totalPages: number;
-            hasNext: boolean;
+        AttendanceCheckInRequest: {
+            code?: string;
         };
-        CohortSummary: {
-            cohortId: components["schemas"]["Id"];
-            number: number;
-            name: string;
+        AttendanceResponse: {
+            /** Format: int64 */
+            attendanceId?: number;
+            /** Format: int64 */
+            userId?: number;
+            userName?: string;
+            /** @enum {string} */
+            part?: "PLANNING" | "DESIGN" | "FRONTEND" | "BACKEND" | "COMMON";
+            /** Format: int64 */
+            scheduleId?: number;
+            scheduleTitle?: string;
+            /** Format: date */
+            scheduleDate?: string;
+            /** @enum {string} */
+            status?: "NOT_CHECKED" | "PRESENT" | "LATE" | "ABSENT";
+            /** Format: date-time */
+            checkedAt?: string;
+            /** @enum {string} */
+            checkInSource?: "SELF_CODE" | "ADMIN";
+            memo?: string;
+            /** Format: int32 */
+            version?: number;
+            /** Format: date-time */
+            createdAt?: string;
+            /** Format: date-time */
+            updatedAt?: string;
         };
-        CohortListResponse: {
-            items: components["schemas"]["CohortSummary"][];
-        };
-        CreateAccountRequest: {
-            name: string;
-            department: string;
-            studentId: string;
-            cohortId: components["schemas"]["Id"];
-            part: components["schemas"]["PartType"];
-        };
-        UpdateAccountRequest: {
-            version: number;
+        CertificatePreviewResponse: {
             name?: string;
             department?: string;
             studentId?: string;
-            cohortId?: components["schemas"]["Id"];
-            part?: components["schemas"]["PartType"];
-        };
-        UpdateAccountStatusRequest: {
+            cohort?: components["schemas"]["CohortSummary"];
             /** @enum {string} */
-            status: "ACTIVE" | "REJECTED";
-            /** @description REJECTED일 때 필수, ACTIVE일 때 null 또는 미전달 */
-            rejectionReason?: string | null;
-            version: number;
+            part?: "PLANNING" | "DESIGN" | "FRONTEND" | "BACKEND" | "COMMON";
+            /** Format: date */
+            activityStartedAt?: string;
+            /** Format: date */
+            activityEndedAt?: string;
         };
-        UpdateRoleRequest: {
-            role: components["schemas"]["SystemRole"];
-            version: number;
-        };
-        AccountResponse: {
-            userId: components["schemas"]["Id"];
-            name: string;
-            department: string;
-            studentId: string;
-            cohort: components["schemas"]["CohortSummary"];
-            part: components["schemas"]["PartType"];
-            role: components["schemas"]["SystemRole"];
-            status: components["schemas"]["AccountStatus"];
-            rejectionReason?: string | null;
-            version: number;
+        CertificateResponse: {
+            /** Format: int64 */
+            certificateId?: number;
+            /** @enum {string} */
+            status?: "ISSUED" | "FAILED";
+            snapshot?: components["schemas"]["CertificatePreviewResponse"];
             /** Format: date-time */
-            createdAt: string;
+            issuedAt?: string;
             /** Format: date-time */
-            updatedAt: string;
+            createdAt?: string;
         };
-        AccountPage: {
-            items: components["schemas"]["AccountResponse"][];
-            page: components["schemas"]["PageMeta"];
+        CohortSummary: {
+            /** Format: int64 */
+            cohortId?: number;
+            /** Format: int32 */
+            number?: number;
+            name?: string;
         };
         AccessTokenResponse: {
-            accessToken: string;
-            /** @constant */
-            tokenType: "Bearer";
-            /** @description 초 단위 */
-            expiresIn: number;
-            account: components["schemas"]["AccountResponse"];
+            accessToken?: string;
+            tokenType?: string;
+            /** Format: int64 */
+            expiresIn?: number;
+            account?: components["schemas"]["AccountResponse"];
         };
-        ProjectParticipantRequest: {
-            userId: components["schemas"]["Id"];
-            role: string;
+        AccountResponse: {
+            /** Format: int64 */
+            userId?: number;
+            name?: string;
+            department?: string;
+            studentId?: string;
+            cohort?: components["schemas"]["CohortSummary"];
+            /** @enum {string} */
+            part?: "PLANNING" | "DESIGN" | "FRONTEND" | "BACKEND" | "COMMON";
+            /** @enum {string} */
+            role?: "MEMBER" | "ADMIN";
+            /** @enum {string} */
+            status?: "PENDING" | "ACTIVE" | "REJECTED";
+            rejectionReason?: string;
+            /** Format: int32 */
+            version?: number;
+            /** Format: date-time */
+            createdAt?: string;
+            /** Format: date-time */
+            updatedAt?: string;
         };
-        ProjectParticipantResponse: {
-            userId: components["schemas"]["Id"];
-            name: string;
-            role: string;
-        };
-        CreateProjectRequest: {
-            title: string;
-            description: string;
-            projectType: components["schemas"]["ProjectType"];
-            thumbnailAssetId?: components["schemas"]["Id"] | null;
-            /** Format: uri */
-            deployUrl?: string | null;
-            /** Format: uri */
-            githubUrl?: string | null;
-            cohortId: components["schemas"]["Id"];
-            startedMonth: string;
-            endedMonth: string;
-            participants: components["schemas"]["ProjectParticipantRequest"][];
-        };
-        UpdateProjectRequest: {
-            version: number;
+        CreateScheduleRequest: {
             title?: string;
             description?: string;
-            projectType?: components["schemas"]["ProjectType"];
-            thumbnailAssetId?: components["schemas"]["Id"] | null;
-            /** Format: uri */
-            deployUrl?: string | null;
-            /** Format: uri */
-            githubUrl?: string | null;
-            cohortId?: components["schemas"]["Id"];
-            startedMonth?: string;
-            endedMonth?: string;
-            participants?: components["schemas"]["ProjectParticipantRequest"][];
+            /** Format: int64 */
+            cohortId: number;
+            /** Format: date */
+            scheduleDate: string;
+            isAllDay: boolean;
+            /** @example 14:30:00 */
+            startTime?: string;
+            location?: string;
         };
-        ProjectResponse: {
-            projectId: components["schemas"]["Id"];
-            title: string;
-            description: string;
-            projectType: components["schemas"]["ProjectType"];
-            thumbnail?: components["schemas"]["NullableFileView"];
-            /** Format: uri */
-            deployUrl?: string | null;
-            /** Format: uri */
-            githubUrl?: string | null;
-            cohort: components["schemas"]["CohortSummary"];
+        ScheduleResponse: {
+            /** Format: int64 */
+            scheduleId?: number;
+            title?: string;
+            description?: string;
+            cohort?: components["schemas"]["CohortSummary"];
+            /** Format: date */
+            scheduleDate?: string;
+            isAllDay?: boolean;
+            /** @example 14:30:00 */
+            startTime?: string;
+            location?: string;
+            /** Format: int32 */
+            version?: number;
+            /** Format: date-time */
+            createdAt?: string;
+            /** Format: date-time */
+            updatedAt?: string;
+        };
+        AttendanceCodeResponse: {
+            /** Format: int64 */
+            scheduleId?: number;
+            code?: string;
+            /** Format: date-time */
+            startedAt?: string;
+            /** Format: date-time */
+            expiresAt?: string;
+        };
+        CreateLearningResourceRequest: {
+            title?: string;
+            /** Format: int32 */
+            week: number;
+            /** @enum {string} */
+            targetPart: "PLANNING" | "DESIGN" | "FRONTEND" | "BACKEND" | "COMMON";
+            /** Format: int64 */
+            fileAssetId: number;
+        };
+        FileAssetResponse: {
+            /** Format: int64 */
+            fileAssetId?: number;
+            /** @enum {string} */
+            purpose?: "PROJECT_THUMBNAIL" | "LEARNING_RESOURCE" | "NOTICE_IMAGE" | "CERTIFICATE";
+            originalFileName?: string;
+            mimeType?: string;
+            /** Format: int64 */
+            sizeBytes?: number;
+            /** Format: date-time */
+            createdAt?: string;
+        };
+        LearningResourceResponse: {
+            /** Format: int64 */
+            resourceId?: number;
+            title?: string;
+            /** Format: int32 */
+            week?: number;
+            /** @enum {string} */
+            targetPart?: "PLANNING" | "DESIGN" | "FRONTEND" | "BACKEND" | "COMMON";
+            /** Format: int64 */
+            createdBy?: number;
+            file?: components["schemas"]["FileAssetResponse"];
+            /** Format: int32 */
+            version?: number;
+            /** Format: date-time */
+            createdAt?: string;
+            /** Format: date-time */
+            updatedAt?: string;
+        };
+        CreateProjectRequest: {
+            title?: string;
+            description?: string;
+            /** @enum {string} */
+            projectType: "HACKATHON" | "IDEATHON";
+            /** Format: int64 */
+            thumbnailAssetId?: number;
+            deployUrl?: string;
+            githubUrl?: string;
+            /** Format: int64 */
+            cohortId: number;
+            /** Format: date */
             startedMonth: string;
+            /** Format: date */
             endedMonth: string;
-            participants: components["schemas"]["ProjectParticipantResponse"][];
-            version: number;
-            /** Format: date-time */
-            createdAt: string;
-            /** Format: date-time */
-            updatedAt: string;
+            dateRangeValid?: boolean;
+            deployUrlValid?: boolean;
+            githubUrlValid?: boolean;
         };
-        ProjectPage: {
-            items: components["schemas"]["ProjectResponse"][];
-            page: components["schemas"]["PageMeta"];
+        AdminProjectResponse: {
+            /** Format: int64 */
+            projectId?: number;
+            title?: string;
+            description?: string;
+            /** @enum {string} */
+            projectType?: "HACKATHON" | "IDEATHON";
+            /** Format: int64 */
+            thumbnailAssetId?: number;
+            deployUrl?: string;
+            githubUrl?: string;
+            cohort?: components["schemas"]["CohortSummary"];
+            /** @example 2025-03 */
+            startedMonth?: string;
+            /** @example 2025-03 */
+            endedMonth?: string;
+            /** Format: int64 */
+            createdBy?: number;
+            /** Format: int32 */
+            version?: number;
+            /** Format: date-time */
+            createdAt?: string;
+            /** Format: date-time */
+            updatedAt?: string;
+        };
+        CreateNoticeRequest: {
+            title?: string;
+            content?: string;
+            /** @enum {string} */
+            tag: "SCHEDULE" | "PROJECT" | "PROMOTION_EVENT" | "OTHER";
+            isFixed?: boolean;
+            externalUrl?: string;
+            /** Format: int64 */
+            imageAssetId?: number;
+            externalUrlValid?: boolean;
+        };
+        NoticeResponse: {
+            /** Format: int64 */
+            noticeId?: number;
+            title?: string;
+            content?: string;
+            /** @enum {string} */
+            tag?: "SCHEDULE" | "PROJECT" | "PROMOTION_EVENT" | "OTHER";
+            isFixed?: boolean;
+            externalUrl?: string;
+            /** Format: int64 */
+            createdBy?: number;
+            /** Format: date-time */
+            publishedAt?: string;
+            /** Format: int32 */
+            version?: number;
+            /** Format: date-time */
+            createdAt?: string;
+            /** Format: date-time */
+            updatedAt?: string;
+        };
+        FileAssetRequest: {
+            /** @enum {string} */
+            purpose: "PROJECT_THUMBNAIL" | "LEARNING_RESOURCE" | "NOTICE_IMAGE" | "CERTIFICATE";
+            objectKey?: string;
+            originalFileName?: string;
+            mimeType?: string;
+            /** Format: int64 */
+            sizeBytes: number;
+            checksumSha256?: string;
         };
         FileUploadUrlRequest: {
-            purpose: components["schemas"]["FilePurpose"];
-            originalFileName: string;
-            mimeType: string;
+            /** @enum {string} */
+            purpose: "PROJECT_THUMBNAIL" | "LEARNING_RESOURCE" | "NOTICE_IMAGE" | "CERTIFICATE";
+            originalFileName?: string;
+            mimeType?: string;
             /** Format: int64 */
             sizeBytes: number;
             checksumSha256?: string;
         };
         FileUploadUrlResponse: {
-            /** Format: uri */
-            uploadUrl: string;
-            objectKey: string;
-            requiredHeaders: {
+            uploadUrl?: string;
+            objectKey?: string;
+            requiredHeaders?: {
                 [key: string]: string;
             };
             /** Format: date-time */
-            expiresAt: string;
+            expiresAt?: string;
         };
-        FileAssetRequest: {
-            purpose: components["schemas"]["FilePurpose"];
-            objectKey: string;
-            originalFileName: string;
-            mimeType: string;
+        CreateAccountRequest: {
+            name?: string;
+            department?: string;
+            studentId?: string;
             /** Format: int64 */
-            sizeBytes: number;
-            checksumSha256?: string;
-        };
-        FileAssetResponse: {
-            fileAssetId: components["schemas"]["Id"];
-            purpose: components["schemas"]["FilePurpose"];
-            originalFileName: string;
-            mimeType: string;
-            /** Format: int64 */
-            sizeBytes: number;
-            /** Format: date-time */
-            createdAt: string;
-        };
-        FileView: {
-            file: components["schemas"]["FileAssetResponse"];
-            /** Format: uri */
-            downloadUrl: string;
-            /** Format: date-time */
-            expiresAt: string;
-        };
-        NullableFileView: components["schemas"]["FileView"] | null;
-        DownloadUrlResponse: {
-            /** Format: uri */
-            downloadUrl: string;
-            /** Format: date-time */
-            expiresAt: string;
-        };
-        CreateLearningResourceRequest: {
-            title: string;
-            week: number;
-            targetPart: components["schemas"]["PartType"];
-            fileAssetId: components["schemas"]["Id"];
-        };
-        UpdateLearningResourceRequest: {
-            version: number;
-            title?: string;
-            week?: number;
-            targetPart?: components["schemas"]["PartType"];
-            fileAssetId?: components["schemas"]["Id"];
-        };
-        LearningResourceResponse: {
-            resourceId: components["schemas"]["Id"];
-            title: string;
-            week: number;
-            targetPart: components["schemas"]["PartType"];
-            file: components["schemas"]["FileAssetResponse"];
-            createdBy: components["schemas"]["Id"];
-            version: number;
-            /** Format: date-time */
-            createdAt: string;
-            /** Format: date-time */
-            updatedAt: string;
-        };
-        ResourcePage: {
-            items: components["schemas"]["LearningResourceResponse"][];
-            page: components["schemas"]["PageMeta"];
-        };
-        CreateNoticeRequest: {
-            title: string;
-            content: string;
-            tag: components["schemas"]["NoticeTag"];
-            /** @default false */
-            isFixed: boolean;
-            /** Format: uri */
-            externalUrl?: string | null;
-            imageAssetId?: components["schemas"]["Id"] | null;
-        };
-        UpdateNoticeRequest: {
-            version: number;
-            title?: string;
-            content?: string;
-            tag?: components["schemas"]["NoticeTag"];
-            isFixed?: boolean;
-            /** Format: uri */
-            externalUrl?: string | null;
-            imageAssetId?: components["schemas"]["Id"] | null;
-        };
-        NoticeResponse: {
-            noticeId: components["schemas"]["Id"];
-            title: string;
-            content: string;
-            tag: components["schemas"]["NoticeTag"];
-            isFixed: boolean;
-            /** Format: uri */
-            externalUrl?: string | null;
-            image?: components["schemas"]["NullableFileView"];
-            createdBy: components["schemas"]["Id"];
-            /** Format: date-time */
-            publishedAt: string;
-            version: number;
-            /** Format: date-time */
-            createdAt: string;
-            /** Format: date-time */
-            updatedAt: string;
-        };
-        NoticePage: {
-            items: components["schemas"]["NoticeResponse"][];
-            page: components["schemas"]["PageMeta"];
-        };
-        LionResponse: {
-            userId: components["schemas"]["Id"];
-            name: string;
-            cohort: components["schemas"]["CohortSummary"];
-            part: components["schemas"]["PartType"];
-            /**
-             * @description MEMBER는 BABY_LION, ADMIN은 OPERATOR로 표시
-             * @enum {string}
-             */
-            activityType: "BABY_LION" | "OPERATOR";
-        };
-        LionPage: {
-            items: components["schemas"]["LionResponse"][];
-            page: components["schemas"]["PageMeta"];
-        };
-        CreateScheduleRequest: {
-            title: string;
-            description?: string | null;
-            cohortId: components["schemas"]["Id"];
-            /** Format: date */
-            scheduleDate: string;
-            isAllDay: boolean;
-            /**
-             * Format: time
-             * @description isAllDay=false일 때 필수, true일 때 null 또는 미전달
-             */
-            startTime?: string | null;
-            location?: string | null;
+            cohortId: number;
+            /** @enum {string} */
+            part: "PLANNING" | "DESIGN" | "FRONTEND" | "BACKEND" | "COMMON";
         };
         UpdateScheduleRequest: {
+            /** Format: int32 */
             version: number;
             title?: string;
-            description?: string | null;
-            cohortId?: components["schemas"]["Id"];
+            description?: string;
             /** Format: date */
             scheduleDate?: string;
             isAllDay?: boolean;
-            /** Format: time */
-            startTime?: string | null;
-            location?: string | null;
+            /** @example 14:30:00 */
+            startTime?: string;
+            location?: string;
+            allDayProvided?: boolean;
+            anyChangeProvided?: boolean;
+            providedValueValid?: boolean;
         };
-        ScheduleResponse: {
-            scheduleId: components["schemas"]["Id"];
-            title: string;
-            description?: string | null;
-            cohort: components["schemas"]["CohortSummary"];
-            /** Format: date */
-            scheduleDate: string;
-            isAllDay: boolean;
-            /** Format: time */
-            startTime?: string | null;
-            location?: string | null;
+        UpdateLearningResourceRequest: {
+            /** Format: int32 */
             version: number;
-            /** Format: date-time */
-            createdAt: string;
-            /** Format: date-time */
-            updatedAt: string;
+            title?: string;
+            /** Format: int32 */
+            week?: number;
+            /** @enum {string} */
+            targetPart?: "PLANNING" | "DESIGN" | "FRONTEND" | "BACKEND" | "COMMON";
+            /** Format: int64 */
+            fileAssetId?: number;
+            anyChangeProvided?: boolean;
+            providedValueValid?: boolean;
         };
-        AttendanceCheckInRequest: {
-            /** @example 123456 */
-            code: string;
+        UpdateProjectRequest: {
+            /** Format: int32 */
+            version: number;
+            title?: string;
+            description?: string;
+            /** @enum {string} */
+            projectType?: "HACKATHON" | "IDEATHON";
+            /** Format: int64 */
+            thumbnailAssetId?: number;
+            deployUrl?: string;
+            githubUrl?: string;
+            /** Format: int64 */
+            cohortId?: number;
+            /** Format: date */
+            startedMonth?: string;
+            /** Format: date */
+            endedMonth?: string;
+            anyChangeProvided?: boolean;
+            providedValueValid?: boolean;
+            deployUrlValid?: boolean;
+            githubUrlValid?: boolean;
+        };
+        UpdateNoticeRequest: {
+            /** Format: int32 */
+            version: number;
+            title?: string;
+            content?: string;
+            /** @enum {string} */
+            tag?: "SCHEDULE" | "PROJECT" | "PROMOTION_EVENT" | "OTHER";
+            isFixed?: boolean;
+            externalUrl?: string;
+            /** Format: int64 */
+            imageAssetId?: number;
+            fixedProvided?: boolean;
+            anyChangeProvided?: boolean;
+            providedValueValid?: boolean;
+            externalUrlValid?: boolean;
         };
         UpdateAttendanceRequest: {
             /** @enum {string} */
             status: "PRESENT" | "LATE" | "ABSENT";
-            memo: string;
+            memo?: string;
+            /** Format: int32 */
             version: number;
+            memoValid?: boolean;
         };
-        AttendanceResponse: {
-            attendanceId: components["schemas"]["Id"];
-            userId: components["schemas"]["Id"];
-            userName?: string;
-            part?: components["schemas"]["PartType"];
-            scheduleId: components["schemas"]["Id"];
-            scheduleTitle?: string;
-            /** Format: date */
-            scheduleDate?: string;
-            status: components["schemas"]["AttendanceStatus"];
-            /** Format: date-time */
-            checkedAt?: string | null;
-            checkInSource?: components["schemas"]["CheckInSource"] | null;
-            memo?: string | null;
+        UpdateAccountRequest: {
+            /** Format: int32 */
             version: number;
-            /** Format: date-time */
-            createdAt: string;
-            /** Format: date-time */
-            updatedAt: string;
-        };
-        AttendancePage: {
-            items: components["schemas"]["AttendanceResponse"][];
-            page: components["schemas"]["PageMeta"];
-        };
-        AttendanceCodeResponse: {
-            scheduleId: components["schemas"]["Id"];
-            /** @example 123456 */
-            code: string;
-            /** Format: date-time */
-            startedAt: string;
-            /** Format: date-time */
-            expiresAt: string;
-        };
-        CertificatePreviewResponse: {
-            name: string;
-            department: string;
-            studentId: string;
-            cohort: components["schemas"]["CohortSummary"];
-            part: components["schemas"]["PartType"];
-            /** Format: date */
-            activityStartedAt?: string | null;
-            /** Format: date */
-            activityEndedAt?: string | null;
-        };
-        CertificateResponse: {
-            certificateId: components["schemas"]["Id"];
-            status: components["schemas"]["CertificateIssueStatus"];
-            snapshot: components["schemas"]["CertificatePreviewResponse"];
-            /** Format: date-time */
-            issuedAt: string;
-            /** Format: date-time */
-            createdAt: string;
-        };
-        HealthResponse: {
+            name?: string;
+            department?: string;
+            studentId?: string;
             /** @enum {string} */
-            status: "UP";
+            part?: "PLANNING" | "DESIGN" | "FRONTEND" | "BACKEND" | "COMMON";
+            /** Format: int64 */
+            cohortId?: number;
+            anyChangeProvided?: boolean;
+            providedValueValid?: boolean;
         };
-        FieldError: {
-            field: string;
-            code: string;
-            message: string;
+        UpdateRoleRequest: {
+            /** @enum {string} */
+            role: "MEMBER" | "ADMIN";
+            /** Format: int32 */
+            version: number;
         };
-        Problem: {
-            /** Format: uri-reference */
-            type: string;
-            title: string;
-            status: number;
-            detail: string;
-            /** Format: uri-reference */
-            instance?: string;
-            code: string;
-            requestId: string;
-            errors?: components["schemas"]["FieldError"][];
-        } & {
-            [key: string]: unknown;
+        RejectAccountRequest: {
+            rejectionReason?: string;
+            /** Format: int32 */
+            version: number;
         };
-    };
-    responses: {
-        /** @description 잘못된 요청 */
-        BadRequest: {
-            headers: {
-                "X-Request-ID": components["headers"]["RequestId"];
-                [name: string]: unknown;
-            };
-            content: {
-                "application/problem+json": components["schemas"]["Problem"];
-            };
+        ApproveAccountRequest: {
+            /** Format: int32 */
+            version: number;
         };
-        /** @description 인증 실패 또는 세션 만료 */
-        Unauthorized: {
-            headers: {
-                "X-Request-ID": components["headers"]["RequestId"];
-                [name: string]: unknown;
-            };
-            content: {
-                "application/problem+json": components["schemas"]["Problem"];
-            };
+        PageMeta: {
+            /** Format: int32 */
+            page?: number;
+            /** Format: int32 */
+            size?: number;
+            /** Format: int64 */
+            totalElements?: number;
+            /** Format: int32 */
+            totalPages?: number;
+            hasNext?: boolean;
         };
-        /** @description 계정 상태 또는 역할로 인해 접근 불가 */
-        Forbidden: {
-            headers: {
-                "X-Request-ID": components["headers"]["RequestId"];
-                [name: string]: unknown;
-            };
-            content: {
-                "application/problem+json": components["schemas"]["Problem"];
-            };
+        PageResponseLearningResourceResponse: {
+            items?: components["schemas"]["LearningResourceResponse"][];
+            page?: components["schemas"]["PageMeta"];
         };
-        /** @description 대상이 없거나 공개할 수 없음 */
-        NotFound: {
-            headers: {
-                "X-Request-ID": components["headers"]["RequestId"];
-                [name: string]: unknown;
-            };
-            content: {
-                "application/problem+json": components["schemas"]["Problem"];
-            };
+        DownloadUrlResponse: {
+            downloadUrl?: string;
+            /** Format: date-time */
+            expiresAt?: string;
         };
-        /** @description 중복, 잘못된 상태 전이 또는 version 충돌 */
-        Conflict: {
-            headers: {
-                "X-Request-ID": components["headers"]["RequestId"];
-                [name: string]: unknown;
-            };
-            content: {
-                "application/problem+json": components["schemas"]["Problem"];
-            };
+        FileView: {
+            file?: components["schemas"]["FileAssetResponse"];
+            downloadUrl?: string;
+            /** Format: date-time */
+            expiresAt?: string;
         };
-        /** @description 파일 크기 제한 초과 */
-        PayloadTooLarge: {
-            headers: {
-                "X-Request-ID": components["headers"]["RequestId"];
-                [name: string]: unknown;
-            };
-            content: {
-                "application/problem+json": components["schemas"]["Problem"];
-            };
+        PageResponseProjectResponse: {
+            items?: components["schemas"]["ProjectResponse"][];
+            page?: components["schemas"]["PageMeta"];
         };
-        /** @description 지원하지 않는 파일 MIME 유형 */
-        UnsupportedMediaType: {
-            headers: {
-                "X-Request-ID": components["headers"]["RequestId"];
-                [name: string]: unknown;
-            };
-            content: {
-                "application/problem+json": components["schemas"]["Problem"];
-            };
+        ProjectParticipantResponse: {
+            /** Format: int64 */
+            userId?: number;
+            name?: string;
+            role?: string;
         };
-        /** @description 입력값 검증 실패 */
-        ValidationError: {
-            headers: {
-                "X-Request-ID": components["headers"]["RequestId"];
-                [name: string]: unknown;
-            };
-            content: {
-                "application/problem+json": components["schemas"]["Problem"];
-            };
+        ProjectResponse: {
+            /** Format: int64 */
+            projectId?: number;
+            title?: string;
+            description?: string;
+            deployUrl?: string;
+            githubUrl?: string;
+            /** @example 2025-03 */
+            startedMonth?: string;
+            /** @example 2025-03 */
+            endedMonth?: string;
+            /** Format: int32 */
+            version?: number;
+            /** @enum {string} */
+            projectType?: "HACKATHON" | "IDEATHON";
+            thumbnail?: components["schemas"]["FileView"];
+            cohort?: components["schemas"]["CohortSummary"];
+            participants?: components["schemas"]["ProjectParticipantResponse"][];
+            /** Format: date-time */
+            createdAt?: string;
+            /** Format: date-time */
+            updatedAt?: string;
         };
-        /** @description 요청 제한 초과 */
-        TooManyRequests: {
-            headers: {
-                "X-Request-ID": components["headers"]["RequestId"];
-                "Retry-After": components["headers"]["RetryAfter"];
-                [name: string]: unknown;
-            };
-            content: {
-                "application/problem+json": components["schemas"]["Problem"];
-            };
+        PageResponseNoticeResponse: {
+            items?: components["schemas"]["NoticeResponse"][];
+            page?: components["schemas"]["PageMeta"];
         };
-        /** @description 카카오 또는 외부 저장소 연동 실패 */
-        BadGateway: {
-            headers: {
-                "X-Request-ID": components["headers"]["RequestId"];
-                [name: string]: unknown;
-            };
-            content: {
-                "application/problem+json": components["schemas"]["Problem"];
-            };
+        LionResponse: {
+            /** Format: int64 */
+            userId?: number;
+            name?: string;
+            cohort?: components["schemas"]["CohortSummary"];
+            /** @enum {string} */
+            part?: "PLANNING" | "DESIGN" | "FRONTEND" | "BACKEND" | "COMMON";
+            activityType?: string;
         };
-        /** @description 내부 오류. 스택·DB·호스트 정보를 노출하지 않음 */
-        InternalServerError: {
-            headers: {
-                "X-Request-ID": components["headers"]["RequestId"];
-                [name: string]: unknown;
-            };
-            content: {
-                "application/problem+json": components["schemas"]["Problem"];
-            };
+        PageResponseLionResponse: {
+            items?: components["schemas"]["LionResponse"][];
+            page?: components["schemas"]["PageMeta"];
+        };
+        PageResponseAttendanceResponse: {
+            items?: components["schemas"]["AttendanceResponse"][];
+            page?: components["schemas"]["PageMeta"];
+        };
+        Pageable: {
+            /** Format: int32 */
+            page?: number;
+            /** Format: int32 */
+            size?: number;
+            sort?: string[];
+        };
+        PageResponseAccountResponse: {
+            items?: components["schemas"]["AccountResponse"][];
+            page?: components["schemas"]["PageMeta"];
         };
     };
-    parameters: {
-        Page: number;
-        Size: number;
-        /** @description 동일 사용자·엔드포인트에서 24시간 동안 같은 요청 결과를 재사용하는 UUID 키 */
-        IdempotencyKey: string;
-        UserId: components["schemas"]["Id"];
-        ProjectId: components["schemas"]["Id"];
-        ResourceId: components["schemas"]["Id"];
-        NoticeId: components["schemas"]["Id"];
-        ScheduleId: components["schemas"]["Id"];
-        AttendanceId: components["schemas"]["Id"];
-        CertificateId: components["schemas"]["Id"];
-    };
+    responses: never;
+    parameters: never;
     requestBodies: never;
-    headers: {
-        /** @description 요청 추적 식별자 */
-        RequestId: string;
-        /** @description 재시도까지 기다릴 초 */
-        RetryAfter: number;
-    };
+    headers: never;
     pathItems: never;
 }
 export type $defs = Record<string, never>;
 export interface operations {
-    startKakaoLogin: {
+    checkIn: {
         parameters: {
             query?: never;
             header?: never;
-            path?: never;
+            path: {
+                scheduleId: number;
+            };
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AttendanceCheckInRequest"];
+            };
+        };
         responses: {
-            /** @description 카카오 인증 화면으로 이동 */
-            302: {
+            /** @description OK */
+            200: {
                 headers: {
-                    Location: string;
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "*/*": components["schemas"]["AttendanceResponse"];
+                };
             };
-            429: components["responses"]["TooManyRequests"];
-            500: components["responses"]["InternalServerError"];
         };
     };
-    handleKakaoCallback: {
+    issueCertificate: {
         parameters: {
-            query: {
-                code: string;
-                state: string;
-                error?: string;
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
             };
-            header?: never;
             path?: never;
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description 인증 결과 화면으로 이동 */
-            302: {
+            /** @description OK */
+            200: {
                 headers: {
-                    Location: string;
-                    /** @description Secure, HttpOnly, SameSite=Lax 쿠키 */
-                    "Set-Cookie"?: string;
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "*/*": components["schemas"]["CertificateResponse"];
+                };
             };
-            400: components["responses"]["BadRequest"];
-            401: components["responses"]["Unauthorized"];
-            429: components["responses"]["TooManyRequests"];
-            502: components["responses"]["BadGateway"];
         };
     };
     reissueAccessToken: {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                "X-CSRF-Token"?: string;
+            };
             path?: never;
-            cookie?: never;
+            cookie?: {
+                refresh_session?: string;
+                csrf_token?: string;
+            };
         };
         requestBody?: never;
         responses: {
-            /** @description 재발급 성공 */
+            /** @description OK */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["AccessTokenResponse"];
+                    "*/*": components["schemas"]["AccessTokenResponse"];
                 };
             };
-            401: components["responses"]["Unauthorized"];
-            403: components["responses"]["Forbidden"];
-            429: components["responses"]["TooManyRequests"];
         };
     };
-    logout: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 로그아웃 완료 */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            401: components["responses"]["Unauthorized"];
-        };
-    };
-    createAccount: {
+    create: {
         parameters: {
             query?: never;
             header: {
-                /** @description 동일 사용자·엔드포인트에서 24시간 동안 같은 요청 결과를 재사용하는 UUID 키 */
-                "Idempotency-Key": components["parameters"]["IdempotencyKey"];
+                "Idempotency-Key": string;
             };
             path?: never;
             cookie?: never;
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["CreateAccountRequest"];
+                "application/json": components["schemas"]["CreateScheduleRequest"];
             };
         };
         responses: {
-            /** @description PENDING 계정 생성 */
-            201: {
-                headers: {
-                    Location?: string;
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AccountResponse"];
-                };
-            };
-            409: components["responses"]["Conflict"];
-            422: components["responses"]["ValidationError"];
-            429: components["responses"]["TooManyRequests"];
-        };
-    };
-    listAccounts: {
-        parameters: {
-            query?: {
-                page?: components["parameters"]["Page"];
-                size?: components["parameters"]["Size"];
-                status?: components["schemas"]["AccountStatus"];
-                role?: components["schemas"]["SystemRole"];
-                cohortId?: components["schemas"]["Id"];
-                part?: components["schemas"]["PartType"];
-                /** @description 이름 또는 학번 검색 */
-                keyword?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 가입 신청일 내림차순 목록 */
+            /** @description OK */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["AccountPage"];
+                    "*/*": components["schemas"]["ScheduleResponse"];
                 };
             };
-            401: components["responses"]["Unauthorized"];
-            403: components["responses"]["Forbidden"];
-            422: components["responses"]["ValidationError"];
         };
     };
-    getAccountById: {
+    getCurrentCode: {
         parameters: {
             query?: never;
             header?: never;
             path: {
-                userId: components["parameters"]["UserId"];
+                scheduleId: number;
             };
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description 조회 성공 */
+            /** @description OK */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["AccountResponse"];
+                    "*/*": components["schemas"]["AttendanceCodeResponse"];
                 };
             };
-            401: components["responses"]["Unauthorized"];
-            403: components["responses"]["Forbidden"];
-            404: components["responses"]["NotFound"];
         };
     };
-    deleteAccount: {
+    createOrReissueCode: {
         parameters: {
             query?: never;
             header?: never;
             path: {
-                userId: components["parameters"]["UserId"];
+                scheduleId: number;
             };
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description 삭제 성공 */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            401: components["responses"]["Unauthorized"];
-            403: components["responses"]["Forbidden"];
-            404: components["responses"]["NotFound"];
-            409: components["responses"]["Conflict"];
-        };
-    };
-    updateAccount: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                userId: components["parameters"]["UserId"];
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["UpdateAccountRequest"];
-            };
-        };
-        responses: {
-            /** @description 수정 성공 */
+            /** @description OK */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["AccountResponse"];
+                    "*/*": components["schemas"]["AttendanceCodeResponse"];
                 };
             };
-            401: components["responses"]["Unauthorized"];
-            403: components["responses"]["Forbidden"];
-            404: components["responses"]["NotFound"];
-            409: components["responses"]["Conflict"];
-            422: components["responses"]["ValidationError"];
         };
     };
-    updateAccountStatus: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                userId: components["parameters"]["UserId"];
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["UpdateAccountStatusRequest"];
-            };
-        };
-        responses: {
-            /** @description 상태 변경 성공 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AccountResponse"];
-                };
-            };
-            401: components["responses"]["Unauthorized"];
-            403: components["responses"]["Forbidden"];
-            404: components["responses"]["NotFound"];
-            409: components["responses"]["Conflict"];
-            422: components["responses"]["ValidationError"];
-        };
-    };
-    updateAccountRole: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                userId: components["parameters"]["UserId"];
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["UpdateRoleRequest"];
-            };
-        };
-        responses: {
-            /** @description 역할 변경 성공 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AccountResponse"];
-                };
-            };
-            401: components["responses"]["Unauthorized"];
-            403: components["responses"]["Forbidden"];
-            404: components["responses"]["NotFound"];
-            409: components["responses"]["Conflict"];
-            422: components["responses"]["ValidationError"];
-        };
-    };
-    listCohorts: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 기수 번호 내림차순 목록 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CohortListResponse"];
-                };
-            };
-            401: components["responses"]["Unauthorized"];
-            403: components["responses"]["Forbidden"];
-        };
-    };
-    listProjects: {
-        parameters: {
-            query?: {
-                page?: components["parameters"]["Page"];
-                size?: components["parameters"]["Size"];
-                /** @description 기수 태그 ID */
-                cohortId?: components["schemas"]["Id"];
-                /** @description 프로젝트 유형 필터. 해커톤과 아이디어톤을 하나 또는 모두 선택할 수 있습니다. */
-                projectTypes?: components["schemas"]["ProjectType"][];
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 등록일 내림차순 목록 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ProjectPage"];
-                };
-            };
-            401: components["responses"]["Unauthorized"];
-            403: components["responses"]["Forbidden"];
-            422: components["responses"]["ValidationError"];
-        };
-    };
-    getProject: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                projectId: components["parameters"]["ProjectId"];
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 조회 성공 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ProjectResponse"];
-                };
-            };
-            401: components["responses"]["Unauthorized"];
-            403: components["responses"]["Forbidden"];
-            404: components["responses"]["NotFound"];
-        };
-    };
-    createProject: {
+    create_1: {
         parameters: {
             query?: never;
             header: {
-                /** @description 동일 사용자·엔드포인트에서 24시간 동안 같은 요청 결과를 재사용하는 UUID 키 */
-                "Idempotency-Key": components["parameters"]["IdempotencyKey"];
+                "Idempotency-Key": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateLearningResourceRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["LearningResourceResponse"];
+                };
+            };
+        };
+    };
+    create_2: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
             };
             path?: never;
             cookie?: never;
@@ -1753,77 +1316,142 @@ export interface operations {
             };
         };
         responses: {
-            /** @description 등록 성공 */
-            201: {
-                headers: {
-                    Location?: string;
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ProjectResponse"];
-                };
-            };
-            401: components["responses"]["Unauthorized"];
-            403: components["responses"]["Forbidden"];
-            404: components["responses"]["NotFound"];
-            422: components["responses"]["ValidationError"];
-        };
-    };
-    deleteProject: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                projectId: components["parameters"]["ProjectId"];
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 삭제 성공 */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            401: components["responses"]["Unauthorized"];
-            403: components["responses"]["Forbidden"];
-            404: components["responses"]["NotFound"];
-        };
-    };
-    updateProject: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                projectId: components["parameters"]["ProjectId"];
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["UpdateProjectRequest"];
-            };
-        };
-        responses: {
-            /** @description 수정 성공 */
+            /** @description OK */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ProjectResponse"];
+                    "*/*": components["schemas"]["AdminProjectResponse"];
                 };
             };
-            401: components["responses"]["Unauthorized"];
-            403: components["responses"]["Forbidden"];
-            404: components["responses"]["NotFound"];
-            409: components["responses"]["Conflict"];
-            422: components["responses"]["ValidationError"];
         };
     };
-    createFileUploadUrl: {
+    create_3: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateNoticeRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["NoticeResponse"];
+                };
+            };
+        };
+    };
+    completeUpload: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["FileAssetRequest"];
+            };
+        };
+        responses: {
+            /** @description 파일 자산 등록 성공 */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["FileAssetResponse"];
+                };
+            };
+            /** @description 인증 필요 */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["FileAssetResponse"];
+                };
+            };
+            /** @description 관리자 권한 필요 */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["FileAssetResponse"];
+                };
+            };
+            /** @description 발급 기록 또는 S3 객체 없음 */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["FileAssetResponse"];
+                };
+            };
+            /** @description 멱등 키 또는 파일 자산 충돌 */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["FileAssetResponse"];
+                };
+            };
+            /** @description 파일 크기 제한 초과 */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["FileAssetResponse"];
+                };
+            };
+            /** @description 지원하지 않는 파일 형식 */
+            415: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["FileAssetResponse"];
+                };
+            };
+            /** @description 업로드 메타데이터 불일치 */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["FileAssetResponse"];
+                };
+            };
+            /** @description S3 연동 실패 */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["FileAssetResponse"];
+                };
+            };
+        };
+    };
+    createUploadUrl: {
         parameters: {
             query?: never;
             header?: never;
@@ -1842,452 +1470,102 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["FileUploadUrlResponse"];
+                    "*/*": components["schemas"]["FileUploadUrlResponse"];
                 };
             };
-            401: components["responses"]["Unauthorized"];
-            403: components["responses"]["Forbidden"];
-            413: components["responses"]["PayloadTooLarge"];
-            415: components["responses"]["UnsupportedMediaType"];
-            422: components["responses"]["ValidationError"];
-            429: components["responses"]["TooManyRequests"];
+            /** @description 인증 필요 */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["FileUploadUrlResponse"];
+                };
+            };
+            /** @description 관리자 권한 필요 */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["FileUploadUrlResponse"];
+                };
+            };
+            /** @description 파일 크기 제한 초과 */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["FileUploadUrlResponse"];
+                };
+            };
+            /** @description 지원하지 않는 파일 형식 */
+            415: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["FileUploadUrlResponse"];
+                };
+            };
         };
     };
-    completeFileUpload: {
+    create_4: {
         parameters: {
             query?: never;
-            header: {
-                /** @description 동일 사용자·엔드포인트에서 24시간 동안 같은 요청 결과를 재사용하는 UUID 키 */
-                "Idempotency-Key": components["parameters"]["IdempotencyKey"];
+            header?: {
+                "X-CSRF-Token"?: string;
             };
             path?: never;
-            cookie?: never;
+            cookie?: {
+                onboarding_session?: string;
+                csrf_token?: string;
+            };
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["FileAssetRequest"];
+                "application/json": components["schemas"]["CreateAccountRequest"];
             };
         };
         responses: {
-            /** @description 파일 자산 등록 성공 */
-            201: {
-                headers: {
-                    Location?: string;
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["FileAssetResponse"];
-                };
-            };
-            401: components["responses"]["Unauthorized"];
-            403: components["responses"]["Forbidden"];
-            404: components["responses"]["NotFound"];
-            409: components["responses"]["Conflict"];
-            413: components["responses"]["PayloadTooLarge"];
-            415: components["responses"]["UnsupportedMediaType"];
-            422: components["responses"]["ValidationError"];
-        };
-    };
-    listResources: {
-        parameters: {
-            query?: {
-                page?: components["parameters"]["Page"];
-                size?: components["parameters"]["Size"];
-                week?: number;
-                targetPart?: components["schemas"]["PartType"];
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 등록일 내림차순 목록 */
+            /** @description OK */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ResourcePage"];
+                    "*/*": components["schemas"]["AccountResponse"];
                 };
             };
-            401: components["responses"]["Unauthorized"];
-            403: components["responses"]["Forbidden"];
-            422: components["responses"]["ValidationError"];
         };
     };
-    getResource: {
+    delete: {
         parameters: {
             query?: never;
             header?: never;
             path: {
-                resourceId: components["parameters"]["ResourceId"];
+                scheduleId: number;
             };
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description 조회 성공 */
+            /** @description OK */
             200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["LearningResourceResponse"];
-                };
-            };
-            401: components["responses"]["Unauthorized"];
-            403: components["responses"]["Forbidden"];
-            404: components["responses"]["NotFound"];
-        };
-    };
-    getResourceDownloadUrl: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                resourceId: components["parameters"]["ResourceId"];
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 짧은 만료의 Private S3 Presigned URL */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["DownloadUrlResponse"];
-                };
-            };
-            401: components["responses"]["Unauthorized"];
-            403: components["responses"]["Forbidden"];
-            404: components["responses"]["NotFound"];
-            429: components["responses"]["TooManyRequests"];
-        };
-    };
-    createLearningResource: {
-        parameters: {
-            query?: never;
-            header: {
-                /** @description 동일 사용자·엔드포인트에서 24시간 동안 같은 요청 결과를 재사용하는 UUID 키 */
-                "Idempotency-Key": components["parameters"]["IdempotencyKey"];
-            };
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CreateLearningResourceRequest"];
-            };
-        };
-        responses: {
-            /** @description 등록 성공 */
-            201: {
-                headers: {
-                    Location?: string;
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["LearningResourceResponse"];
-                };
-            };
-            401: components["responses"]["Unauthorized"];
-            403: components["responses"]["Forbidden"];
-            404: components["responses"]["NotFound"];
-            409: components["responses"]["Conflict"];
-            422: components["responses"]["ValidationError"];
-        };
-    };
-    updateLearningResource: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                resourceId: components["parameters"]["ResourceId"];
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["UpdateLearningResourceRequest"];
-            };
-        };
-        responses: {
-            /** @description 수정 성공 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["LearningResourceResponse"];
-                };
-            };
-            401: components["responses"]["Unauthorized"];
-            403: components["responses"]["Forbidden"];
-            404: components["responses"]["NotFound"];
-            409: components["responses"]["Conflict"];
-            422: components["responses"]["ValidationError"];
-        };
-    };
-    listNotices: {
-        parameters: {
-            query?: {
-                page?: components["parameters"]["Page"];
-                size?: components["parameters"]["Size"];
-                tag?: components["schemas"]["NoticeTag"];
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 고정 공지 우선, 이후 등록일 내림차순 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["NoticePage"];
-                };
-            };
-            401: components["responses"]["Unauthorized"];
-            403: components["responses"]["Forbidden"];
-            422: components["responses"]["ValidationError"];
-        };
-    };
-    getNotice: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                noticeId: components["parameters"]["NoticeId"];
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 조회 성공 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["NoticeResponse"];
-                };
-            };
-            401: components["responses"]["Unauthorized"];
-            403: components["responses"]["Forbidden"];
-            404: components["responses"]["NotFound"];
-        };
-    };
-    createNotice: {
-        parameters: {
-            query?: never;
-            header: {
-                /** @description 동일 사용자·엔드포인트에서 24시간 동안 같은 요청 결과를 재사용하는 UUID 키 */
-                "Idempotency-Key": components["parameters"]["IdempotencyKey"];
-            };
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CreateNoticeRequest"];
-            };
-        };
-        responses: {
-            /** @description 등록 성공 */
-            201: {
-                headers: {
-                    Location?: string;
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["NoticeResponse"];
-                };
-            };
-            401: components["responses"]["Unauthorized"];
-            403: components["responses"]["Forbidden"];
-            404: components["responses"]["NotFound"];
-            422: components["responses"]["ValidationError"];
-        };
-    };
-    updateNotice: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                noticeId: components["parameters"]["NoticeId"];
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["UpdateNoticeRequest"];
-            };
-        };
-        responses: {
-            /** @description 수정 성공 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["NoticeResponse"];
-                };
-            };
-            401: components["responses"]["Unauthorized"];
-            403: components["responses"]["Forbidden"];
-            404: components["responses"]["NotFound"];
-            409: components["responses"]["Conflict"];
-            422: components["responses"]["ValidationError"];
-        };
-    };
-    listLions: {
-        parameters: {
-            query?: {
-                page?: components["parameters"]["Page"];
-                size?: components["parameters"]["Size"];
-                cohortId?: components["schemas"]["Id"];
-                part?: components["schemas"]["PartType"];
-                role?: components["schemas"]["SystemRole"];
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 기수 내림차순, 동일 기수에서 이름 오름차순 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["LionPage"];
-                };
-            };
-            401: components["responses"]["Unauthorized"];
-            403: components["responses"]["Forbidden"];
-            422: components["responses"]["ValidationError"];
-        };
-    };
-    listSchedules: {
-        parameters: {
-            query: {
-                /** @description 조회 월 */
-                yearMonth: string;
-                cohortId?: components["schemas"]["Id"];
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 날짜별 종일 우선, 시작 시간, 일정명 순 목록 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ScheduleResponse"][];
-                };
-            };
-            401: components["responses"]["Unauthorized"];
-            403: components["responses"]["Forbidden"];
-            422: components["responses"]["ValidationError"];
-        };
-    };
-    getSchedule: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                scheduleId: components["parameters"]["ScheduleId"];
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 조회 성공 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ScheduleResponse"];
-                };
-            };
-            401: components["responses"]["Unauthorized"];
-            403: components["responses"]["Forbidden"];
-            404: components["responses"]["NotFound"];
-        };
-    };
-    createSchedule: {
-        parameters: {
-            query?: never;
-            header: {
-                /** @description 동일 사용자·엔드포인트에서 24시간 동안 같은 요청 결과를 재사용하는 UUID 키 */
-                "Idempotency-Key": components["parameters"]["IdempotencyKey"];
-            };
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CreateScheduleRequest"];
-            };
-        };
-        responses: {
-            /** @description 등록 성공 */
-            201: {
-                headers: {
-                    Location?: string;
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ScheduleResponse"];
-                };
-            };
-            401: components["responses"]["Unauthorized"];
-            403: components["responses"]["Forbidden"];
-            404: components["responses"]["NotFound"];
-            422: components["responses"]["ValidationError"];
-        };
-    };
-    deleteSchedule: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                scheduleId: components["parameters"]["ScheduleId"];
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 삭제 성공 */
-            204: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
             };
-            401: components["responses"]["Unauthorized"];
-            403: components["responses"]["Forbidden"];
-            404: components["responses"]["NotFound"];
         };
     };
-    updateSchedule: {
+    update: {
         parameters: {
             query?: never;
             header?: never;
             path: {
-                scheduleId: components["parameters"]["ScheduleId"];
+                scheduleId: number;
             };
             cookie?: never;
         };
@@ -2297,108 +1575,113 @@ export interface operations {
             };
         };
         responses: {
-            /** @description 수정 성공 */
+            /** @description OK */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ScheduleResponse"];
+                    "*/*": components["schemas"]["ScheduleResponse"];
                 };
             };
-            401: components["responses"]["Unauthorized"];
-            403: components["responses"]["Forbidden"];
-            404: components["responses"]["NotFound"];
-            409: components["responses"]["Conflict"];
-            422: components["responses"]["ValidationError"];
         };
     };
-    listMyAttendances: {
-        parameters: {
-            query?: {
-                page?: components["parameters"]["Page"];
-                size?: components["parameters"]["Size"];
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 세션 날짜 내림차순 목록 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AttendancePage"];
-                };
-            };
-            401: components["responses"]["Unauthorized"];
-            403: components["responses"]["Forbidden"];
-        };
-    };
-    checkInAttendance: {
+    update_1: {
         parameters: {
             query?: never;
             header?: never;
             path: {
-                scheduleId: components["parameters"]["ScheduleId"];
+                resourceId: number;
             };
             cookie?: never;
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["AttendanceCheckInRequest"];
+                "application/json": components["schemas"]["UpdateLearningResourceRequest"];
             };
         };
         responses: {
-            /** @description 출석 인증 성공 */
+            /** @description OK */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["AttendanceResponse"];
+                    "*/*": components["schemas"]["LearningResourceResponse"];
                 };
             };
-            401: components["responses"]["Unauthorized"];
-            403: components["responses"]["Forbidden"];
-            404: components["responses"]["NotFound"];
-            409: components["responses"]["Conflict"];
-            422: components["responses"]["ValidationError"];
-            429: components["responses"]["TooManyRequests"];
         };
     };
-    listAttendances: {
+    delete_1: {
         parameters: {
-            query: {
-                page?: components["parameters"]["Page"];
-                size?: components["parameters"]["Size"];
-                scheduleId: components["schemas"]["Id"];
-                /** @description 출결자 파트 필터 */
-                part?: components["schemas"]["PartType"];
-                userId?: components["schemas"]["Id"];
-                status?: components["schemas"]["AttendanceStatus"];
-            };
+            query?: never;
             header?: never;
-            path?: never;
+            path: {
+                projectId: number;
+            };
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description 파트 오름차순, 동일 파트에서 이름 오름차순 목록 */
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    update_2: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                projectId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateProjectRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["AttendancePage"];
+                    "*/*": components["schemas"]["AdminProjectResponse"];
                 };
             };
-            401: components["responses"]["Unauthorized"];
-            403: components["responses"]["Forbidden"];
-            422: components["responses"]["ValidationError"];
+        };
+    };
+    update_3: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                noticeId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateNoticeRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["NoticeResponse"];
+                };
+            };
         };
     };
     updateAttendance: {
@@ -2406,7 +1689,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                attendanceId: components["parameters"]["AttendanceId"];
+                attendanceId: number;
             };
             cookie?: never;
         };
@@ -2416,72 +1699,456 @@ export interface operations {
             };
         };
         responses: {
-            /** @description 수정 성공 */
+            /** @description OK */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["AttendanceResponse"];
+                    "*/*": components["schemas"]["AttendanceResponse"];
                 };
             };
-            401: components["responses"]["Unauthorized"];
-            403: components["responses"]["Forbidden"];
-            404: components["responses"]["NotFound"];
-            409: components["responses"]["Conflict"];
-            422: components["responses"]["ValidationError"];
         };
     };
-    getAttendanceCode: {
+    get: {
         parameters: {
             query?: never;
             header?: never;
             path: {
-                scheduleId: components["parameters"]["ScheduleId"];
+                userId: number;
             };
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description 현재 유효 코드와 고정된 만료 시각 */
+            /** @description OK */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["AttendanceCodeResponse"];
+                    "*/*": components["schemas"]["AccountResponse"];
                 };
             };
-            401: components["responses"]["Unauthorized"];
-            403: components["responses"]["Forbidden"];
-            404: components["responses"]["NotFound"];
         };
     };
-    createOrReissueAttendanceCode: {
+    delete_2: {
         parameters: {
             query?: never;
             header?: never;
             path: {
-                scheduleId: components["parameters"]["ScheduleId"];
+                userId: number;
             };
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description 코드 성공 */
-            201: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    update_4: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                userId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateAccountRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["AttendanceCodeResponse"];
+                    "*/*": components["schemas"]["AccountResponse"];
                 };
             };
-            401: components["responses"]["Unauthorized"];
-            403: components["responses"]["Forbidden"];
-            404: components["responses"]["NotFound"];
-            409: components["responses"]["Conflict"];
-            429: components["responses"]["TooManyRequests"];
+        };
+    };
+    changeRole: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                userId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateRoleRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["AccountResponse"];
+                };
+            };
+        };
+    };
+    reject: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                userId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RejectAccountRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["AccountResponse"];
+                };
+            };
+        };
+    };
+    approve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                userId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ApproveAccountRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["AccountResponse"];
+                };
+            };
+        };
+    };
+    healthCheck: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": string;
+                };
+            };
+        };
+    };
+    getSchedules: {
+        parameters: {
+            query: {
+                yearMonth: string;
+                cohortId?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ScheduleResponse"][];
+                };
+            };
+        };
+    };
+    getSchedule: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                scheduleId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ScheduleResponse"];
+                };
+            };
+        };
+    };
+    getResources: {
+        parameters: {
+            query?: {
+                week?: number;
+                targetPart?: "PLANNING" | "DESIGN" | "FRONTEND" | "BACKEND" | "COMMON";
+                page?: number;
+                size?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["PageResponseLearningResourceResponse"];
+                };
+            };
+        };
+    };
+    getResource: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                resourceId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["LearningResourceResponse"];
+                };
+            };
+        };
+    };
+    getDownloadUrl: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                resourceId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["DownloadUrlResponse"];
+                };
+            };
+        };
+    };
+    getProjects: {
+        parameters: {
+            query?: {
+                cohortId?: number;
+                projectType?: ("HACKATHON" | "IDEATHON")[];
+                page?: number;
+                size?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["PageResponseProjectResponse"];
+                };
+            };
+        };
+    };
+    getProject: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                projectId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ProjectResponse"];
+                };
+            };
+        };
+    };
+    list: {
+        parameters: {
+            query?: {
+                page?: number;
+                size?: number;
+                tag?: "SCHEDULE" | "PROJECT" | "PROMOTION_EVENT" | "OTHER";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["PageResponseNoticeResponse"];
+                };
+            };
+        };
+    };
+    get_1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                noticeId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["NoticeResponse"];
+                };
+            };
+        };
+    };
+    getLions: {
+        parameters: {
+            query?: {
+                cohortId?: number;
+                part?: "PLANNING" | "DESIGN" | "FRONTEND" | "BACKEND" | "COMMON";
+                role?: "MEMBER" | "ADMIN";
+                page?: number;
+                size?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["PageResponseLionResponse"];
+                };
+            };
+        };
+    };
+    getCohorts: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["CohortSummary"][];
+                };
+            };
+        };
+    };
+    getDownloadUrl_1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                certificateId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["DownloadUrlResponse"];
+                };
+            };
         };
     };
     previewMyCertificateData: {
@@ -2493,119 +2160,155 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description 현재 등록된 본인 정보 */
+            /** @description OK */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["CertificatePreviewResponse"];
+                    "*/*": components["schemas"]["CertificatePreviewResponse"];
                 };
             };
-            401: components["responses"]["Unauthorized"];
-            403: components["responses"]["Forbidden"];
         };
     };
-    issueCertificate: {
+    loginRedirect: {
         parameters: {
-            query?: never;
-            header: {
-                /** @description 동일 사용자·엔드포인트에서 24시간 동안 같은 요청 결과를 재사용하는 UUID 키 */
-                "Idempotency-Key": components["parameters"]["IdempotencyKey"];
+            query?: {
+                origin?: string;
             };
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 발급 성공 */
-            201: {
-                headers: {
-                    Location?: string;
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CertificateResponse"];
-                };
-            };
-            401: components["responses"]["Unauthorized"];
-            403: components["responses"]["Forbidden"];
-            409: components["responses"]["Conflict"];
-            429: components["responses"]["TooManyRequests"];
-            500: components["responses"]["InternalServerError"];
-        };
-    };
-    getCertificateDownloadUrl: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                certificateId: components["parameters"]["CertificateId"];
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 짧은 만료의 Private S3 Presigned URL */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["DownloadUrlResponse"];
-                };
-            };
-            401: components["responses"]["Unauthorized"];
-            404: components["responses"]["NotFound"];
-            429: components["responses"]["TooManyRequests"];
-        };
-    };
-    getLiveness: {
-        parameters: {
-            query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description 프로세스 정상 */
+            /** @description OK */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": components["schemas"]["HealthResponse"];
-                };
+                content?: never;
             };
         };
     };
-    getReadiness: {
+    callback: {
         parameters: {
-            query?: never;
+            query?: {
+                code?: string;
+                state?: string;
+                error?: string;
+            };
             header?: never;
             path?: never;
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description DB 등 필수 의존성 정상 */
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    listMine: {
+        parameters: {
+            query?: {
+                page?: number;
+                size?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["HealthResponse"];
+                    "*/*": components["schemas"]["PageResponseAttendanceResponse"];
                 };
             };
-            /** @description 준비되지 않음 */
-            503: {
+        };
+    };
+    listAttendances: {
+        parameters: {
+            query: {
+                scheduleId: number;
+                part?: "PLANNING" | "DESIGN" | "FRONTEND" | "BACKEND" | "COMMON";
+                userId?: number;
+                status?: "NOT_CHECKED" | "PRESENT" | "LATE" | "ABSENT";
+                pageable: components["schemas"]["Pageable"];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": components["schemas"]["Problem"];
+                    "*/*": components["schemas"]["PageResponseAttendanceResponse"];
                 };
+            };
+        };
+    };
+    list_1: {
+        parameters: {
+            query: {
+                status?: "PENDING" | "ACTIVE" | "REJECTED";
+                role?: "MEMBER" | "ADMIN";
+                cohortId?: number;
+                part?: "PLANNING" | "DESIGN" | "FRONTEND" | "BACKEND" | "COMMON";
+                keyword?: string;
+                pageable: components["schemas"]["Pageable"];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["PageResponseAccountResponse"];
+                };
+            };
+        };
+    };
+    logout: {
+        parameters: {
+            query?: never;
+            header?: {
+                "X-CSRF-Token"?: string;
+            };
+            path?: never;
+            cookie?: {
+                refresh_session?: string;
+                csrf_token?: string;
+            };
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
         };
     };

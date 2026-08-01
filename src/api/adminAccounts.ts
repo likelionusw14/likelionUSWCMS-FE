@@ -60,7 +60,7 @@ export async function approveAccount(
   return data
 }
 
-// 가입 거절. PENDING → REJECTED. 거절 사유는 감사 로그에 남으므로 필수다.
+// 가입 거절. PENDING → REJECTED. 거절 사유는 선택 — 넘기면 감사 로그에 남는다.
 export async function rejectAccount(
   userId: string,
   body: ApiRejectAccountRequest,

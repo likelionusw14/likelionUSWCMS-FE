@@ -20,6 +20,18 @@ if (!res.ok) {
 }
 
 const schema = await res.text()
+
+// springdoc(/v3/api-docs)은 한 줄짜리 JSON 을 돌려준다. 그대로 저장하면 diff 가 통째로
+// 한 줄이라 리뷰가 불가능하므로 들여쓴다 — JSON 은 YAML 의 부분집합이라 .yaml 로 둬도 파싱된다.
+function formatted(text) {
+  try {
+    return `${JSON.stringify(JSON.parse(text), null, 2)}\n`
+  } catch {
+    // YAML 응답(SwaggerHub export 등)은 손대지 않고 그대로 쓴다.
+    return text.endsWith('\n') ? text : `${text}\n`
+  }
+}
+
 await mkdir(dirname(out), { recursive: true })
-await writeFile(out, schema.endsWith('\n') ? schema : `${schema}\n`, 'utf8')
+await writeFile(out, formatted(schema), 'utf8')
 console.log(`[api:fetch] 저장 완료 → ${out}`)
