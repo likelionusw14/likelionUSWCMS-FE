@@ -3,10 +3,11 @@ import type {
   ApiAccountPage,
   ApiAccountResponse,
   ApiAccountStatus,
+  ApiApproveAccountRequest,
   ApiPartType,
+  ApiRejectAccountRequest,
   ApiSystemRole,
   ApiUpdateAccountRequest,
-  ApiUpdateAccountStatusRequest,
   ApiUpdateRoleRequest,
 } from '@api'
 
@@ -47,12 +48,25 @@ export async function updateAccount(
   return data
 }
 
-export async function updateAccountStatus(
+// 가입 승인. PENDING → ACTIVE. version 은 낙관적 동시성 토큰으로 필수.
+export async function approveAccount(
   userId: string,
-  body: ApiUpdateAccountStatusRequest,
+  body: ApiApproveAccountRequest,
 ): Promise<ApiAccountResponse> {
   const { data } = await apiClient.patch<ApiAccountResponse>(
-    endpoints.adminAccountStatus(userId),
+    endpoints.adminAccountApproval(userId),
+    body,
+  )
+  return data
+}
+
+// 가입 거절. PENDING → REJECTED. 거절 사유는 감사 로그에 남으므로 필수다.
+export async function rejectAccount(
+  userId: string,
+  body: ApiRejectAccountRequest,
+): Promise<ApiAccountResponse> {
+  const { data } = await apiClient.patch<ApiAccountResponse>(
+    endpoints.adminAccountRejection(userId),
     body,
   )
   return data

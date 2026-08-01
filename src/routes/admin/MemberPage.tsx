@@ -1,15 +1,16 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { COHORT_OPTIONS, PART_OPTIONS } from '@constants'
+import { ACCOUNT_REJECTION_DEFAULT_REASON, COHORT_OPTIONS, PART_OPTIONS } from '@constants'
 import {
   toPartCode,
   toRoleCode,
+  useApproveAccount,
   useDeleteAccount,
   useMemberListPage,
   usePendingMembers,
+  useRejectAccount,
   useUpdateAccount,
   useUpdateAccountRole,
-  useUpdateAccountStatus,
 } from '@hooks'
 import { MemberEditModal, ResultDialog, RoleEditModal } from '@molecules'
 import { MemberList, PendingMemberList } from '@organisms'
@@ -24,7 +25,8 @@ export function MemberPage() {
   const [roleMember, setRoleMember] = useState<Member | null>(null)
   const [deleteDoneOpen, setDeleteDoneOpen] = useState(false)
 
-  const updateStatus = useUpdateAccountStatus()
+  const approveAccount = useApproveAccount()
+  const rejectAccount = useRejectAccount()
   const updateRole = useUpdateAccountRole()
   const updateAccount = useUpdateAccount()
   const deleteAccount = useDeleteAccount()
@@ -39,13 +41,18 @@ export function MemberPage() {
           onApprove={(id) => {
             const target = pending.find((member) => member.id === id)
             if (target) {
-              updateStatus.mutate({ userId: id, status: 'ACTIVE', version: target.version })
+              approveAccount.mutate({ userId: id, version: target.version })
             }
           }}
           onReject={(id) => {
             const target = pending.find((member) => member.id === id)
             if (target) {
-              updateStatus.mutate({ userId: id, status: 'REJECTED', version: target.version })
+              // 사유 입력 UI 가 없어 기본 문구를 보낸다 (rejectionReason 은 API 필수).
+              rejectAccount.mutate({
+                userId: id,
+                version: target.version,
+                rejectionReason: ACCOUNT_REJECTION_DEFAULT_REASON,
+              })
             }
           }}
         />

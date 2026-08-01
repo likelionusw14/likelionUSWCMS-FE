@@ -55,7 +55,9 @@ export const endpoints = {
   // Accounts (관리자 회원 관리)
   adminAccounts: '/api/admin/accounts',
   adminAccount: (userId: string) => `/api/admin/accounts/${userId}`,
-  adminAccountStatus: (userId: string) => `/api/admin/accounts/${userId}/status`,
+  // 가입 승인·거절은 상태 단일 엔드포인트(/status)에서 동작별 두 경로로 분리됐다.
+  adminAccountApproval: (userId: string) => `/api/admin/accounts/${userId}/approval`,
+  adminAccountRejection: (userId: string) => `/api/admin/accounts/${userId}/rejection`,
   adminAccountRole: (userId: string) => `/api/admin/accounts/${userId}/role`,
 
   // Schedules — 사용자 조회
