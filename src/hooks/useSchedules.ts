@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { createSchedule, deleteSchedule, fetchSchedules, updateSchedule } from '@api'
 import type { ApiCreateScheduleRequest, ApiScheduleResponse, ApiUpdateScheduleRequest } from '@api'
 import { isBackendConnected } from '@config'
+import { getVisibleMonths, toYearMonth } from '@utils'
 import type { CalendarEvent, QueryResult, ScheduleFormValues } from '@types'
 
 const SCHEDULES_KEY = 'admin-schedules'
@@ -149,12 +150,21 @@ export function toUpdateScheduleRequest(
 }
 
 // 월별 일정(캘린더 이벤트) 조회. month 는 0-11(JS Date 월 인덱스).
-// 백엔드 미연동이면 현재 월 목데이터를 반환한다(데모 유지).
+// 사용자 캘린더와 같이 이전·다음 달까지 함께 받는다 — 그리드의 이웃 달 칸(그레이존)에도
+// 일정이 뜨고, 달을 넘겨도 이미 받아둔 데이터라 빈 화면을 거치지 않는다.
+// 백엔드 미연동이면 목데이터를 반환한다(데모 유지).
 export function useSchedules(year: number, month: number): QueryResult<CalendarEvent[]> {
-  const yearMonth = `${year}-${String(month + 1).padStart(2, '0')}`
+  const visibleMonths = getVisibleMonths(year, month)
   const request = useQuery({
-    queryKey: [SCHEDULES_KEY, yearMonth],
-    queryFn: () => fetchSchedules({ yearMonth }),
+    queryKey: [SCHEDULES_KEY, 'calendar', toYearMonth(year, month)],
+    queryFn: async () => {
+      const responses = await Promise.all(
+        visibleMonths.map(({ year: visibleYear, month: visibleMonth }) =>
+          fetchSchedules({ yearMonth: toYearMonth(visibleYear, visibleMonth) }),
+        ),
+      )
+      return responses.flat()
+    },
     enabled: isBackendConnected,
   })
 
