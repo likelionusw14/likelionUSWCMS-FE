@@ -12,7 +12,8 @@ export function ProjectFormPage() {
   const navigate = useNavigate()
   const { data: project } = useProject(projectId)
   const isEdit = Boolean(projectId)
-  const { values, setField, handleSubmit, fileName, setFileName } = useProjectForm(project)
+  const { values, setField, handleSubmit, fileName, selectFile, clearFile } =
+    useProjectForm(project)
   const deleteProject = useDeleteProject()
   const [confirmOpen, setConfirmOpen] = useState(false)
   const [deleteDoneOpen, setDeleteDoneOpen] = useState(false)
@@ -36,8 +37,8 @@ export function ProjectFormPage() {
         cohortOptions={COHORT_OPTIONS}
         categoryOptions={PROJECT_CATEGORY_OPTIONS}
         fileName={fileName}
-        onFileChange={setFileName}
-        onFileClear={() => setFileName('')}
+        onFileChange={selectFile}
+        onFileClear={clearFile}
       />
 
       <ConfirmDialog
