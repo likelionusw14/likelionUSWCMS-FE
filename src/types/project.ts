@@ -87,6 +87,7 @@ export interface UserProjectSummary extends ProjectSummary {
 }
 
 export interface UserProject extends UserProjectSummary {
+  imageUrls: string[]
   description: string
   deployUrl: string | null
   githubUrl: string | null

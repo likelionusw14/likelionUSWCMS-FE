@@ -1,11 +1,12 @@
 import { useLocation } from 'react-router-dom'
-import { PROJECT_COHORT_OPTIONS, USER_PROJECT_TYPE_OPTIONS } from '@constants'
-import { useUserProjectListPage } from '@hooks'
+import { USER_PROJECT_TYPE_OPTIONS } from '@constants'
+import { useCohorts, useUserProjectListPage } from '@hooks'
 import { ProjectFilterBar, ProjectList } from '@organisms'
 
 // 멤버(/app/projects)·게스트(/projects)가 같은 목록을 공유한다. 상세 링크 베이스는 현재 라우트에서 딴다.
 export function UserProjectListPage() {
   const { pathname } = useLocation()
+  const cohorts = useCohorts()
   const { data, cohort, projectType, page, setCohort, setProjectType, setPage, resetPage } =
     useUserProjectListPage()
 
@@ -25,7 +26,7 @@ export function UserProjectListPage() {
           filterValue={projectType}
           onCohortChange={setCohort}
           onFilterChange={setProjectType}
-          cohortOptions={PROJECT_COHORT_OPTIONS}
+          cohortOptions={cohorts.data}
           filterOptions={USER_PROJECT_TYPE_OPTIONS}
           filterPlaceholder="프로젝트"
           onSearch={resetPage}
