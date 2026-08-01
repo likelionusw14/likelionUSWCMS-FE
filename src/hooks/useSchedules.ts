@@ -170,7 +170,8 @@ export function useCreateSchedule() {
     mutationFn: async (body: ApiCreateScheduleRequest) => {
       // 미연동 데모: 서버 호출 없이 성공 처리.
       if (!isBackendConnected) return
-      await createSchedule(body)
+      // Idempotency-Key 는 제출 1건당 새로 만든다 (같은 키는 24시간 동안 첫 응답을 재생한다).
+      await createSchedule(body, crypto.randomUUID())
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: [SCHEDULES_KEY] }),
   })

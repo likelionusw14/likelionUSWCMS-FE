@@ -1,8 +1,14 @@
 import { apiClient, endpoints } from '@api'
 import type { ApiCreateNoticeRequest, ApiNoticeResponse, ApiUpdateNoticeRequest } from '@api'
 
-export async function createNotice(body: ApiCreateNoticeRequest): Promise<ApiNoticeResponse> {
-  const { data } = await apiClient.post<ApiNoticeResponse>(endpoints.adminNotices, body)
+// 공지 등록. Idempotency-Key 는 스펙상 필수 헤더이므로 호출부에서 제출 1건당 하나를 만들어 넘긴다.
+export async function createNotice(
+  body: ApiCreateNoticeRequest,
+  idempotencyKey: string,
+): Promise<ApiNoticeResponse> {
+  const { data } = await apiClient.post<ApiNoticeResponse>(endpoints.adminNotices, body, {
+    headers: { 'Idempotency-Key': idempotencyKey },
+  })
   return data
 }
 

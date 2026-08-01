@@ -112,7 +112,9 @@ export function useCreateNotice() {
   return useMutation({
     mutationFn: async (body: ApiCreateNoticeRequest) => {
       if (!isBackendConnected) return
-      await createNotice(body)
+      // Idempotency-Key 는 제출 1건당 새로 만든다. 같은 키는 24시간 동안 첫 응답을 그대로
+      // 재생하므로, 422 를 고쳐 다시 낼 때 옛 결과가 돌아오면 안 된다.
+      await createNotice(body, crypto.randomUUID())
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['admin-notices'] }),
   })
