@@ -164,14 +164,16 @@ function toYearMonth(value: string): string {
 }
 
 // ProjectFormValues → CreateProjectRequest.
-export function toCreateProjectRequest(values: ProjectFormValues): ApiCreateProjectRequest {
+// thumbnailAssetId 는 업로드를 마친 뒤에야 정해지므로 호출부가 넘긴다 (없으면 미전달).
+export function toCreateProjectRequest(
+  values: ProjectFormValues,
+  thumbnailAssetId?: number,
+): ApiCreateProjectRequest {
   return {
     title: values.name.trim(),
     description: values.description.trim(),
     projectType: PROJECT_TYPE_ENUM[values.category] ?? 'HACKATHON',
-    // thumbnailAssetId 미전달: FileUploadField 가 파일명 문자열만 다뤄 실제 File 객체가 없다.
-    // TODO(파일 업로드): 폼이 File 을 넘기도록 확장 후 uploadFile('PROJECT_THUMBNAIL', file) 로
-    //   fileAssetId 를 획득해 thumbnailAssetId 로 전달해야 한다.
+    ...(thumbnailAssetId === undefined ? {} : { thumbnailAssetId }),
     deployUrl: values.projectUrl.trim() || null,
     githubUrl: values.githubUrl.trim() || null,
     cohortId: Number.parseInt(values.cohort, 10) || 0,
@@ -182,15 +184,18 @@ export function toCreateProjectRequest(values: ProjectFormValues): ApiCreateProj
 }
 
 // ProjectFormValues → UpdateProjectRequest. version 은 수정 대상(useProject 응답)의 값을 필수 전달.
+// 수정에서 thumbnailAssetId 미전달은 '기존 대표이미지 유지' 다.
 export function toUpdateProjectRequest(
   values: ProjectFormValues,
   version: number,
+  thumbnailAssetId?: number,
 ): ApiUpdateProjectRequest {
   return {
     version,
     title: values.name.trim(),
     description: values.description.trim(),
     projectType: PROJECT_TYPE_ENUM[values.category] ?? 'HACKATHON',
+    ...(thumbnailAssetId === undefined ? {} : { thumbnailAssetId }),
     deployUrl: values.projectUrl.trim() || null,
     githubUrl: values.githubUrl.trim() || null,
     cohortId: Number.parseInt(values.cohort, 10) || 0,

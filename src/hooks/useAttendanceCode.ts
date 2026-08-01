@@ -7,9 +7,10 @@ import { isBackendConnected } from '@config'
 // 유효시간 5분(로컬 폴백용).
 const VALID_SECONDS = 5 * 60
 
-// 7자리 숫자 코드(로컬 폴백용).
+// 6자리 숫자 코드(로컬 폴백용). 자릿수는 인증 API 의 제약(^\d{6}$)과 맞춘다 —
+// 폴백만 7자리면 데모 코드를 그대로 입력해도 6자리 입력창에서 잘려 절대 맞지 않는다.
 function randomCode(): string {
-  return String(Math.floor(Math.random() * 10_000_000)).padStart(7, '0')
+  return String(Math.floor(Math.random() * 1_000_000)).padStart(6, '0')
 }
 
 // 출석 코드 생성 — 코드 발급 + 유효시간 카운트다운.

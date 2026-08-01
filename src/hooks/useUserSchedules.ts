@@ -3,20 +3,10 @@ import { fetchUserSchedules } from '@api'
 import type { ApiScheduleResponse } from '@api'
 import { isBackendConnected } from '@config'
 import type { CalendarEvent } from '@types'
+import { getVisibleMonths, toYearMonth } from '@utils'
 
 function pad2(value: number) {
   return String(value).padStart(2, '0')
-}
-
-function toYearMonth(year: number, month: number) {
-  return `${year}-${pad2(month + 1)}`
-}
-
-function getVisibleMonths(year: number, month: number) {
-  return [-1, 0, 1].map((offset) => {
-    const date = new Date(year, month + offset, 1)
-    return { year: date.getFullYear(), month: date.getMonth() }
-  })
 }
 
 function formatDateTime(schedule: ApiScheduleResponse) {

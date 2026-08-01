@@ -1,5 +1,6 @@
 import type { FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { uploadFile } from '@api'
 import { isBackendConnected } from '@config'
 import {
   toCreateProjectRequest,
@@ -60,17 +61,23 @@ export function useProjectForm(project?: Project) {
       return
     }
 
+    // 대표이미지를 새로 골랐을 때만 업로드해 assetId 를 얻는다.
+    // 수정에서 미전달은 '기존 이미지 유지' 이므로 안 고르면 undefined 그대로 넘긴다.
+    const thumbnailAssetId = form.file
+      ? await uploadFile('PROJECT_THUMBNAIL', form.file, crypto.randomUUID())
+      : undefined
+
     if (project) {
       // 수정: version 은 낙관적 동시성 토큰으로 필수(useProject 응답의 version).
       await updateProject.mutateAsync({
         projectId: project.id,
-        body: toUpdateProjectRequest(form.values, project.version),
+        body: toUpdateProjectRequest(form.values, project.version, thumbnailAssetId),
       })
       navigate('/admin/projects')
       return
     }
 
-    await createProject.mutateAsync(toCreateProjectRequest(form.values))
+    await createProject.mutateAsync(toCreateProjectRequest(form.values, thumbnailAssetId))
     navigate('/admin/projects')
   }
 

@@ -19,6 +19,9 @@ export function useEntityForm<TEntity extends Entity, TValues extends object>(op
 
   const [values, setValues] = useState<TValues>(() => toValues(entity))
   const [fileName, setFileName] = useState(() => toFileName?.(entity) ?? '')
+  // 새로 고른 파일. 저장 시점에만 업로드하므로 여기서는 들고만 있는다.
+  // null = 새로 고른 파일 없음 (수정 화면에서는 '기존 첨부 유지' 를 뜻한다).
+  const [file, setFile] = useState<File | null>(null)
 
   // 엔티티 정체성이 바뀔 때만 재하이드레이트 (매 렌더 리셋 방지). 신규 폼(entity 없음)은 id ''.
   const hydratedId = useRef(entity?.id ?? '')
@@ -28,10 +31,22 @@ export function useEntityForm<TEntity extends Entity, TValues extends object>(op
     hydratedId.current = nextId
     setValues(toValues(entity))
     setFileName(toFileName?.(entity) ?? '')
+    setFile(null)
   }, [entity, toValues, toFileName])
 
   function setField<K extends keyof TValues>(field: K, value: TValues[K]) {
     setValues((previous) => ({ ...previous, [field]: value }))
+  }
+
+  // 파일 선택·해제는 파일명(표시)과 File(전송)을 함께 움직인다.
+  function selectFile(next: File) {
+    setFile(next)
+    setFileName(next.name)
+  }
+
+  function clearFile() {
+    setFile(null)
+    setFileName('')
   }
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -39,5 +54,5 @@ export function useEntityForm<TEntity extends Entity, TValues extends object>(op
     navigate(redirectTo)
   }
 
-  return { values, setField, handleSubmit, fileName, setFileName }
+  return { values, setField, handleSubmit, fileName, file, selectFile, clearFile }
 }

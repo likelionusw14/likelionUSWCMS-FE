@@ -43,7 +43,10 @@ export function FileUploadField({
         type="file"
         accept={accept}
         className="hidden"
-        onChange={(event) => onFileChange(event.target.files?.[0]?.name ?? '')}
+        onChange={(event) => {
+          const file = event.target.files?.[0]
+          if (file) onFileChange(file)
+        }}
       />
       <div className="flex min-w-px flex-wrap items-center gap-8">
         <button

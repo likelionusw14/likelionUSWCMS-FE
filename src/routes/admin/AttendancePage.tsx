@@ -7,8 +7,9 @@ import { PART_OPTIONS } from '@constants'
 
 // 출결 관리 — 출석 코드 생성 카드 + (출석 내역 제목 + 검색바 + 출석 내역 카드). Figma 29:18174 / 563:9299.
 export function AttendancePage() {
-  const { code, remainingSeconds, generate } = useAttendanceCode()
   const {
+    scheduleId,
+    hasSchedule,
     records,
     totalCount,
     page,
@@ -25,6 +26,8 @@ export function AttendancePage() {
     togglePresent,
     saveRemark,
   } = useAttendanceList()
+  // 출석 코드는 일정에 매인다 — 선택한 날짜의 일정이 없으면 발급 대상이 없다.
+  const { code, remainingSeconds, generate } = useAttendanceCode(scheduleId)
 
   return (
     <>
@@ -55,15 +58,21 @@ export function AttendancePage() {
             placeholder="파트"
           />
         </SearchBar>
-        <AttendanceList
-          records={records}
-          totalCount={totalCount}
-          page={page}
-          totalPages={totalPages}
-          onPageChange={setPage}
-          onTogglePresent={togglePresent}
-          onEditRemark={setRemarkRecord}
-        />
+        {hasSchedule ? (
+          <AttendanceList
+            records={records}
+            totalCount={totalCount}
+            page={page}
+            totalPages={totalPages}
+            onPageChange={setPage}
+            onTogglePresent={togglePresent}
+            onEditRemark={setRemarkRecord}
+          />
+        ) : (
+          <p className="py-48 text-center text-m-16 text-background-2">
+            선택한 날짜에 일정이 없습니다. 출결은 일정 단위로 관리되니 먼저 일정을 등록해주세요.
+          </p>
+        )}
       </div>
 
       <DatePickerModal
