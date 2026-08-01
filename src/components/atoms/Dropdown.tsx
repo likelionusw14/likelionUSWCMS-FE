@@ -41,9 +41,13 @@ export function Dropdown({ value, onChange, options, placeholder, className }: D
         onClick={() => setIsOpen((previous) => !previous)}
         aria-haspopup="listbox"
         aria-expanded={isOpen}
-        className={cn('flex h-32 items-center justify-between text-m-14 text-black', PANEL_BOX)}
+        className={cn('flex h-32 items-center justify-between text-m-14', PANEL_BOX)}
       >
-        <span className="truncate">{selected ? selected.label : placeholder}</span>
+        {/* 미선택은 흐리게 — placeholder 가 선택값과 같은 검정이면 이미 고른 것처럼 보인다.
+            파트 placeholder('기획')처럼 실제 선택지와 글자가 같은 경우 특히 구분이 안 된다. */}
+        <span className={cn('truncate', selected ? 'text-black' : 'text-primary/50')}>
+          {selected ? selected.label : placeholder}
+        </span>
         <motion.img
           src={chevronDown}
           alt=""
