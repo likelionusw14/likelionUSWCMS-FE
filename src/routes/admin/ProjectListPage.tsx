@@ -1,15 +1,16 @@
 import { useState } from 'react'
-import { COHORT_OPTIONS } from '@constants'
 import { Dropdown } from '@atoms'
-import { useProjects, usePagination } from '@hooks'
+import { useCohorts, useProjects, usePagination } from '@hooks'
 import { ProjectList, SearchBar } from '@organisms'
 
 export function ProjectListPage() {
   const { data: projects } = useProjects()
+  const cohorts = useCohorts()
   const [cohort, setCohort] = useState('')
-  // Project 모델엔 파트 개념이 없어 기수(cohortId)만 필터한다. COHORT_OPTIONS value 는 '14기' 형식.
+  // Project 모델엔 파트 개념이 없어 기수(cohortId)만 필터한다.
+  // 선택지 value 가 곧 cohortId 라 ID 로 비교한다 — 라벨('14기')과 ID(1)는 다르다.
   const filtered = cohort
-    ? projects.filter((project) => `${project.cohortId}기` === cohort)
+    ? projects.filter((project) => String(project.cohortId) === cohort)
     : projects
   const { page, setPage, totalPages, slice } = usePagination({
     totalItems: filtered.length,
@@ -28,7 +29,7 @@ export function ProjectListPage() {
               setCohort(value)
               setPage(1)
             }}
-            options={COHORT_OPTIONS}
+            options={cohorts.data}
             placeholder="기수"
           />
         </SearchBar>
