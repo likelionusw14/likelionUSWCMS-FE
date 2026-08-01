@@ -10,3 +10,12 @@
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
   X-Frame-Options: DENY
+
+# HTML 은 캐시하지 않는다 (자산과 반대로 파일명이 고정이라 내용이 바뀌어도 이름이 그대로다).
+# 오래된 index.html 은 이미 사라진 해시 자산을 요청하고, 없는 경로는 _redirects 의 SPA 폴백에
+# 걸려 index.html(text/html)이 200 으로 돌아온다. 그러면 브라우저가 JS 모듈 자리에 HTML 을 받아
+# "Expected a JavaScript-or-Wasm module script ..." 로 화면이 통째로 안 뜬다.
+/
+  Cache-Control: no-cache
+/index.html
+  Cache-Control: no-cache
