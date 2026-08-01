@@ -76,6 +76,7 @@ export interface ApiProjectPage {
 export type ApiCreateProjectRequest = Req<Schemas['CreateProjectRequest']>
 export type ApiUpdateProjectRequest = Req<Schemas['UpdateProjectRequest']>
 export type ApiProjectParticipantResponse = Res<Schemas['ProjectParticipantResponse']>
+export type ApiProjectParticipantRequest = Req<Schemas['ProjectParticipantRequest']>
 
 // Lions (사자)
 export type ApiLionResponse = Res<Schemas['LionResponse']>
@@ -99,7 +100,8 @@ export type ApiCertificatePreviewResponse = Res<Schemas['CertificatePreviewRespo
 export type ApiCertificateResponse = Res<Schemas['CertificateResponse']>
 
 // Notices
-export type ApiNoticeResponse = Nullable<Res<Schemas['NoticeResponse']>, 'externalUrl'>
+// image 는 첨부가 없는 공지에서 비어 온다.
+export type ApiNoticeResponse = Nullable<Res<Schemas['NoticeResponse']>, 'externalUrl' | 'image'>
 export interface ApiNoticePage {
   items: ApiNoticeResponse[]
   page: ApiPageMeta

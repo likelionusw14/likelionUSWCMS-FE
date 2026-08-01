@@ -829,13 +829,20 @@ export interface components {
             githubUrl?: string;
             /** Format: int64 */
             cohortId: number;
-            /** Format: date */
+            /** @example 2025-03 */
             startedMonth: string;
-            /** Format: date */
+            /** @example 2025-03 */
             endedMonth: string;
+            participants: components["schemas"]["ProjectParticipantRequest"][];
             dateRangeValid?: boolean;
+            participantsUnique?: boolean;
             deployUrlValid?: boolean;
             githubUrlValid?: boolean;
+        };
+        ProjectParticipantRequest: {
+            /** Format: int64 */
+            userId: number;
+            role?: string;
         };
         AdminProjectResponse: {
             /** Format: int64 */
@@ -853,6 +860,7 @@ export interface components {
             startedMonth?: string;
             /** @example 2025-03 */
             endedMonth?: string;
+            participants?: components["schemas"]["ProjectParticipantResponse"][];
             /** Format: int64 */
             createdBy?: number;
             /** Format: int32 */
@@ -861,6 +869,12 @@ export interface components {
             createdAt?: string;
             /** Format: date-time */
             updatedAt?: string;
+        };
+        ProjectParticipantResponse: {
+            /** Format: int64 */
+            userId?: number;
+            name?: string;
+            role?: string;
         };
         CreateNoticeRequest: {
             title?: string;
@@ -873,6 +887,12 @@ export interface components {
             imageAssetId?: number;
             externalUrlValid?: boolean;
         };
+        FileView: {
+            file?: components["schemas"]["FileAssetResponse"];
+            downloadUrl?: string;
+            /** Format: date-time */
+            expiresAt?: string;
+        };
         NoticeResponse: {
             /** Format: int64 */
             noticeId?: number;
@@ -882,6 +902,7 @@ export interface components {
             tag?: "SCHEDULE" | "PROJECT" | "PROMOTION_EVENT" | "OTHER";
             isFixed?: boolean;
             externalUrl?: string;
+            image?: components["schemas"]["FileView"];
             /** Format: int64 */
             createdBy?: number;
             /** Format: date-time */
@@ -971,12 +992,14 @@ export interface components {
             githubUrl?: string;
             /** Format: int64 */
             cohortId?: number;
-            /** Format: date */
+            /** @example 2025-03 */
             startedMonth?: string;
-            /** Format: date */
+            /** @example 2025-03 */
             endedMonth?: string;
+            participants?: components["schemas"]["ProjectParticipantRequest"][];
             anyChangeProvided?: boolean;
             providedValueValid?: boolean;
+            participantsUnique?: boolean;
             deployUrlValid?: boolean;
             githubUrlValid?: boolean;
         };
@@ -1052,21 +1075,9 @@ export interface components {
             /** Format: date-time */
             expiresAt?: string;
         };
-        FileView: {
-            file?: components["schemas"]["FileAssetResponse"];
-            downloadUrl?: string;
-            /** Format: date-time */
-            expiresAt?: string;
-        };
         PageResponseProjectResponse: {
             items?: components["schemas"]["ProjectResponse"][];
             page?: components["schemas"]["PageMeta"];
-        };
-        ProjectParticipantResponse: {
-            /** Format: int64 */
-            userId?: number;
-            name?: string;
-            role?: string;
         };
         ProjectResponse: {
             /** Format: int64 */

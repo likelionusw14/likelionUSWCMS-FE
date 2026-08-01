@@ -179,7 +179,10 @@ export function toCreateProjectRequest(
     cohortId: Number.parseInt(values.cohort, 10) || 0,
     startedMonth: toYearMonth(values.startDate),
     endedMonth: toYearMonth(values.endDate),
-    // 참여자는 등록 요청 바디에 없다 — 별도 참여자 API 로 붙이는 구조로 보인다.
+    // [추정] participants 는 필수지만 userId 도 필수다. 관리자 폼의 참여자 입력은 자유 텍스트라
+    // ('김대머(14기,기획), …') userId 를 신뢰성 있게 뽑을 수 없어 빈 배열로 보낸다.
+    // 구조화된 참여자 편집 UI(회원 검색 → 선택)가 생기면 그때 실제 목록을 싣는다.
+    participants: [],
   }
 }
 
