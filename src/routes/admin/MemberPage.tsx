@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ACCOUNT_REJECTION_DEFAULT_REASON, COHORT_OPTIONS, PART_OPTIONS } from '@constants'
+import { COHORT_OPTIONS, PART_OPTIONS } from '@constants'
 import {
   toPartCode,
   toRoleCode,
@@ -47,12 +47,8 @@ export function MemberPage() {
           onReject={(id) => {
             const target = pending.find((member) => member.id === id)
             if (target) {
-              // 사유 입력 UI 가 없어 기본 문구를 보낸다 (rejectionReason 은 API 필수).
-              rejectAccount.mutate({
-                userId: id,
-                version: target.version,
-                rejectionReason: ACCOUNT_REJECTION_DEFAULT_REASON,
-              })
+              // 사유 입력 UI 가 없어 rejectionReason 은 생략한다 (API 선택값).
+              rejectAccount.mutate({ userId: id, version: target.version })
             }
           }}
         />

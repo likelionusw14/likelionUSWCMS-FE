@@ -34,9 +34,9 @@ export type ApiAccountPage = components['schemas']['AccountPage']
 export type ApiUpdateAccountRequest = components['schemas']['UpdateAccountRequest']
 export type ApiUpdateRoleRequest = components['schemas']['UpdateRoleRequest']
 
-// 가입 승인·거절 요청 바디.
-// [TODO] 백엔드가 PATCH /admin/accounts/{userId}/status 를 approval·rejection 두 경로로 분리했는데
-//   openapi/openapi.yaml 이 아직 옛 스펙(UpdateAccountStatusRequest)이라 생성 타입에 없다.
+// 가입 승인·거절 요청 바디 (운영 서버 /v3/api-docs 의 ApproveAccountRequest·RejectAccountRequest).
+// 거절 사유는 필수가 아니다 (required 는 version 뿐, maxLength 500).
+// [TODO] openapi/openapi.yaml 이 아직 옛 스펙(UpdateAccountStatusRequest)이라 생성 타입에 없다.
 //   스펙이 갱신되면 npm run api:sync 후 아래 수기 타입을 components['schemas'] 재노출로 교체한다.
 export interface ApiApproveAccountRequest {
   version: number
@@ -44,7 +44,7 @@ export interface ApiApproveAccountRequest {
 
 export interface ApiRejectAccountRequest {
   version: number
-  rejectionReason: string
+  rejectionReason?: string
 }
 
 // Projects
