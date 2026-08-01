@@ -1,11 +1,12 @@
 import { useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
+  approveAccount,
   deleteAccount,
   fetchAccounts,
+  rejectAccount,
   updateAccount,
   updateAccountRole,
-  updateAccountStatus,
 } from '@api'
 import type {
   AdminAccountQuery,
@@ -178,21 +179,27 @@ export function usePendingMembers(): {
   }
 }
 
-// 가입상태 변경 (승인 = ACTIVE / 거절 = REJECTED + rejectionReason). version 필수.
-export function useUpdateAccountStatus() {
+// 가입 승인 (PENDING → ACTIVE). version 필수.
+export function useApproveAccount() {
   const qc = useQueryClient()
   return useMutation({
-    mutationFn: async (input: {
-      userId: string
-      status: 'ACTIVE' | 'REJECTED'
-      version: number
-      rejectionReason?: string
-    }) => {
+    mutationFn: async (input: { userId: string; version: number }) => {
       if (!isBackendConnected) return
-      await updateAccountStatus(input.userId, {
-        status: input.status,
+      await approveAccount(input.userId, { version: input.version })
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: [ADMIN_ACCOUNTS_KEY] }),
+  })
+}
+
+// 가입 거절 (PENDING → REJECTED). 거절 사유는 감사 로그에 남으므로 필수다.
+export function useRejectAccount() {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: async (input: { userId: string; version: number; rejectionReason: string }) => {
+      if (!isBackendConnected) return
+      await rejectAccount(input.userId, {
         version: input.version,
-        rejectionReason: input.status === 'REJECTED' ? input.rejectionReason : null,
+        rejectionReason: input.rejectionReason,
       })
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: [ADMIN_ACCOUNTS_KEY] }),
