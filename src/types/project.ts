@@ -124,6 +124,7 @@ export interface ProjectFormValues {
   endDate: string
   githubUrl: string
   projectUrl: string
-  participants: string
+  // 참여자는 API 가 userId 를 요구하므로 자유 텍스트가 아니라 선택된 회원 목록이다.
+  participants: ProjectParticipant[]
   description: string
 }

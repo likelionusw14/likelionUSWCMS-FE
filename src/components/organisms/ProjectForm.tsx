@@ -3,6 +3,7 @@ import type { FormEvent } from 'react'
 import calendarIcon from '@/assets/icons/calendar.svg'
 import { Button, Dropdown, Input } from '@atoms'
 import { DatePickerModal, FileUploadField, FormRow } from '@molecules'
+import { ParticipantPicker } from './ParticipantPicker'
 import type { ProjectFormProps, ProjectFormValues } from '@types'
 import { cn } from '@utils'
 
@@ -148,12 +149,9 @@ export function ProjectForm({
           {/* 프로젝트 참여자 */}
           <div className="relative z-10 flex min-h-48 w-full items-stretch sm:min-h-[56px]">
             <FormRow label="프로젝트 참여자">
-              <Input
-                variant="form"
-                className="min-w-px"
+              <ParticipantPicker
                 value={values.participants}
-                onChange={(event) => onFieldChange('participants', event.target.value)}
-                placeholder="김ㅇㅇ(14기,기획), 김ㅇㅇ(14기,기획)"
+                onChange={(participants) => onFieldChange('participants', participants)}
               />
             </FormRow>
           </div>

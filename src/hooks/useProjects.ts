@@ -163,6 +163,14 @@ function toYearMonth(value: string): string {
   return `${year}-${month.padStart(2, '0')}`
 }
 
+// 폼의 참여자 목록 → 요청 바디. API 는 userId 와 역할 텍스트만 받는다.
+function toParticipantRequests(participants: ProjectFormValues['participants']) {
+  return participants.map((participant) => ({
+    userId: participant.userId,
+    role: participant.role,
+  }))
+}
+
 // ProjectFormValues → CreateProjectRequest.
 // thumbnailAssetId 는 업로드를 마친 뒤에야 정해지므로 호출부가 넘긴다 (없으면 미전달).
 export function toCreateProjectRequest(
@@ -179,10 +187,7 @@ export function toCreateProjectRequest(
     cohortId: Number.parseInt(values.cohort, 10) || 0,
     startedMonth: toYearMonth(values.startDate),
     endedMonth: toYearMonth(values.endDate),
-    // [추정] participants 는 필수지만 userId 도 필수다. 관리자 폼의 참여자 입력은 자유 텍스트라
-    // ('김대머(14기,기획), …') userId 를 신뢰성 있게 뽑을 수 없어 빈 배열로 보낸다.
-    // 구조화된 참여자 편집 UI(회원 검색 → 선택)가 생기면 그때 실제 목록을 싣는다.
-    participants: [],
+    participants: toParticipantRequests(values.participants),
   }
 }
 
@@ -204,7 +209,7 @@ export function toUpdateProjectRequest(
     cohortId: Number.parseInt(values.cohort, 10) || 0,
     startedMonth: toYearMonth(values.startDate),
     endedMonth: toYearMonth(values.endDate),
-    // 참여자는 수정 요청 바디에 없다 (create 와 동일).
+    participants: toParticipantRequests(values.participants),
   }
 }
 
