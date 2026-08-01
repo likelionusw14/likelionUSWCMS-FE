@@ -28,7 +28,8 @@ function toProjectValues(project: Project | undefined): ProjectFormValues {
   if (!project) return EMPTY_VALUES
   return {
     name: project.title,
-    cohort: `${project.cohortId}기`,
+    // 드롭다운 value 는 기수 ID(useCohorts 선택지와 동일). 표시 라벨('14기')과 다르다.
+    cohort: String(project.cohortId),
     category: project.tags.find((tag) => tag === '해커톤' || tag === '아이디어톤') ?? '',
     startDate: `${project.developedYear}.${String(project.developedMonth).padStart(2, '0')}`,
     endDate: `${project.developedYear}.${String(project.developedMonth).padStart(2, '0')}`,
