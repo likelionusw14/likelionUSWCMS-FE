@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
-import { fetchCertificatePreview, issueCertificate } from '@api'
+import { fetchCertificateDownloadUrl, fetchCertificatePreview, issueCertificate } from '@api'
 import type { ApiCertificatePreviewResponse, ApiPartType } from '@api'
 import { isBackendConnected } from '@config'
 import type { CertificateFlowState, CertificateInfo } from '@types'
@@ -71,6 +71,8 @@ export function useCertificateIssue(): {
 } {
   const navigate = useNavigate()
   const [state, setState] = useState<CertificateFlowState>('idle')
+  // 발급 응답의 certificateId — 다운로드 URL 을 받을 때 필요하다.
+  const [certificateId, setCertificateId] = useState<number | undefined>(undefined)
   const timerRef = useRef<number | undefined>(undefined)
 
   useEffect(() => () => window.clearTimeout(timerRef.current), [])
@@ -82,12 +84,32 @@ export function useCertificateIssue(): {
       return
     }
     issueCertificate()
-      .then(() => setState('issued'))
+      .then((response) => {
+        setCertificateId(response.certificateId)
+        setState('issued')
+      })
       .catch(() => setState('idle'))
   }, [])
 
-  // 지침: 실제 다운로드 없이 다음 팝업으로 이동.
-  const download = useCallback(() => setState('downloaded'), [])
+  const download = useCallback(() => {
+    // 미연동(mock)이면 받을 파일이 없어 다음 팝업으로만 넘어간다.
+    if (!isBackendConnected || certificateId === undefined) {
+      setState('downloaded')
+      return
+    }
+    // 다운로드 URL 은 만료가 짧은 Presigned 라 눌린 시점에 받아 바로 연다.
+    fetchCertificateDownloadUrl(String(certificateId))
+      .then(({ downloadUrl }) => {
+        const anchor = document.createElement('a')
+        anchor.href = downloadUrl
+        anchor.target = '_blank'
+        anchor.rel = 'noopener noreferrer'
+        anchor.click()
+        setState('downloaded')
+      })
+      // 실패하면 완료로 넘기지 않는다 — 발급 완료 팝업에 머물러 다시 시도할 수 있게 둔다.
+      .catch(() => {})
+  }, [certificateId])
 
   const goHome = useCallback(() => {
     setState('idle')
