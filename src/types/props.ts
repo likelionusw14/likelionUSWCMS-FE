@@ -430,6 +430,8 @@ export interface AttendanceCheckInProps {
   onCodeChange: (value: string) => void
   remainingSeconds: number
   result: AttendanceCheckInResult
+  /** 실패 사유(서버 메시지 등). 없으면 기본 문구를 쓴다. */
+  errorMessage?: string
   onSubmit: () => void
   onCloseResult: () => void
 }

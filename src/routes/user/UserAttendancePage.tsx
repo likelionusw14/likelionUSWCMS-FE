@@ -21,6 +21,7 @@ export function UserAttendancePage() {
         onCodeChange={checkIn.setCode}
         remainingSeconds={checkIn.remainingSeconds}
         result={checkIn.result}
+        errorMessage={checkIn.errorMessage}
         onSubmit={checkIn.submit}
         onCloseResult={checkIn.closeResult}
       />
