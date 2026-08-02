@@ -1,12 +1,14 @@
 import { Dropdown } from '@atoms'
-import { PROJECT_COHORT_OPTIONS } from '@constants'
-import { useUserLionListPage } from '@hooks'
+import { useCohorts, useUserLionListPage } from '@hooks'
 import { LionPartFilter } from '@molecules'
 import { LionSection } from '@organisms'
 
 // 사자 페이지 — 기수 드롭다운(공통) + 운영진/아기사자 2섹션. 아기사자만 파트 필터.
 export function UserLionListPage() {
   const { operators, babyLions, cohort, part, setCohort, setPart } = useUserLionListPage()
+  // 기수 선택지는 백엔드에서 받는다 — value 가 곧 cohortId 다.
+  // 하드코딩한 '14' 를 그대로 보내면 존재하지 않는 기수 ID 로 조회돼 결과가 비었다.
+  const cohorts = useCohorts()
 
   return (
     <div className="mx-auto flex w-full max-w-[1280px] flex-col gap-48 px-24 pb-96 pt-40 sm:gap-64 sm:px-32 sm:pt-48 lg:px-64">
@@ -20,12 +22,7 @@ export function UserLionListPage() {
 
       <div className="flex flex-col gap-24">
         <div className="flex justify-end">
-          <Dropdown
-            value={cohort}
-            onChange={setCohort}
-            options={PROJECT_COHORT_OPTIONS}
-            placeholder="기수"
-          />
+          <Dropdown value={cohort} onChange={setCohort} options={cohorts.data} placeholder="기수" />
         </div>
         <LionSection label="운영진" lions={operators.data} isLoading={operators.isLoading} />
         <LionSection
