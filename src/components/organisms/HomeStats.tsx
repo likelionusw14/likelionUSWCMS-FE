@@ -1,5 +1,6 @@
 import { motion, useReducedMotion } from 'framer-motion'
 import { CountUp } from '@atoms'
+import effortBar from '@/assets/home/stats/effort.png'
 
 // 주요 성과 지표 — 말풍선 바 3칸. 숫자는 뷰포트 진입 시 카운트업한다.
 const STATS = [
@@ -47,21 +48,30 @@ export function HomeStats() {
             </p>
           </div>
 
-          {/* 주요성과 말풍선 — 바(140px) + 아래 삼각 꼬리(58px) */}
-          <div className="relative w-full pb-[42px] sm:h-[198px] sm:pb-0">
-            <ul className="flex w-full flex-col items-stretch divide-y-2 divide-white/30 overflow-hidden rounded-16 bg-secondary-2 shadow-emboss-light sm:h-[140px] sm:flex-row sm:divide-x-2 sm:divide-y-0">
+          {/* 주요성과 말풍선 — sm 미만은 Figma 모바일(196×330) 스펙대로 고정 폭 + 가운데 정렬 */}
+          <div className="relative w-[196px] pb-[18px] sm:w-full sm:pb-0">
+            {/* sm 이상 배경 — 바+꼬리가 담긴 Figma export(736×129). 구분선도 이미지에 있다 */}
+            <img
+              src={effortBar}
+              alt=""
+              width={736}
+              height={129}
+              className="hidden w-full sm:block"
+            />
+            {/* 통계 3칸 — sm 미만은 스스로 배경을 그리고, sm 이상은 이미지 바 영역(92/129)에 얹는다 */}
+            <ul className="flex w-full flex-col items-stretch divide-y-2 divide-white/30 overflow-hidden rounded-16 bg-secondary-2 text-white shadow-emboss-light sm:absolute sm:inset-x-0 sm:top-0 sm:h-[71.3%] sm:flex-row sm:divide-y-0 sm:rounded-none sm:bg-transparent sm:shadow-none">
               {STATS.map((stat) => (
                 <li
                   key={stat.label}
-                  className="flex min-h-[108px] flex-1 flex-col items-center justify-center gap-8 text-center whitespace-nowrap text-white sm:min-h-0"
+                  className="flex flex-col items-center justify-center gap-8 py-24 text-center whitespace-nowrap sm:flex-1 sm:py-0"
                 >
                   <span className="text-sm-16 sm:text-sm-22">{stat.label}</span>
                   <CountUp to={stat.to} suffix={stat.suffix} className="text-sm-22 sm:text-h1" />
                 </li>
               ))}
             </ul>
-            {/* 꼬리 — Figma 벡터(588:4513) 대신 clip-path 삼각형. 첫 구분선 오른쪽(가로 38.4% 지점)에 맞춘다 */}
-            <div className="absolute bottom-0 left-1/2 h-[42px] w-[48px] -translate-x-1/2 bg-secondary-2 [clip-path:polygon(0_0,100%_0,50%_100%)] sm:bottom-auto sm:left-[38.4%] sm:top-[140px] sm:h-[58px] sm:w-[61px]" />
+            {/* sm 미만 꼬리 — Figma 20×18, 말풍선 왼쪽에서 32px (export 는 구분선 위치가 어긋나 CSS 로 그린다) */}
+            <div className="absolute bottom-0 left-[32px] h-[18px] w-[20px] bg-secondary-2 [clip-path:polygon(0_0,100%_0,50%_100%)] sm:hidden" />
           </div>
         </motion.div>
       </div>
