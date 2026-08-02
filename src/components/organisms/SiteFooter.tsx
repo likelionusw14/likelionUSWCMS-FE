@@ -38,7 +38,7 @@ export function SiteFooter({ variant }: SiteFooterProps) {
             <p className={cn('text-m-18', styles.sub)}>{BRAND_TAGLINE}</p>
             <div className={cn('flex items-center gap-8 text-m-18', styles.sub)}>
               <span>©</span>
-              <span>LIKELION USW ALL RIGHT RESERVED</span>
+              <span>LIKELION USW ALL RIGHTS RESERVED</span>
             </div>
           </div>
 
