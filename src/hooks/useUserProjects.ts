@@ -116,6 +116,7 @@ function toUserProject(response: ApiProjectResponse): UserProject {
     imageUrls: response.thumbnail?.downloadUrl ? [response.thumbnail.downloadUrl] : [],
     tags: [`${response.cohort.number}기`, PROJECT_TYPE_LABEL[response.projectType]],
     cohortId: response.cohort.cohortId,
+    cohortNumber: response.cohort.number,
     developedYear: Number.parseInt(response.endedMonth.slice(0, 4), 10),
     developedMonth: Number.parseInt(endedMonth, 10),
     createdAt: response.createdAt,

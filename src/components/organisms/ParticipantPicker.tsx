@@ -55,7 +55,7 @@ export function ParticipantPicker({ value, onChange }: ParticipantPickerProps) {
                 >
                   <span className="truncate">{candidate.name}</span>
                   <span className="shrink-0 text-r-12 text-primary/50">
-                    {candidate.cohortId}기 · {candidate.part}
+                    {candidate.cohortNumber}기 · {candidate.part}
                   </span>
                 </button>
               </li>

@@ -58,7 +58,11 @@ export function ProjectDetail({ project }: ProjectDetailProps) {
               {/* part 는 응답에 없어 비어 올 수 있다 — 빈 조각을 그대로 두면 '김ㅇㅇ(14기,,팀장)' 이 된다. */}
               {project.participants
                 .map((participant) => {
-                  const detail = [`${participant.cohortId}기`, participant.part, participant.role]
+                  const detail = [
+                    `${participant.cohortNumber}기`,
+                    participant.part,
+                    participant.role,
+                  ]
                     .filter(Boolean)
                     .join(', ')
                   return `${participant.name}(${detail})`

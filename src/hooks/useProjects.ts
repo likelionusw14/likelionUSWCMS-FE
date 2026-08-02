@@ -44,10 +44,10 @@ const MOCK_PROJECT_RESPONSES: ProjectDetailResponse[] = [
     developedYear: 2026,
     developedMonth: 3,
     participants: [
-      { userId: 21017023, name: '김대머', cohortId: 14, part: '기획', role: '팀장' },
-      { userId: 22017055, name: '이대머', cohortId: 14, part: '디자인', role: '팀원' },
-      { userId: 22017056, name: '박대머', cohortId: 14, part: '프론트엔드', role: '팀원' },
-      { userId: 22017057, name: '최대머', cohortId: 14, part: '백엔드', role: '팀원' },
+      { userId: 21017023, name: '김대머', cohortNumber: 14, part: '기획', role: '팀장' },
+      { userId: 22017055, name: '이대머', cohortNumber: 14, part: '디자인', role: '팀원' },
+      { userId: 22017056, name: '박대머', cohortNumber: 14, part: '프론트엔드', role: '팀원' },
+      { userId: 22017057, name: '최대머', cohortNumber: 14, part: '백엔드', role: '팀원' },
     ],
     createdAt: '2026-03-02T10:00:00Z',
     updatedAt: '2026-03-10T15:30:00Z',
@@ -64,8 +64,8 @@ const MOCK_PROJECT_RESPONSES: ProjectDetailResponse[] = [
     developedYear: 2026,
     developedMonth: 2,
     participants: [
-      { userId: 21017024, name: '김형진', cohortId: 14, part: '백엔드', role: '팀원' },
-      { userId: 22017058, name: '신준호', cohortId: 14, part: '기획', role: '팀장' },
+      { userId: 21017024, name: '김형진', cohortNumber: 14, part: '백엔드', role: '팀원' },
+      { userId: 22017058, name: '신준호', cohortNumber: 14, part: '기획', role: '팀장' },
     ],
     createdAt: '2026-02-20T09:00:00Z',
     updatedAt: '2026-02-24T11:20:00Z',
@@ -82,7 +82,7 @@ const MOCK_PROJECT_RESPONSES: ProjectDetailResponse[] = [
     developedYear: 2025,
     developedMonth: 8,
     participants: [
-      { userId: 21017025, name: '이수원', cohortId: 13, part: '프론트엔드', role: '팀장' },
+      { userId: 21017025, name: '이수원', cohortNumber: 13, part: '프론트엔드', role: '팀장' },
     ],
     createdAt: '2025-08-15T12:00:00Z',
     updatedAt: '2025-08-20T10:00:00Z',
@@ -108,6 +108,8 @@ function toProjectSummary(response: ProjectDetailResponse): ProjectSummary {
     thumbnailUrl: response.thumbnailUrl,
     tags: response.tags,
     cohortId: response.cohortId,
+    // 목 응답(백엔드 연동 전 스키마)은 기수 ID 와 표시 번호가 같은 값이다.
+    cohortNumber: response.cohortId,
     developedYear: response.developedYear,
     developedMonth: response.developedMonth,
     createdAt: response.createdAt,
@@ -137,6 +139,7 @@ function toProjectFromApi(response: ApiProjectResponse): Project {
     thumbnailUrl: response.thumbnail?.downloadUrl ?? '',
     tags: [response.cohort.name, PROJECT_TYPE_LABEL[response.projectType]],
     cohortId: response.cohort.cohortId,
+    cohortNumber: response.cohort.number,
     developedYear: Number.parseInt(yearText, 10),
     developedMonth: Number.parseInt(monthText, 10),
     createdAt: response.createdAt,
@@ -144,11 +147,11 @@ function toProjectFromApi(response: ApiProjectResponse): Project {
     deployUrl: response.deployUrl ?? '',
     githubUrl: response.githubUrl ?? '',
     // [추정] ProjectParticipantResponse 는 userId/name/role 만 제공한다. 화면모델의 part 는 응답에
-    // 없어 빈 문자열, cohortId 는 프로젝트 기수로 대체한다(참여자 상세 스키마 확정 전까지).
+    // 없어 빈 문자열, 기수는 프로젝트 기수 번호로 대체한다(참여자 상세 스키마 확정 전까지).
     participants: response.participants.map((participant) => ({
       userId: participant.userId,
       name: participant.name,
-      cohortId: response.cohort.cohortId,
+      cohortNumber: response.cohort.number,
       part: '',
       role: participant.role,
     })),

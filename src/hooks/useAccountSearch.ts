@@ -13,13 +13,13 @@ const SEARCH_SIZE = 8
 function toParticipant(response: {
   userId: number
   name: string
-  cohort: { cohortId: number }
+  cohort: { number: number }
   part: keyof typeof PART_LABEL
 }): ProjectParticipant {
   return {
     userId: response.userId,
     name: response.name,
-    cohortId: response.cohort.cohortId,
+    cohortNumber: response.cohort.number,
     part: PART_LABEL[response.part],
     role: PART_LABEL[response.part],
   }

@@ -6,7 +6,8 @@ export type ProjectTag = '해커톤' | '아이디어톤'
 export interface ProjectParticipant {
   userId: number
   name: string
-  cohortId: number
+  // 표시용 기수 번호('14기' 의 14). 백엔드 기수 식별자(cohortId)와 값이 다르므로 ID 를 넣지 않는다.
+  cohortNumber: number
   part: string
   role: string
 }
@@ -53,7 +54,10 @@ export interface ProjectSummary extends Entity {
   title: string
   thumbnailUrl: string
   tags: string[]
+  // 백엔드 기수 식별자(필터·수정 요청용). 표시용 번호와 값이 다르다(14기의 cohortId 가 1일 수 있다).
   cohortId: number
+  // 표시용 기수 번호('14기' 의 14).
+  cohortNumber: number
   developedYear: number
   developedMonth: number
   createdAt: string
