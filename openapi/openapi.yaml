@@ -2444,13 +2444,22 @@
           },
           "startedMonth": {
             "type": "string",
-            "format": "date"
+            "example": "2025-03"
           },
           "endedMonth": {
             "type": "string",
-            "format": "date"
+            "example": "2025-03"
+          },
+          "participants": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProjectParticipantRequest"
+            }
           },
           "dateRangeValid": {
+            "type": "boolean"
+          },
+          "participantsUnique": {
             "type": "boolean"
           },
           "deployUrlValid": {
@@ -2463,8 +2472,26 @@
         "required": [
           "cohortId",
           "endedMonth",
+          "participants",
           "projectType",
           "startedMonth"
+        ]
+      },
+      "ProjectParticipantRequest": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "role": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 0
+          }
+        },
+        "required": [
+          "userId"
         ]
       },
       "AdminProjectResponse": {
@@ -2508,6 +2535,12 @@
             "type": "string",
             "example": "2025-03"
           },
+          "participants": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProjectParticipantResponse"
+            }
+          },
           "createdBy": {
             "type": "integer",
             "format": "int64"
@@ -2523,6 +2556,21 @@
           "updatedAt": {
             "type": "string",
             "format": "date-time"
+          }
+        }
+      },
+      "ProjectParticipantResponse": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "name": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
           }
         }
       },
@@ -2568,6 +2616,21 @@
           "tag"
         ]
       },
+      "FileView": {
+        "type": "object",
+        "properties": {
+          "file": {
+            "$ref": "#/components/schemas/FileAssetResponse"
+          },
+          "downloadUrl": {
+            "type": "string"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
       "NoticeResponse": {
         "type": "object",
         "properties": {
@@ -2595,6 +2658,9 @@
           },
           "externalUrl": {
             "type": "string"
+          },
+          "image": {
+            "$ref": "#/components/schemas/FileView"
           },
           "createdBy": {
             "type": "integer",
@@ -2873,16 +2939,25 @@
           },
           "startedMonth": {
             "type": "string",
-            "format": "date"
+            "example": "2025-03"
           },
           "endedMonth": {
             "type": "string",
-            "format": "date"
+            "example": "2025-03"
+          },
+          "participants": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProjectParticipantRequest"
+            }
           },
           "anyChangeProvided": {
             "type": "boolean"
           },
           "providedValueValid": {
+            "type": "boolean"
+          },
+          "participantsUnique": {
             "type": "boolean"
           },
           "deployUrlValid": {
@@ -3112,21 +3187,6 @@
           }
         }
       },
-      "FileView": {
-        "type": "object",
-        "properties": {
-          "file": {
-            "$ref": "#/components/schemas/FileAssetResponse"
-          },
-          "downloadUrl": {
-            "type": "string"
-          },
-          "expiresAt": {
-            "type": "string",
-            "format": "date-time"
-          }
-        }
-      },
       "PageResponseProjectResponse": {
         "type": "object",
         "properties": {
@@ -3138,21 +3198,6 @@
           },
           "page": {
             "$ref": "#/components/schemas/PageMeta"
-          }
-        }
-      },
-      "ProjectParticipantResponse": {
-        "type": "object",
-        "properties": {
-          "userId": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "name": {
-            "type": "string"
-          },
-          "role": {
-            "type": "string"
           }
         }
       },

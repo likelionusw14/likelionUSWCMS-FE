@@ -1,7 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
-import { fetchCertificatePreview, issueCertificate } from '@api'
+import {
+  fetchCertificateDownloadUrl,
+  fetchCertificatePreview,
+  issueCertificate,
+  normalizeError,
+} from '@api'
 import type { ApiCertificatePreviewResponse, ApiPartType } from '@api'
 import { isBackendConnected } from '@config'
 import type { CertificateFlowState, CertificateInfo } from '@types'
@@ -65,12 +70,17 @@ const MOCK_ISSUE_MS = 5000
 // 발급 플로우 상태머신 — 발급(5초 로딩) → 완료 → 다운로드 완료 → 홈.
 export function useCertificateIssue(): {
   state: CertificateFlowState
+  errorMessage: string | undefined
   issue: () => void
   download: () => void
   goHome: () => void
+  dismissError: () => void
 } {
   const navigate = useNavigate()
   const [state, setState] = useState<CertificateFlowState>('idle')
+  const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined)
+  // 발급 응답의 certificateId — 다운로드 URL 을 받을 때 필요하다.
+  const [certificateId, setCertificateId] = useState<number | undefined>(undefined)
   const timerRef = useRef<number | undefined>(undefined)
 
   useEffect(() => () => window.clearTimeout(timerRef.current), [])
@@ -82,17 +92,49 @@ export function useCertificateIssue(): {
       return
     }
     issueCertificate()
-      .then(() => setState('issued'))
-      .catch(() => setState('idle'))
+      .then((response) => {
+        setCertificateId(response.certificateId)
+        setState('issued')
+      })
+      // 실패를 삼키면 팝업만 조용히 닫혀 사용자가 이유를 알 수 없다. 사유를 띄운다.
+      .catch((error) => {
+        setErrorMessage(normalizeError(error).message)
+        setState('failed')
+      })
   }, [])
 
-  // 지침: 실제 다운로드 없이 다음 팝업으로 이동.
-  const download = useCallback(() => setState('downloaded'), [])
+  const download = useCallback(() => {
+    // 미연동(mock)이면 받을 파일이 없어 다음 팝업으로만 넘어간다.
+    if (!isBackendConnected || certificateId === undefined) {
+      setState('downloaded')
+      return
+    }
+    // 다운로드 URL 은 만료가 짧은 Presigned 라 눌린 시점에 받아 바로 연다.
+    fetchCertificateDownloadUrl(String(certificateId))
+      .then(({ downloadUrl }) => {
+        const anchor = document.createElement('a')
+        anchor.href = downloadUrl
+        anchor.target = '_blank'
+        anchor.rel = 'noopener noreferrer'
+        anchor.click()
+        setState('downloaded')
+      })
+      .catch((error) => {
+        setErrorMessage(normalizeError(error).message)
+        setState('failed')
+      })
+  }, [certificateId])
+
+  // 실패 안내를 닫으면 처음 상태로 돌아간다(다시 발급을 시도할 수 있다).
+  const dismissError = useCallback(() => {
+    setErrorMessage(undefined)
+    setState('idle')
+  }, [])
 
   const goHome = useCallback(() => {
     setState('idle')
     navigate('/app')
   }, [navigate])
 
-  return { state, issue, download, goHome }
+  return { state, errorMessage, issue, download, goHome, dismissError }
 }

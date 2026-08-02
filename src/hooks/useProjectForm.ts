@@ -19,7 +19,7 @@ const EMPTY_VALUES: ProjectFormValues = {
   endDate: '',
   githubUrl: '',
   projectUrl: '',
-  participants: '',
+  participants: [],
   description: '',
 }
 
@@ -35,9 +35,8 @@ function toProjectValues(project: Project | undefined): ProjectFormValues {
     endDate: `${project.developedYear}.${String(project.developedMonth).padStart(2, '0')}`,
     githubUrl: project.githubUrl,
     projectUrl: project.deployUrl,
-    participants: project.participants
-      .map((participant) => `${participant.name}(${participant.cohortId}기,${participant.part})`)
-      .join(', '),
+    // 참여자는 그대로 목록으로 넘긴다 (역할 텍스트도 응답 값을 유지한다).
+    participants: project.participants,
     description: project.description,
   }
 }

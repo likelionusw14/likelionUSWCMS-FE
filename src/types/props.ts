@@ -7,7 +7,13 @@ import type {
 } from 'react'
 import type { AreaType, Role } from './auth'
 import type { NavItem } from './nav'
-import type { Project, ProjectFormValues, ProjectSummary, UserProject } from './project'
+import type {
+  Project,
+  ProjectFormValues,
+  ProjectParticipant,
+  ProjectSummary,
+  UserProject,
+} from './project'
 import type { Session, SessionFormValues, UserSessionResource } from './session'
 import type { Notice, UserNotice } from './notice'
 import type { Member, PendingMember } from './member'
@@ -314,7 +320,8 @@ export interface FormRowProps {
 
 export interface ProjectFormProps {
   values: ProjectFormValues
-  onFieldChange: (field: keyof ProjectFormValues, value: string) => void
+  // 참여자는 문자열이 아니라 회원 목록이라 필드별 타입을 그대로 받는다.
+  onFieldChange: <K extends keyof ProjectFormValues>(field: K, value: ProjectFormValues[K]) => void
   onSubmit: (event: FormEvent<HTMLFormElement>) => void
   // 수정 화면에서만 내려온다 (작성 화면에는 삭제 대상이 없다).
   onDelete?: () => void
@@ -324,6 +331,12 @@ export interface ProjectFormProps {
   /** 고른 파일. 업로드는 저장 시점에 일어난다 (선택 즉시 올리지 않는다). */
   onFileChange: (file: File) => void
   onFileClear: () => void
+}
+
+// 프로젝트 참여자 선택 — 회원 검색 후 고르면 역할이 그 사람의 파트로 자동 입력된다.
+export interface ParticipantPickerProps {
+  value: ProjectParticipant[]
+  onChange: (participants: ProjectParticipant[]) => void
 }
 
 // 관리 폼 공용 업로드 박스 — 아이콘 + 파일명 + 찾기/삭제 버튼. 공지·세션자료·프로젝트 작성이 공유한다.
@@ -417,6 +430,8 @@ export interface AttendanceCheckInProps {
   onCodeChange: (value: string) => void
   remainingSeconds: number
   result: AttendanceCheckInResult
+  /** 실패 사유(서버 메시지 등). 없으면 기본 문구를 쓴다. */
+  errorMessage?: string
   onSubmit: () => void
   onCloseResult: () => void
 }
@@ -739,6 +754,9 @@ export interface CertificateInfoPanelProps {
 // 발급 플로우 팝업 — 상태에 따라 발급 중(로딩) / 발급 완료(다운로드) / 다운로드 완료(홈).
 export interface CertificateFlowModalProps {
   state: CertificateFlowState
+  /** 실패 사유(서버 메시지). state 가 failed 일 때만 쓰인다. */
+  errorMessage?: string
   onDownload: () => void
   onGoHome: () => void
+  onDismissError: () => void
 }

@@ -35,6 +35,21 @@ const MOCK_NOTICES: ApiNoticeResponse[] = Array.from({ length: 393 }, (_, index)
     tag,
     isFixed: index % 4 === 0,
     externalUrl: null,
+    image:
+      index % 3 === 0
+        ? {
+            file: {
+              fileAssetId: noticeId,
+              purpose: 'NOTICE_IMAGE',
+              originalFileName: '활동안내.pdf',
+              mimeType: 'application/pdf',
+              sizeBytes: 1024,
+              createdAt: `2026-05-${day}T14:30:00Z`,
+            },
+            downloadUrl: 'https://example.com/notice.pdf',
+            expiresAt: `2026-05-${day}T15:30:00Z`,
+          }
+        : null,
     createdBy: 1,
     publishedAt: `2026-05-${day}T14:30:00Z`,
     version: 0,
@@ -54,8 +69,7 @@ function toNotice(response: ApiNoticeResponse): Notice {
     // publishedAt('YYYY-MM-DDT...') → 'YYYY.MM.DD' 표시 포맷.
     createdAt: response.publishedAt.slice(0, 10).replace(/-/g, '.'),
     mustRead: response.isFixed,
-    // 공지 응답에 첨부 이미지 필드가 없다 — 첨부 API 가 생기면 파일명을 채운다.
-    fileName: '',
+    fileName: response.image?.file.originalFileName ?? '',
     version: response.version,
   }
 }

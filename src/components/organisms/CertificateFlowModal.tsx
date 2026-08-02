@@ -44,7 +44,13 @@ function CheckCircle() {
 // idle 은 렌더하지 않는다. 버튼으로만 진행(바깥클릭·ESC 무시). 창(맥 헤더) 모양은 WindowPanel.
 // Figma 539:7805(발급 중) / 539:7811(발급완료) / 539:7818(다운로드완료) — 세 상태 모두 640x536 동일.
 // nodes.tsv 에 375 아트보드용 모바일 변형이 없어 폭은 sm 이하에서 w-full 로만 줄인다.
-export function CertificateFlowModal({ state, onDownload, onGoHome }: CertificateFlowModalProps) {
+export function CertificateFlowModal({
+  state,
+  errorMessage,
+  onDownload,
+  onGoHome,
+  onDismissError,
+}: CertificateFlowModalProps) {
   return (
     <Modal
       open={state !== 'idle'}
@@ -94,6 +100,23 @@ export function CertificateFlowModal({ state, onDownload, onGoHome }: Certificat
             </p>
             <Button variant="primary" onClick={onGoHome}>
               홈으로 돌아가기
+            </Button>
+          </>
+        )}
+        {state === 'failed' && (
+          // Figma 에 실패 상태가 없어 완료 화면과 같은 골격(문구 + 버튼)으로 맞춘다.
+          <>
+            <p className="text-center text-m-16-home text-black">
+              증명서 발급에 실패했습니다.
+              {errorMessage && (
+                <>
+                  <br />
+                  <span className="text-m-14 text-gray-700">{errorMessage}</span>
+                </>
+              )}
+            </p>
+            <Button variant="primary" onClick={onDismissError}>
+              확인
             </Button>
           </>
         )}

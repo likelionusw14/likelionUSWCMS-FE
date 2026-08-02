@@ -32,7 +32,7 @@ export function ProjectCard({ project, detailPath, className }: ProjectCardProps
               {project.developedYear}.{String(project.developedMonth).padStart(2, '0')}
             </p>
           </div>
-          <p className="text-m-16-home text-gray-700">{project.cohortId}기 프로젝트</p>
+          <p className="text-m-16-home text-gray-700">{project.cohortNumber}기 프로젝트</p>
         </div>
         <div className="flex w-full flex-wrap gap-8">
           {project.tags.map((tag) => (

@@ -20,7 +20,7 @@ import { isBackendConnected } from '@config'
 import type { Member, MemberPage, PendingMember } from '@types'
 
 // enum → 한국어 라벨 매핑 (공유 계약).
-const PART_LABEL: Record<ApiPartType, string> = {
+export const PART_LABEL: Record<ApiPartType, string> = {
   PLANNING: '기획',
   DESIGN: '디자인',
   FRONTEND: '프론트엔드',

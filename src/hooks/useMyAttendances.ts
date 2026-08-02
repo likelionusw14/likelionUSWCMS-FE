@@ -84,7 +84,8 @@ export function useMyAttendanceList(): {
     totalCount: meta?.totalElements ?? 0,
     page: (meta?.page ?? 0) + 1,
     setPage,
-    totalPages: meta?.totalPages ?? 1,
+    // 기록이 없으면 서버가 0 을 주는데 화면에는 '1/0 page' 로 보인다. 최소 1쪽으로 맞춘다.
+    totalPages: Math.max(1, meta?.totalPages ?? 1),
     isLoading: request.isLoading,
   }
 }

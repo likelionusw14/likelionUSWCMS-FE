@@ -55,11 +55,18 @@ export function ProjectDetail({ project }: ProjectDetailProps) {
             <span className={LABEL_CELL}>프로젝트 참여자</span>
             {/* 값은 세로 가운데 — 시안 1280 은 160 높이 안 34px 텍스트가 y=63, 375 는 101 안 85px 가 y=8 이다. */}
             <p className="flex min-w-px flex-1 items-center break-words px-16 py-8 text-m-14 text-black sm:px-24">
+              {/* part 는 응답에 없어 비어 올 수 있다 — 빈 조각을 그대로 두면 '김ㅇㅇ(14기,,팀장)' 이 된다. */}
               {project.participants
-                .map(
-                  (participant) =>
-                    `${participant.name}(${participant.cohortId}기,${participant.part},${participant.role})`,
-                )
+                .map((participant) => {
+                  const detail = [
+                    `${participant.cohortNumber}기`,
+                    participant.part,
+                    participant.role,
+                  ]
+                    .filter(Boolean)
+                    .join(', ')
+                  return `${participant.name}(${detail})`
+                })
                 .join(', ')}
             </p>
           </div>

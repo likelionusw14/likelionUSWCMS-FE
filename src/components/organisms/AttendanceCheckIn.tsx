@@ -15,6 +15,7 @@ export function AttendanceCheckIn({
   onCodeChange,
   remainingSeconds,
   result,
+  errorMessage,
   onSubmit,
   onCloseResult,
 }: AttendanceCheckInProps) {
@@ -57,7 +58,7 @@ export function AttendanceCheckIn({
         description={
           result === 'success'
             ? '출석 처리가 완료되었습니다.'
-            : '코드가 올바르지 않거나 유효시간이 지났습니다.'
+            : (errorMessage ?? '코드가 올바르지 않거나 유효시간이 지났습니다.')
         }
         confirmLabel="확인"
       />
