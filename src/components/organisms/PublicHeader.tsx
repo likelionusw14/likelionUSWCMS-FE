@@ -37,10 +37,10 @@ export function PublicHeader({ navItems, tone = 'light' }: PublicHeaderProps) {
   // 모바일 카드가 화면 최상단에서부터 내려오도록 헤더 실제 높이를 넘긴다(브레이크포인트마다 다르다).
   const headerRef = useRef<HTMLElement>(null)
   const headerHeight = useElementHeight(headerRef)
-  // 드로어에는 계정 아이콘이 없다 — 로그인 상태면 마이페이지를 메뉴 항목으로 덧붙인다.
+  // 드로어에는 계정 아이콘이 없으므로 인증 상태에 맞는 계정 진입 항목을 메뉴 끝에 덧붙인다.
   const drawerNavItems = isAuthenticated
     ? [...navItems, { to: '/app', label: '마이페이지' }]
-    : navItems
+    : [...navItems, { to: '/login', label: '로그인' }]
 
   function handleLogout() {
     logout()

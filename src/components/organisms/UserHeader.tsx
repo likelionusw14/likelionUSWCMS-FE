@@ -118,7 +118,7 @@ export function UserHeader({ navItems, onLogout }: UserHeaderProps) {
         tone={tone}
         headerHasBrand
         headerHeight={headerHeight}
-        // onLogout={onLogout}
+        onLogout={onLogout}
       />
     </div>
   )
