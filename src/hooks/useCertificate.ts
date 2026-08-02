@@ -1,7 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
-import { fetchCertificateDownloadUrl, fetchCertificatePreview, issueCertificate } from '@api'
+import {
+  fetchCertificateDownloadUrl,
+  fetchCertificatePreview,
+  issueCertificate,
+  normalizeError,
+} from '@api'
 import type { ApiCertificatePreviewResponse, ApiPartType } from '@api'
 import { isBackendConnected } from '@config'
 import type { CertificateFlowState, CertificateInfo } from '@types'
@@ -65,12 +70,15 @@ const MOCK_ISSUE_MS = 5000
 // 발급 플로우 상태머신 — 발급(5초 로딩) → 완료 → 다운로드 완료 → 홈.
 export function useCertificateIssue(): {
   state: CertificateFlowState
+  errorMessage: string | undefined
   issue: () => void
   download: () => void
   goHome: () => void
+  dismissError: () => void
 } {
   const navigate = useNavigate()
   const [state, setState] = useState<CertificateFlowState>('idle')
+  const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined)
   // 발급 응답의 certificateId — 다운로드 URL 을 받을 때 필요하다.
   const [certificateId, setCertificateId] = useState<number | undefined>(undefined)
   const timerRef = useRef<number | undefined>(undefined)
@@ -88,7 +96,11 @@ export function useCertificateIssue(): {
         setCertificateId(response.certificateId)
         setState('issued')
       })
-      .catch(() => setState('idle'))
+      // 실패를 삼키면 팝업만 조용히 닫혀 사용자가 이유를 알 수 없다. 사유를 띄운다.
+      .catch((error) => {
+        setErrorMessage(normalizeError(error).message)
+        setState('failed')
+      })
   }, [])
 
   const download = useCallback(() => {
@@ -107,14 +119,22 @@ export function useCertificateIssue(): {
         anchor.click()
         setState('downloaded')
       })
-      // 실패하면 완료로 넘기지 않는다 — 발급 완료 팝업에 머물러 다시 시도할 수 있게 둔다.
-      .catch(() => {})
+      .catch((error) => {
+        setErrorMessage(normalizeError(error).message)
+        setState('failed')
+      })
   }, [certificateId])
+
+  // 실패 안내를 닫으면 처음 상태로 돌아간다(다시 발급을 시도할 수 있다).
+  const dismissError = useCallback(() => {
+    setErrorMessage(undefined)
+    setState('idle')
+  }, [])
 
   const goHome = useCallback(() => {
     setState('idle')
     navigate('/app')
   }, [navigate])
 
-  return { state, issue, download, goHome }
+  return { state, errorMessage, issue, download, goHome, dismissError }
 }

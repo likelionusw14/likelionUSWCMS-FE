@@ -752,6 +752,9 @@ export interface CertificateInfoPanelProps {
 // 발급 플로우 팝업 — 상태에 따라 발급 중(로딩) / 발급 완료(다운로드) / 다운로드 완료(홈).
 export interface CertificateFlowModalProps {
   state: CertificateFlowState
+  /** 실패 사유(서버 메시지). state 가 failed 일 때만 쓰인다. */
+  errorMessage?: string
   onDownload: () => void
   onGoHome: () => void
+  onDismissError: () => void
 }

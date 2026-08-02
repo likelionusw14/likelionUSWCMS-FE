@@ -22,7 +22,13 @@ export function UserCertificatePage() {
         onIssue={flow.issue}
       />
 
-      <CertificateFlowModal state={flow.state} onDownload={flow.download} onGoHome={flow.goHome} />
+      <CertificateFlowModal
+        state={flow.state}
+        errorMessage={flow.errorMessage}
+        onDownload={flow.download}
+        onGoHome={flow.goHome}
+        onDismissError={flow.dismissError}
+      />
     </div>
   )
 }

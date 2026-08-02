@@ -11,5 +11,6 @@ export interface CertificateInfo {
   activityPeriod: string
 }
 
-// 발급 플로우 상태. idle=발급 전, issuing=발급 중(로딩), issued=발급 완료, downloaded=다운로드 완료.
-export type CertificateFlowState = 'idle' | 'issuing' | 'issued' | 'downloaded'
+// 발급 플로우 상태. idle=발급 전, issuing=발급 중(로딩), issued=발급 완료, downloaded=다운로드 완료,
+// failed=발급·다운로드 실패(사유를 보여주고 닫을 때까지 머문다).
+export type CertificateFlowState = 'idle' | 'issuing' | 'issued' | 'downloaded' | 'failed'
