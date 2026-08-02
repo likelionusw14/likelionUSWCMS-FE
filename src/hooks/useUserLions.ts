@@ -181,6 +181,7 @@ export function useUserLions(query: UserLionQuery): { data: Lion[]; isLoading: b
 const USER_LION_PART_DEFAULT = 'PLANNING' as const
 
 export function useUserLionListPage() {
+  // cohort 는 드롭다운에서 고른 값 — useCohorts 선택지의 value 이므로 기수 번호가 아니라 cohortId 다.
   const [cohort, setCohort] = useState('')
   const [part, setPart] = useState<NonNullable<UserLionQuery['part']>>(USER_LION_PART_DEFAULT)
   const cohortId = cohort ? Number.parseInt(cohort, 10) : undefined
